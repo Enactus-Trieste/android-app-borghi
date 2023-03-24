@@ -1,4 +1,4 @@
-# Borghi-Segreti
+# L'app
 App realizzata come progetto per il corso di Sistemi Integrati e Mobili dell'Università degli Studi di Trieste.
 
 L'obiettivo dell'applicazione è quello di far scoprire le ricchezze paesaggistiche, naturalistiche e storiche dei piccoli borghi di montagna situati nelle cosiddette aree interne del nostro Paese.
@@ -11,6 +11,5 @@ Le attività completate vengono salvate in una specifica sezione dell'area perso
 # Funzionamento
 Per utilizzare qualsiasi funzione dell'app all'utente è richeista la registrazione al servizio.
 Dalla pagina dell'area personale è possibile visionare i punti collezionati e l'obiettivo attuale, accedere alla mappa, alle attività completate e alle informazioni utente.
-Per poter utilizzare tutte le funzioni è necessaria una connessione di rete. 
+Per poter utilizzare tutte le funzioni è necessaria una connessione di rete.
 
-![Borghi Segreti](https://user-images.githubusercontent.com/94709756/218716792-c20168cd-492a-40bb-8a50-a35853d436c7.png)
