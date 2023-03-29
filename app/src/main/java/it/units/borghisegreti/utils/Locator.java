@@ -23,8 +23,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 
 import it.units.borghisegreti.R;
-import it.units.borghisegreti.activities.MainActivity;
-import it.units.borghisegreti.fragments.MapsActivityFragment;
+import it.units.borghisegreti.activities.MapsActivity;
 import it.units.borghisegreti.interfaces.OnObjectiveInRangeEventListener;
 import it.units.borghisegreti.interfaces.OnUserLocationUpdateListener;
 import it.units.borghisegreti.models.Experience;
@@ -33,13 +32,13 @@ import it.units.borghisegreti.models.Experience;
 public class Locator {
 
     private static final int RANGE = 50;
-    private final MapsActivityFragment callingActivity;
+    private final MapsActivity callingActivity;
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
     private OnUserLocationUpdateListener locationUpdateListener;
     private OnObjectiveInRangeEventListener objectiveInRangeListener;
 
-    public Locator(MapsActivityFragment activity, boolean testMode) {
+    public Locator(MapsActivity activity, boolean testMode) {
         this.callingActivity = activity;
         if (testMode) {
             Location overriddenUserLocation = new Location("");
@@ -115,8 +114,6 @@ public class Locator {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int id) {
-                                Intent intent = new Intent(callingActivity.getApplicationContext(), MainActivity.class);
-                                callingActivity.startActivity(intent);
                             }
                         });
 
