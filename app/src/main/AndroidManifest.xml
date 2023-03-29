@@ -21,7 +21,7 @@
             android:value="AIzaSyBShW7TElkoKfC8yI2YcFclO6vH3smQ64Y" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.MapsActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -32,40 +32,11 @@
         </activity>
 
         <activity
-            android:name=".activities.CompletedExperiencesActivity"
-            android:exported="false"
-            android:label="@string/completed_experiences"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <activity
-            android:name=".activities.UserProfileActivity"
-            android:exported="false"
-            android:label="@string/user_info"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <activity
-            android:name=".fragments.MapsActivityFragment"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <activity
             android:name=".activities.SignInActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <activity
-            android:name=".activities.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="it.units.borghisegreti.activities.MainActivity" />
-        </activity>
 
     </application>
 

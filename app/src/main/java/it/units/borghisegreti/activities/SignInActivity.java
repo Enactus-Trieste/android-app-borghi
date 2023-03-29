@@ -41,7 +41,7 @@ public class SignInActivity extends AppCompatActivity {
         if (result.getResultCode() == RESULT_OK) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             Log.d(TAG, "User authentication: " + user);
-            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            Intent mainActivityIntent = new Intent(this, MapsActivity.class);
             startActivity(mainActivityIntent);
             finish();
         } else {
