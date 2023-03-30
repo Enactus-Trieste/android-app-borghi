@@ -25,6 +25,7 @@ public class MapsViewModel extends ViewModel {
     public static final String DB_URL = "https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app";
     public static final String DB_TAG = "FIREBASE_DB_CONNECTOR";
     public static final String ZONES_REFERENCE = "zones";
+    public static final String EXPERIENCES_REFERENCE = "experiences";
     private final FirebaseDatabase database;
     private final ValueEventListener experiencesListener;
     private final ValueEventListener zonesListener;
@@ -39,14 +40,16 @@ public class MapsViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Experience> experiences = new ArrayList<>();
-                for (DataSnapshot dataExperience : snapshot.getChildren()) {
-                    String id = dataExperience.getKey();
-                    String name = dataExperience.child("name").getValue(String.class);
-                    String description = dataExperience.child("description").getValue(String.class);
-                    ExperienceType type = dataExperience.child("type").getValue(ExperienceType.class);
-                    Double latitude = dataExperience.child("coordinates").child("latitude").getValue(Double.class);
-                    Double longitude = dataExperience.child("coordinates").child("longitude").getValue(Double.class);
-                    Integer points = dataExperience.child("points").getValue(Integer.class);
+                for (DataSnapshot experienceSnapshot : snapshot.getChildren()) {
+                    Log.d(DB_TAG, "onDataChange: EXPERIENCES");
+                    // a better approach would be Experience experience = experienceSnapshot.getValue(Experience.class)
+                    String id = experienceSnapshot.getKey();
+                    String name = experienceSnapshot.child("name").getValue(String.class);
+                    String description = experienceSnapshot.child("description").getValue(String.class);
+                    ExperienceType type = experienceSnapshot.child("type").getValue(ExperienceType.class);
+                    Double latitude = experienceSnapshot.child("coordinates").child("latitude").getValue(Double.class);
+                    Double longitude = experienceSnapshot.child("coordinates").child("longitude").getValue(Double.class);
+                    Integer points = experienceSnapshot.child("points").getValue(Integer.class);
 
                     LatLng coordinates = new LatLng(latitude, longitude);
 
@@ -61,7 +64,7 @@ public class MapsViewModel extends ViewModel {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e(DB_TAG, "error: " + error.getMessage());
             }
         };
         zonesListener = new ValueEventListener() {
@@ -86,10 +89,15 @@ public class MapsViewModel extends ViewModel {
             }
         };
         database.getReference(ZONES_REFERENCE).addValueEventListener(zonesListener);
+        database.getReference(EXPERIENCES_REFERENCE).addValueEventListener(experiencesListener);
     }
 
     public LiveData<List<Zone>> getZones() {
         return zones;
+    }
+
+    public LiveData<List<Experience>> getExperiences() {
+        return experiences;
     }
 
 
@@ -97,5 +105,6 @@ public class MapsViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         database.getReference(ZONES_REFERENCE).removeEventListener(zonesListener);
+        database.getReference(EXPERIENCES_REFERENCE).removeEventListener(experiencesListener);
     }
 }
