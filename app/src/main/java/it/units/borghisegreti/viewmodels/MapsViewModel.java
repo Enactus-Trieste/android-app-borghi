@@ -46,12 +46,12 @@ public class MapsViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Zone> zones = new ArrayList<>();
-                for (DataSnapshot dataZones : snapshot.getChildren()) {
+                for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
                     Log.d(DB_TAG, "onDataChange: ZONES");
-                    // a better approach would be Zone zone = dataZones.getValue(Zone.class)
-                    String zoneName = dataZones.child("name").getValue(String.class);
-                    Double latitude = dataZones.child("coordinates").child("latitude").getValue(Double.class);
-                    Double longitude = dataZones.child("coordinates").child("longitude").getValue(Double.class);
+                    // a better approach would be Zone zone = zoneSnapshot.getValue(Zone.class)
+                    String zoneName = zoneSnapshot.child("name").getValue(String.class);
+                    Double latitude = zoneSnapshot.child("coordinates").child("latitude").getValue(Double.class);
+                    Double longitude = zoneSnapshot.child("coordinates").child("longitude").getValue(Double.class);
                     LatLng zoneCoordinates = new LatLng(latitude, longitude);
                     zones.add(new Zone(zoneName, zoneCoordinates));
                 }
