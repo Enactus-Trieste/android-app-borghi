@@ -1,15 +1,19 @@
 package it.units.borghisegreti.viewmodels;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.units.borghisegreti.models.Zone;
@@ -17,6 +21,7 @@ import it.units.borghisegreti.models.Zone;
 
 public class MapsViewModel extends ViewModel {
     public static final String DB_URL = "https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app";
+    public static final String DB_TAG = "FIREBASE_DB_CONNECTOR";
     public static final String ZONES_REFERENCE = "zones";
     private final FirebaseDatabase database;
     private final ValueEventListener experiencesListener;
@@ -40,12 +45,22 @@ public class MapsViewModel extends ViewModel {
         zonesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                List<Zone> zones = new ArrayList<>();
+                for (DataSnapshot dataZones : snapshot.getChildren()) {
+                    Log.d(DB_TAG, "onDataChange: ZONES");
+                    // a better approach would be Zone zone = dataZones.getValue(Zone.class)
+                    String zoneName = dataZones.child("name").getValue(String.class);
+                    Double latitude = dataZones.child("coordinates").child("latitude").getValue(Double.class);
+                    Double longitude = dataZones.child("coordinates").child("longitude").getValue(Double.class);
+                    LatLng zoneCoordinates = new LatLng(latitude, longitude);
+                    zones.add(new Zone(zoneName, zoneCoordinates));
+                }
+                MapsViewModel.this.zones.setValue(zones);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e(DB_TAG, "error: " + error.getMessage());
             }
         };
     }
