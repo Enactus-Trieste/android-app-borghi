@@ -14,10 +14,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.models.Experience;
@@ -31,6 +36,8 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private List<Experience> experiences;
     private List<Zone> zones;
     private GoogleMap map;
+    private final Map<Marker, Experience> experiencesOnTheMap = new HashMap<>();
+    private final Map<Marker, Zone> zonesOnTheMap = new HashMap<>();
 
     public MapsFragment() {
         // Required empty public constructor
@@ -88,11 +95,33 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     }
 
     private void drawAllExperienceMarkers() {
+        clearFromTheMap(zonesOnTheMap.keySet());
+        for (Experience experience : experiences) {
+            drawExperienceMarker(experience);
+
+        }
+    }
+
+    private void drawExperienceMarker(Experience experience) {
 
     }
 
     private void drawAllZoneMarkers() {
+        clearFromTheMap(experiencesOnTheMap.keySet());
+        for (Zone zone : zones) {
+            Marker zoneMarker = map.addMarker(new MarkerOptions()
+                    .position(zone.getCoordinates())
+                    .title(zone.getName())
+                    .anchor(0.5f, 0.5f)
+                    .icon(BitmapDescriptorFactory.fromAsset("icons/BorgoIcon.png")));
+            zonesOnTheMap.put(zoneMarker, zone);
+        }
+    }
 
+    private void clearFromTheMap(@NonNull Set<Marker> markersToClear) {
+        for (Marker marker : markersToClear) {
+            marker.remove();
+        }
     }
 
     @Override
