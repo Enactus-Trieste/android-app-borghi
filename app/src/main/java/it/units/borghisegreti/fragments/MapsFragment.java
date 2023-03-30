@@ -67,10 +67,12 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         map.setOnCameraMoveListener(this::drawMarkers);
         viewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
+            Log.d(MAPS_TAG, "New experiences received from Firebase");
             this.experiences = experiences;
             drawMarkers();
         });
         viewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
+            Log.d(MAPS_TAG, "New zones received from Firebase");
             this.zones = zones;
             drawMarkers();
         });
