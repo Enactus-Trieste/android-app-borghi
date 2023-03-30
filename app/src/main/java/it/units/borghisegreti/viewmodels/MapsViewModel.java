@@ -63,6 +63,7 @@ public class MapsViewModel extends ViewModel {
                 Log.e(DB_TAG, "error: " + error.getMessage());
             }
         };
+        database.getReference(ZONES_REFERENCE).addValueEventListener(zonesListener);
     }
 
     public LiveData<List<Zone>> getZones() {
@@ -73,5 +74,6 @@ public class MapsViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
+        database.getReference(ZONES_REFERENCE).removeEventListener(zonesListener);
     }
 }
