@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         NavHostFragment hostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        navController = Objects.requireNonNull(hostFragment, "Host fragment view not found").getNavController();
+        navController = Objects.requireNonNull(hostFragment, "Host fragment container view not found").getNavController();
 
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             // here we can check the destination id and handle changes accordingly
