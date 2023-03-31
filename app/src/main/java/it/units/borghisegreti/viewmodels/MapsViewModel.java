@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -29,13 +30,13 @@ public class MapsViewModel extends ViewModel {
     private final FirebaseDatabase database;
     private final ValueEventListener experiencesListener;
     private final ValueEventListener zonesListener;
-    private final MutableLiveData<List<Zone>> zones;
-    private final MutableLiveData<List<Experience>> experiences;
+    private final MutableLiveData<List<Zone>> databaseZones;
+    private final MutableLiveData<List<Experience>> databaseExperiences;
 
     public MapsViewModel() {
         database = FirebaseDatabase.getInstance(DB_URL);
-        zones = new MutableLiveData<>();
-        experiences = new MutableLiveData<>();
+        databaseZones = new MutableLiveData<>();
+        databaseExperiences = new MutableLiveData<>();
         experiencesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -59,7 +60,7 @@ public class MapsViewModel extends ViewModel {
 
                     experiences.add(new Experience(id, name, description, type, coordinates, points));
                 }
-                MapsViewModel.this.experiences.setValue(experiences);
+                MapsViewModel.this.databaseExperiences.setValue(experiences);
             }
 
             @Override
@@ -80,7 +81,7 @@ public class MapsViewModel extends ViewModel {
                     LatLng zoneCoordinates = new LatLng(latitude, longitude);
                     zones.add(new Zone(zoneName, zoneCoordinates));
                 }
-                MapsViewModel.this.zones.setValue(zones);
+                MapsViewModel.this.databaseZones.setValue(zones);
             }
 
             @Override
@@ -93,11 +94,24 @@ public class MapsViewModel extends ViewModel {
     }
 
     public LiveData<List<Zone>> getZones() {
-        return zones;
+        return databaseZones;
     }
 
     public LiveData<List<Experience>> getExperiences() {
-        return experiences;
+        return databaseExperiences;
+    }
+
+    // example method on how to transform data directly in the ViewModel
+    public LiveData<List<Experience>> getExperiencesByName(@NonNull String experienceName) {
+        return Transformations.map(databaseExperiences, experiences -> {
+            List<Experience> filteredExperiences = new ArrayList<>();
+            for (Experience experience : experiences) {
+                if (experience.getName().equals(experienceName)) {
+                    filteredExperiences.add(experience);
+                }
+            }
+            return filteredExperiences;
+        });
     }
 
 
