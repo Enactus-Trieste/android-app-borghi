@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MapsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/complete_exp_button"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/complete_experience"
+        android:textSize="@dimen/complete_experience_button_text_size"
+        android:textColor="@color/white"
+        android:elevation="10dp"
+        android:background="@drawable/complete_experience_button"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="@dimen/complete_experience_button_margin_bottom"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

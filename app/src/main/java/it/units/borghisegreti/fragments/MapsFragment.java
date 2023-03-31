@@ -100,6 +100,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
 
     private void drawAllExperienceMarkers() {
         clearFromTheMap(zonesOnTheMap.keySet());
+        zonesOnTheMap.clear();
         for (Experience experience : experiences) {
             drawExperienceMarker(experience);
             if (experience.getIsTheObjective()) {
