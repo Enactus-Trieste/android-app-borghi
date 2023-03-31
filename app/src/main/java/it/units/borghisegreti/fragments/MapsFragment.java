@@ -3,6 +3,7 @@ package it.units.borghisegreti.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -102,11 +103,17 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         for (Experience experience : experiences) {
             drawExperienceMarker(experience);
             if (experience.getIsTheObjective()) {
-                findMarkerAssociatedToExperience(experience).setZIndex(1f);
+                Marker foundMarker = findMarkerAssociatedToExperience(experience);
+                if (foundMarker != null) {
+                    foundMarker.setZIndex(1f);
+                } else {
+                    Log.e(MAPS_TAG, "No marker found in findMarkerAssociatedToExperience");
+                }
             }
         }
     }
 
+    @Nullable
     private Marker findMarkerAssociatedToExperience(Experience experience) {
         for (Map.Entry<Marker, Experience> entry : experiencesOnTheMap.entrySet()) {
             if (experience.equals(entry.getValue())) {
@@ -125,9 +132,13 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
                     .snippet(experience.getDescription()));
             experiencesOnTheMap.put(marker, experience);
         }
-        IconBuilder markerBuilder = new IconBuilder(getContext(), experience);
-        marker.setIcon(markerBuilder.buildMarkerDescriptor());
-        marker.setAlpha(markerBuilder.getMarkerAlpha());
+        if (marker == null) {
+            Log.e(MAPS_TAG, "Error while drawing marker in drawExperienceMarker");
+        } else {
+            IconBuilder markerBuilder = new IconBuilder(getContext(), experience);
+            marker.setIcon(markerBuilder.buildMarkerDescriptor());
+            marker.setAlpha(markerBuilder.getMarkerAlpha());
+        }
     }
 
     private void drawAllZoneMarkers() {
