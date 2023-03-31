@@ -162,6 +162,22 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        return false;
+        Zone zone = zonesOnTheMap.get(marker);
+        Experience experience = experiencesOnTheMap.get(marker);
+        if (zone != null) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 12f));
+        } else if (experience != null) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    // TODO insert BottomSheetDialogFragment
+                }
+
+                @Override
+                public void onCancel() {
+                }
+            });
+        }
+        return true;
     }
 }
