@@ -27,6 +27,7 @@ import java.util.Set;
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
+import it.units.borghisegreti.utils.IconBuilder;
 import it.units.borghisegreti.viewmodels.MapsViewModel;
 
 public class MapsFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -87,10 +88,12 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     }
 
     private void drawMarkers() {
-        if (map.getCameraPosition().zoom < 12) {
-            drawAllZoneMarkers();
-        } else {
-            drawAllExperienceMarkers();
+        if (experiences != null && zones != null) {
+            if (map.getCameraPosition().zoom < 12) {
+                drawAllZoneMarkers();
+            } else {
+                drawAllExperienceMarkers();
+            }
         }
     }
 
@@ -98,16 +101,38 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         clearFromTheMap(zonesOnTheMap.keySet());
         for (Experience experience : experiences) {
             drawExperienceMarker(experience);
-
+            if (experience.getIsTheObjective()) {
+                findMarkerAssociatedToExperience(experience).setZIndex(1f);
+            }
         }
     }
 
-    private void drawExperienceMarker(Experience experience) {
+    private Marker findMarkerAssociatedToExperience(Experience experience) {
+        for (Map.Entry<Marker, Experience> entry : experiencesOnTheMap.entrySet()) {
+            if (experience.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 
+    private void drawExperienceMarker(Experience experience) {
+        Marker marker = findMarkerAssociatedToExperience(experience);
+        if (marker == null) {
+            marker = map.addMarker(new MarkerOptions()
+                    .position(experience.getCoordinates())
+                    .title(experience.getName())
+                    .snippet(experience.getDescription()));
+            experiencesOnTheMap.put(marker, experience);
+        }
+        IconBuilder markerBuilder = new IconBuilder(getContext(), experience);
+        marker.setIcon(markerBuilder.buildMarkerDescriptor());
+        marker.setAlpha(markerBuilder.getMarkerAlpha());
     }
 
     private void drawAllZoneMarkers() {
         clearFromTheMap(experiencesOnTheMap.keySet());
+        experiencesOnTheMap.clear();
         for (Zone zone : zones) {
             Marker zoneMarker = map.addMarker(new MarkerOptions()
                     .position(zone.getCoordinates())
