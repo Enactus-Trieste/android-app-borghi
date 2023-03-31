@@ -40,7 +40,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private GoogleMap map;
     private final Map<Marker, Experience> experiencesOnTheMap = new HashMap<>();
     private final Map<Marker, Zone> zonesOnTheMap = new HashMap<>();
-    private FragmentMapsBinding binding;
+    private FragmentMapsBinding viewBinding;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -57,8 +57,8 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentMapsBinding.inflate(inflater, container, false);
-        View fragmentView = binding.getRoot();
+        viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
+        View fragmentView = viewBinding.getRoot();
         // TODO move map handling from MapActivity here
         getMapAsync(this);
         return fragmentView;
@@ -72,7 +72,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        viewBinding = null;
     }
 
     @Override
