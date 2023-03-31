@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import it.units.borghisegreti.R;
+import it.units.borghisegreti.databinding.FragmentMapsBinding;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
@@ -40,6 +40,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private GoogleMap map;
     private final Map<Marker, Experience> experiencesOnTheMap = new HashMap<>();
     private final Map<Marker, Zone> zonesOnTheMap = new HashMap<>();
+    private FragmentMapsBinding binding;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -56,7 +57,8 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View fragmentView = inflater.inflate(R.layout.fragment_maps, container, false);
+        binding = FragmentMapsBinding.inflate(inflater, container, false);
+        View fragmentView = binding.getRoot();
         // TODO move map handling from MapActivity here
         getMapAsync(this);
         return fragmentView;
@@ -65,6 +67,12 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override
