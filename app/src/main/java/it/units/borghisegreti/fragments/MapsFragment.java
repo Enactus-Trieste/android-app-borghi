@@ -29,12 +29,12 @@ import it.units.borghisegreti.databinding.FragmentMapsBinding;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
-import it.units.borghisegreti.viewmodels.MapsViewModel;
+import it.units.borghisegreti.viewmodels.MapViewModel;
 
 public class MapsFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     public static final String MAPS_TAG = "MAPS_FRAGMENT";
-    private MapsViewModel viewModel;
+    private MapViewModel mapViewModel;
     private List<Experience> experiences;
     private List<Zone> zones;
     private GoogleMap map;
@@ -49,7 +49,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(MapsViewModel.class);
+        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
     }
 
     @NonNull
@@ -83,12 +83,12 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         map.setMinZoomPreference(7f);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         map.setOnCameraMoveListener(this::drawMarkers);
-        viewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
+        mapViewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
             Log.d(MAPS_TAG, "New experiences received from Firebase");
             this.experiences = experiences;
             drawMarkers();
         });
-        viewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
+        mapViewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
             Log.d(MAPS_TAG, "New zones received from Firebase");
             this.zones = zones;
             drawMarkers();

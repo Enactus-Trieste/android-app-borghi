@@ -22,7 +22,7 @@ import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.ExperienceType;
 
 
-public class MapsViewModel extends ViewModel {
+public class MapViewModel extends ViewModel {
     public static final String DB_URL = "https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app";
     public static final String DB_TAG = "FIREBASE_DB_CONNECTOR";
     public static final String ZONES_REFERENCE = "zones";
@@ -33,7 +33,7 @@ public class MapsViewModel extends ViewModel {
     private final MutableLiveData<List<Zone>> databaseZones;
     private final MutableLiveData<List<Experience>> databaseExperiences;
 
-    public MapsViewModel() {
+    public MapViewModel() {
         database = FirebaseDatabase.getInstance(DB_URL);
         databaseZones = new MutableLiveData<>();
         databaseExperiences = new MutableLiveData<>();
@@ -60,7 +60,7 @@ public class MapsViewModel extends ViewModel {
 
                     experiences.add(new Experience(id, name, description, type, coordinates, points));
                 }
-                MapsViewModel.this.databaseExperiences.setValue(experiences);
+                MapViewModel.this.databaseExperiences.setValue(experiences);
             }
 
             @Override
@@ -81,7 +81,7 @@ public class MapsViewModel extends ViewModel {
                     LatLng zoneCoordinates = new LatLng(latitude, longitude);
                     zones.add(new Zone(zoneName, zoneCoordinates));
                 }
-                MapsViewModel.this.databaseZones.setValue(zones);
+                MapViewModel.this.databaseZones.setValue(zones);
             }
 
             @Override
