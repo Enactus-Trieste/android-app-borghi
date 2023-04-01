@@ -10,14 +10,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import it.units.borghisegreti.models.Experience;
 
 public class UserDataViewModel extends ViewModel {
     public static final String USER_DATA_REFERENCE = "user_data";
@@ -89,6 +93,57 @@ public class UserDataViewModel extends ViewModel {
 
     public LiveData<Integer> getUserPoints() {
         return databaseUserPoints;
+    }
+
+    public Task<Void> setObjectiveExperience(@NonNull Experience experience) {
+        return database.getReference()
+                .child(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(OBJECTIVE_REFERENCE)
+                .setValue(experience.getId());
+    }
+
+    @NonNull
+    public Task<Void> setExperienceAsCompleted(@NonNull Experience experience) {
+        experience.setFormattedDateOfCompletion(buildStringOfCurrentDate());
+        setUserPoints(experience.getPoints() + databaseUserPoints.getValue()).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(DB_TAG, "Sucessfully updated user points");
+            } else {
+                Log.e(DB_TAG, "Error while updating user points");
+            }
+        });
+        Map<String, String> mapToUpload = new HashMap<>();
+        mapToUpload.put(experience.getId(), experience.getFormattedDateOfCompletion());
+        return database.getReference()
+                .child(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(COMPLETED_EXPERIENCES_REFERENCE)
+                .setValue(mapToUpload);
+    }
+
+    @NonNull
+    private Task<Void> setUserPoints(int points) {
+        return database.getReference()
+                .child(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(POINTS_REFERENCE)
+                .setValue(points);
+    }
+
+    @NonNull
+    private Task<DataSnapshot> getUserUpdatedPoints() {
+        return database.getReference()
+                .child(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(POINTS_REFERENCE)
+                .get();
+    }
+
+    @NonNull
+    private static String buildStringOfCurrentDate() {
+        DateFormat format = DateFormat.getDateInstance();
+        return format.format(new Date());
     }
 
     @Override
