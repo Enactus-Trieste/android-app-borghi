@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 
 public class UserDataViewModel extends ViewModel {
@@ -27,7 +27,11 @@ public class UserDataViewModel extends ViewModel {
     @NonNull
     private final MutableLiveData<Map<String, String>> databaseCompletedExperiencesFormattedDatesById;
     @NonNull
-    private final ValueEventListener completedExperiencesListener;
+    private final MutableLiveData<String> databaseObjectiveExperienceId;
+    @NonNull
+    private final MutableLiveData<Integer> databaseUserPoints;
+    @NonNull
+    private final ValueEventListener userDataListener;
     @NonNull
     private final FirebaseDatabase database;
     @NonNull
@@ -36,17 +40,28 @@ public class UserDataViewModel extends ViewModel {
     public UserDataViewModel(@NonNull String userId) {
         database = FirebaseDatabase.getInstance(DB_URL);
         databaseCompletedExperiencesFormattedDatesById = new MutableLiveData<>();
+        databaseObjectiveExperienceId = new MutableLiveData<>();
+        databaseUserPoints = new MutableLiveData<>();
         this.userId = userId;
-        completedExperiencesListener = new ValueEventListener() {
+        userDataListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // completed experiences
                 Map<String, String> completedExperiencesFormattedDatesById = new HashMap<>();
-                for (DataSnapshot experienceSnapshot : snapshot.getChildren()) {
+                for (DataSnapshot experienceSnapshot : snapshot.child(COMPLETED_EXPERIENCES_REFERENCE).getChildren()) {
                     String experienceId = experienceSnapshot.getKey();
                     String formattedCompletionDate = experienceSnapshot.getValue(String.class);
                     completedExperiencesFormattedDatesById.put(experienceId, formattedCompletionDate);
                 }
                 databaseCompletedExperiencesFormattedDatesById.setValue(completedExperiencesFormattedDatesById);
+
+                // objective experience
+                String objectiveExperienceId = snapshot.child(OBJECTIVE_REFERENCE).getValue(String.class);
+                databaseObjectiveExperienceId.setValue(objectiveExperienceId);
+
+                // user points
+                Integer points = snapshot.child(POINTS_REFERENCE).getValue(Integer.class);
+                databaseUserPoints.setValue(points);
             }
 
             @Override
@@ -57,8 +72,7 @@ public class UserDataViewModel extends ViewModel {
         database.getReference()
                 .child(USER_DATA_REFERENCE)
                 .child(this.userId)
-                .child(COMPLETED_EXPERIENCES_REFERENCE)
-                .addValueEventListener(completedExperiencesListener);
+                .addValueEventListener(userDataListener);
     }
 
     /**
@@ -69,13 +83,20 @@ public class UserDataViewModel extends ViewModel {
         return databaseCompletedExperiencesFormattedDatesById;
     }
 
+    public LiveData<String> getObjectiveExperienceId() {
+        return databaseObjectiveExperienceId;
+    }
+
+    public LiveData<Integer> getUserPoints() {
+        return databaseUserPoints;
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();
         database.getReference()
                 .child(USER_DATA_REFERENCE)
                 .child(userId)
-                .child(COMPLETED_EXPERIENCES_REFERENCE)
-                .removeEventListener(completedExperiencesListener);
+                .removeEventListener(userDataListener);
     }
 }
