@@ -49,7 +49,7 @@ public class IconBuilder {
                 descriptor = BitmapDescriptorFactory.defaultMarker();
         }
 
-        if (experience.getIsTheObjective()) {
+        if (experience.isTheObjective()) {
             descriptor = BitmapDescriptorFactory.fromAsset("icons/star.png");
         }
 

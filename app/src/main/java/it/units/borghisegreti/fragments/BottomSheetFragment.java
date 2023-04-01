@@ -78,14 +78,14 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
             completedText.setText(completedString);
             completedText.setVisibility(View.VISIBLE);
         }
-        if (experience.getIsTheObjective()) {
+        if (experience.isTheObjective()) {
             setObjButton.setText(R.string.removeObjective_buttonText);
         }
 
         setObjButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (experience.getIsTheObjective()) {
+                if (experience.isTheObjective()) {
                     database.setObjectiveExperienceOfUser(null);
                     setObjButton.setText(R.string.setObjective_buttonText);
                 } else {

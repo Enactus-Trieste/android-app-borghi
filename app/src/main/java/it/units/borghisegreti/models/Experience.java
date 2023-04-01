@@ -52,7 +52,7 @@ public class Experience {
         return points;
     }
 
-    public boolean getIsTheObjective() {
+    public boolean isTheObjective() {
         return isTheObjective;
     }
 

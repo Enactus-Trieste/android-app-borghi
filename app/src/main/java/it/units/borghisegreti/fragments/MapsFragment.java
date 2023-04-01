@@ -111,7 +111,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         zonesOnTheMap.clear();
         for (Experience experience : experiences) {
             drawExperienceMarker(experience);
-            if (experience.getIsTheObjective()) {
+            if (experience.isTheObjective()) {
                 Marker foundMarker = findMarkerAssociatedToExperience(experience);
                 if (foundMarker != null) {
                     foundMarker.setZIndex(1f);

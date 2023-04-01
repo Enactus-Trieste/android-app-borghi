@@ -5,7 +5,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -95,7 +94,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         boolean thereIsAnObjectiveExperience = false;
                         for (Experience experience : changedExperiences) {
                             drawExperienceMarker(experience);
-                            if (experience.getIsTheObjective()) {
+                            if (experience.isTheObjective()) {
                                 objectiveExperience = experience;
                                 thereIsAnObjectiveExperience = true;
                             }
@@ -215,7 +214,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (experiences != null) {
             for (Experience experience : experiences) {
                 drawExperienceMarker(experience);
-                if (experience.getIsTheObjective()) {
+                if (experience.isTheObjective()) {
                     objectiveExperience = experience;
                     Objects.requireNonNull(findMarkerAssociatedToExperience(objectiveExperience)).setZIndex(1f);
                 }
