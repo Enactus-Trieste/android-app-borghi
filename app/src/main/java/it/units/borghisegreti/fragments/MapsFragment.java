@@ -30,11 +30,13 @@ import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
 import it.units.borghisegreti.viewmodels.MapViewModel;
+import it.units.borghisegreti.viewmodels.UserDataViewModel;
 
 public class MapsFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     public static final String MAPS_TAG = "MAPS_FRAGMENT";
     private MapViewModel mapViewModel;
+    private UserDataViewModel userDataViewModel;
     private List<Experience> experiences;
     private List<Zone> zones;
     private GoogleMap map;
@@ -50,6 +52,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
     }
 
     @NonNull
@@ -59,8 +62,8 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
-        // TODO move map handling from MapActivity here
         getMapAsync(this);
+        // TODO move map handling from MapActivity here
         return fragmentView;
     }
 
@@ -86,12 +89,20 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         mapViewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
             Log.d(MAPS_TAG, "New experiences received from Firebase");
             this.experiences = experiences;
-            drawMarkers();
+            if (map.getCameraPosition().zoom >= 12) {
+                drawAllExperienceMarkers();
+            } else {
+                Log.d(MAPS_TAG, "Zoom is less than 12, not drawing experience markers");
+            }
         });
         mapViewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
             Log.d(MAPS_TAG, "New zones received from Firebase");
             this.zones = zones;
-            drawMarkers();
+            if (map.getCameraPosition().zoom < 12) {
+                drawAllZoneMarkers();
+            } else {
+                Log.d(MAPS_TAG, "Zoom is more than 12, not drawing zone markers");
+            }
         });
 
     }
