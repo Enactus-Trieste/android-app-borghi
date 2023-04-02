@@ -43,6 +43,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private final Map<Marker, Experience> experiencesOnTheMap = new HashMap<>();
     private final Map<Marker, Zone> zonesOnTheMap = new HashMap<>();
     private FragmentMapsBinding viewBinding;
+    private String objectiveExperienceId;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -63,6 +64,9 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
         getMapAsync(this);
+        userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
+            objectiveExperienceId = experienceId;
+        });
         // TODO move map handling from MapActivity here
         return fragmentView;
     }

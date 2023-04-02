@@ -117,14 +117,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onResume();
 
         locator = new Locator(this, isTestModeEnabled);
-        locator.addOnUserLocationUpdateEventListener(new OnUserLocationUpdateListener() {
+        locator.setOnUserLocationUpdateEventListener(new OnUserLocationUpdateListener() {
             @Override
             public void onUserLocationUpdate(Location userLocation) {
                 drawUserLocationMarker(userLocation);
             }
         });
         Activity thisActivity = this;
-        locator.addOnObjectiveInRangeEventListener(new OnObjectiveInRangeEventListener() {
+        locator.setOnObjectiveInRangeEventListener(new OnObjectiveInRangeEventListener() {
             final Button completeExperienceButton = findViewById(R.id.complete_exp_button);
             @Override
             public void onObjectiveInRange() {

@@ -51,11 +51,11 @@ public class Locator {
         }
     }
 
-    public void addOnUserLocationUpdateEventListener(OnUserLocationUpdateListener listener) {
+    public void setOnUserLocationUpdateEventListener(OnUserLocationUpdateListener listener) {
         this.locationUpdateListener = listener;
     }
 
-    public void addOnObjectiveInRangeEventListener(OnObjectiveInRangeEventListener listener) {
+    public void setOnObjectiveInRangeEventListener(OnObjectiveInRangeEventListener listener) {
         this.objectiveInRangeListener = listener;
     }
 
