@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
@@ -37,12 +38,15 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     public static final String MAPS_TAG = "MAPS_FRAGMENT";
     private MapViewModel mapViewModel;
     private UserDataViewModel userDataViewModel;
+    @Nullable
     private List<Experience> experiences;
+    @Nullable
     private List<Zone> zones;
     private GoogleMap map;
     private final Map<Marker, Experience> experiencesOnTheMapByMarker = new HashMap<>();
     private final Map<Marker, Zone> zonesOnTheMapByMarker = new HashMap<>();
     private FragmentMapsBinding viewBinding;
+    @Nullable
     private String objectiveExperienceId;
 
     public MapsFragment() {
@@ -87,6 +91,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         map.setMinZoomPreference(7f);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         map.setOnCameraMoveListener(this::drawMarkers);
+
 
         userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
             objectiveExperienceId = experienceId;
@@ -135,7 +140,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private void drawAllExperienceMarkers() {
         clearFromTheMap(zonesOnTheMapByMarker.keySet());
         zonesOnTheMapByMarker.clear();
-        for (Experience experience : experiences) {
+        for (Experience experience : Objects.requireNonNull(experiences, "No experiences found, value is null")) {
             drawExperienceMarker(experience);
             if (experience.getId().equals(objectiveExperienceId)) {
                 Marker foundMarker = findMarkerAssociatedToExperience(experience);
@@ -149,7 +154,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     }
 
     @Nullable
-    private Marker findMarkerAssociatedToExperience(Experience experience) {
+    private Marker findMarkerAssociatedToExperience(@NonNull Experience experience) {
         for (Map.Entry<Marker, Experience> entry : experiencesOnTheMapByMarker.entrySet()) {
             if (experience.equals(entry.getValue())) {
                 return entry.getKey();
@@ -158,7 +163,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         return null;
     }
 
-    private void drawExperienceMarker(Experience experience) {
+    private void drawExperienceMarker(@NonNull Experience experience) {
         Marker marker = findMarkerAssociatedToExperience(experience);
         if (marker == null) {
             marker = map.addMarker(new MarkerOptions()
@@ -179,7 +184,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private void drawAllZoneMarkers() {
         clearFromTheMap(experiencesOnTheMapByMarker.keySet());
         experiencesOnTheMapByMarker.clear();
-        for (Zone zone : zones) {
+        for (Zone zone : Objects.requireNonNull(zones, "No zones found, value is null")) {
             Marker zoneMarker = map.addMarker(new MarkerOptions()
                     .position(zone.getCoordinates())
                     .title(zone.getName())
