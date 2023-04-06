@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.jetbrains.annotations.Contract;
 
 public class Zone {
+    @NonNull
     private String name;
     private double latitude;
     private double longitude;
@@ -21,6 +22,7 @@ public class Zone {
     // required for Firebase's getValue(Zone.class)
     private Zone() {}
 
+    @NonNull
     public String getName() {
         return name;
     }
