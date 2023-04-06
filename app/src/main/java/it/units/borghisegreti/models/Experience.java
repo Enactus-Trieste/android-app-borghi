@@ -68,8 +68,14 @@ public class Experience {
         return type;
     }
 
+    @NonNull
     public LatLng getCoordinates() {
         return new LatLng(latitude, longitude);
+    }
+
+    @NonNull
+    public ExperienceType getEnumType() {
+        return ExperienceType.valueOf(type);
     }
 
     public double getLatitude() {
