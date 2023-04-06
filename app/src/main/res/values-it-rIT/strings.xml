@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BorghiSegreti</string>
+    <string name="app_name">Borghi Segreti</string>
     <string name="action_settings">Impostazioni</string>
     <string name="sign_in_button_text">Accedi</string>
     <string name="log_in_button_text">Accedi</string>
