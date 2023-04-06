@@ -23,7 +23,7 @@ public class IconBuilder {
     public BitmapDescriptor buildMarkerDescriptor() {
         BitmapDescriptor descriptor;
 
-        switch (experience.getType()) {
+        switch (ExperienceType.valueOf(experience.getType())) {
             case MOUNTAIN:
                 descriptor = BitmapDescriptorFactory.fromAsset("markers/MountainIcon.png");
                 break;
@@ -57,7 +57,7 @@ public class IconBuilder {
     }
 
     public float getMarkerAlpha() {
-        if (experience.getIsCompletedByUser()) {
+        if (experience.isCompletedByUser()) {
             return 0.5f;
         }
         return 1f;
@@ -65,7 +65,7 @@ public class IconBuilder {
 
     public InputStream getExperienceIcon() throws IOException {
         InputStream iconImage;
-        switch (experience.getType()) {
+        switch (ExperienceType.valueOf(experience.getType())) {
             case MOUNTAIN:
                 iconImage = context.getAssets().open("icons/MountainIcon.png");
                 break;

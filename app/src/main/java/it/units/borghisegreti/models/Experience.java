@@ -1,31 +1,52 @@
 package it.units.borghisegreti.models;
 
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import it.units.borghisegreti.utils.ExperienceType;
 
 public class Experience {
+    // stored in the database
+    @NonNull
     private String id;
+    @NonNull
     private String name;
+    @NonNull
     private String description;
-    private ExperienceType type;
-    private LatLng coordinates;
+    @NonNull
+    private String type;
+    private double latitude;
+    private double longitude;
     private int points;
+
+    // not stored in the database
     private boolean isTheObjective;
     private boolean isCompletedByUser;
     private String formattedDateOfCompletion;
 
-    public Experience(String id, String name, String description, ExperienceType type, LatLng coordinates, int points) {
+    public Experience(
+            @NonNull String id,
+            @NonNull String name,
+            @NonNull String description,
+            @NonNull ExperienceType type,
+            @NonNull LatLng coordinates, int points) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.type = type;
-        this.coordinates = coordinates;
+        this.type = type.toString();
+        this.latitude = coordinates.latitude;
+        this.longitude = coordinates.longitude;
         this.points = points;
         this.isTheObjective = false;
         this.isCompletedByUser = false;
         this.formattedDateOfCompletion = "";
+    }
+
+    // required to use Firebase's getValue(Experience.class)
+    public Experience() {
+
     }
 
     public String getId() {
@@ -40,23 +61,30 @@ public class Experience {
         return description;
     }
 
-    public ExperienceType getType() {
+    public String getType() {
         return type;
     }
 
     public LatLng getCoordinates() {
-        return coordinates;
+        return new LatLng(latitude, longitude);
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
     }
 
     public int getPoints() {
         return points;
     }
-
     public boolean isTheObjective() {
         return isTheObjective;
     }
 
-    public boolean getIsCompletedByUser() {
+    public boolean isCompletedByUser() {
         return isCompletedByUser;
     }
 

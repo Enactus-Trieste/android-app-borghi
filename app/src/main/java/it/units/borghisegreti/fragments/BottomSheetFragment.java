@@ -71,7 +71,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         description.setText(experience.getDescription());
         points.setText(String.format(Locale.getDefault(), getString(R.string.gained_points), experience.getPoints()));
 
-        if (experience.getIsCompletedByUser()) {
+        if (experience.isCompletedByUser()) {
             setObjButton.setVisibility(View.GONE);
             TextView completedText = view.findViewById(R.id.completed_text_view);
             String completedString = getString(R.string.completed) + " " + experience.getFormattedDateOfCompletion();
