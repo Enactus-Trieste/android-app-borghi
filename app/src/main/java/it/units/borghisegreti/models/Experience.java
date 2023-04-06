@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Objects;
+
 import it.units.borghisegreti.utils.ExperienceType;
 
 public class Experience {
@@ -114,5 +116,16 @@ public class Experience {
         this.formattedDateOfCompletion = date;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Experience that = (Experience) o;
+        return id.equals(that.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

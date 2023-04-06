@@ -40,8 +40,8 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private List<Experience> experiences;
     private List<Zone> zones;
     private GoogleMap map;
-    private final Map<Marker, Experience> experiencesOnTheMap = new HashMap<>();
-    private final Map<Marker, Zone> zonesOnTheMap = new HashMap<>();
+    private final Map<Marker, Experience> experiencesOnTheMapByMarker = new HashMap<>();
+    private final Map<Marker, Zone> zonesOnTheMapByMarker = new HashMap<>();
     private FragmentMapsBinding viewBinding;
     private String objectiveExperienceId;
 
@@ -64,9 +64,6 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
         getMapAsync(this);
-        userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
-            objectiveExperienceId = experienceId;
-        });
         // TODO move map handling from MapActivity here
         return fragmentView;
     }
@@ -90,6 +87,20 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         map.setMinZoomPreference(7f);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         map.setOnCameraMoveListener(this::drawMarkers);
+
+        userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
+            objectiveExperienceId = experienceId;
+            for (Experience experienceOnTheMap : experiencesOnTheMapByMarker.values()) {
+                if (experienceOnTheMap.getId().equals(objectiveExperienceId)) {
+                    Marker marker = findMarkerAssociatedToExperience(experienceOnTheMap);
+                    if (marker != null) {
+                        marker.setZIndex(1f);
+                    } else {
+                        Log.w(MAPS_TAG, "No marker found on the map for the given experience");
+                    }
+                }
+            }
+        });
         mapViewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
             Log.d(MAPS_TAG, "New experiences received from Firebase");
             this.experiences = experiences;
@@ -122,11 +133,11 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     }
 
     private void drawAllExperienceMarkers() {
-        clearFromTheMap(zonesOnTheMap.keySet());
-        zonesOnTheMap.clear();
+        clearFromTheMap(zonesOnTheMapByMarker.keySet());
+        zonesOnTheMapByMarker.clear();
         for (Experience experience : experiences) {
             drawExperienceMarker(experience);
-            if (experience.isTheObjective()) {
+            if (experience.getId().equals(objectiveExperienceId)) {
                 Marker foundMarker = findMarkerAssociatedToExperience(experience);
                 if (foundMarker != null) {
                     foundMarker.setZIndex(1f);
@@ -139,7 +150,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
 
     @Nullable
     private Marker findMarkerAssociatedToExperience(Experience experience) {
-        for (Map.Entry<Marker, Experience> entry : experiencesOnTheMap.entrySet()) {
+        for (Map.Entry<Marker, Experience> entry : experiencesOnTheMapByMarker.entrySet()) {
             if (experience.equals(entry.getValue())) {
                 return entry.getKey();
             }
@@ -154,7 +165,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
                     .position(experience.getCoordinates())
                     .title(experience.getName())
                     .snippet(experience.getDescription()));
-            experiencesOnTheMap.put(marker, experience);
+            experiencesOnTheMapByMarker.put(marker, experience);
         }
         if (marker == null) {
             Log.e(MAPS_TAG, "Error while drawing marker in drawExperienceMarker");
@@ -166,15 +177,15 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     }
 
     private void drawAllZoneMarkers() {
-        clearFromTheMap(experiencesOnTheMap.keySet());
-        experiencesOnTheMap.clear();
+        clearFromTheMap(experiencesOnTheMapByMarker.keySet());
+        experiencesOnTheMapByMarker.clear();
         for (Zone zone : zones) {
             Marker zoneMarker = map.addMarker(new MarkerOptions()
                     .position(zone.getCoordinates())
                     .title(zone.getName())
                     .anchor(0.5f, 0.5f)
                     .icon(BitmapDescriptorFactory.fromAsset("icons/BorgoIcon.png")));
-            zonesOnTheMap.put(zoneMarker, zone);
+            zonesOnTheMapByMarker.put(zoneMarker, zone);
         }
     }
 
@@ -186,8 +197,8 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        Zone zone = zonesOnTheMap.get(marker);
-        Experience experience = experiencesOnTheMap.get(marker);
+        Zone zone = zonesOnTheMapByMarker.get(marker);
+        Experience experience = experiencesOnTheMapByMarker.get(marker);
         if (zone != null) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 12f));
         } else if (experience != null) {

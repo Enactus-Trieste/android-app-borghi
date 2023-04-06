@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.Objects;
+
 public class Zone {
     @NonNull
     private String name;
@@ -37,5 +39,18 @@ public class Zone {
 
     public LatLng getCoordinates() {
         return new LatLng(latitude, longitude);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Zone zone = (Zone) o;
+        return Double.compare(zone.latitude, latitude) == 0 && Double.compare(zone.longitude, longitude) == 0 && name.equals(zone.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, latitude, longitude);
     }
 }
