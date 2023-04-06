@@ -19,7 +19,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import it.units.borghisegreti.models.Experience;
 
@@ -51,10 +53,11 @@ public class UserDataViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // completed experiences
+                Log.d(DB_TAG, "Received new remote user data from database");
                 Map<String, String> completedExperiencesFormattedDatesById = new HashMap<>();
-                for (DataSnapshot experienceSnapshot : snapshot.child(COMPLETED_EXPERIENCES_REFERENCE).getChildren()) {
-                    String experienceId = experienceSnapshot.getKey();
-                    String formattedCompletionDate = experienceSnapshot.getValue(String.class);
+                for (DataSnapshot completedExperienceSnapshot : snapshot.child(COMPLETED_EXPERIENCES_REFERENCE).getChildren()) {
+                    String experienceId = completedExperienceSnapshot.getKey();
+                    String formattedCompletionDate = completedExperienceSnapshot.getValue(String.class);
                     completedExperiencesFormattedDatesById.put(experienceId, formattedCompletionDate);
                 }
                 databaseCompletedExperiencesFormattedDatesById.setValue(completedExperiencesFormattedDatesById);
@@ -95,20 +98,20 @@ public class UserDataViewModel extends ViewModel {
         return databaseUserPoints;
     }
 
-    public Task<Void> setObjectiveExperience(@NonNull Experience experience) {
+    public Task<Void> setObjectiveExperience(@NonNull String experienceId) {
         return database.getReference()
                 .child(USER_DATA_REFERENCE)
                 .child(userId)
                 .child(OBJECTIVE_REFERENCE)
-                .setValue(experience.getId());
+                .setValue(experienceId);
     }
 
     @NonNull
     public Task<Void> setExperienceAsCompleted(@NonNull Experience experience) {
         experience.setFormattedDateOfCompletion(buildStringOfCurrentDate());
-        setUserPoints(experience.getPoints() + databaseUserPoints.getValue()).addOnCompleteListener(task -> {
+        setUserPoints(experience.getPoints() + Objects.requireNonNull(databaseUserPoints.getValue(), "User points should already be initialized")).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d(DB_TAG, "Sucessfully updated user points");
+                Log.d(DB_TAG, "Successfully updated user points");
             } else {
                 Log.e(DB_TAG, "Error while updating user points");
             }
@@ -142,8 +145,8 @@ public class UserDataViewModel extends ViewModel {
 
     @NonNull
     private static String buildStringOfCurrentDate() {
-        DateFormat format = DateFormat.getDateInstance();
-        return format.format(new Date());
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.ITALY);
+        return dateFormat.format(new Date());
     }
 
     @Override
