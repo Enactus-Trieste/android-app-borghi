@@ -9,13 +9,16 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
@@ -42,23 +45,9 @@ public class MapViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Experience> experiences = new ArrayList<>();
                 for (DataSnapshot experienceSnapshot : snapshot.getChildren()) {
-                    Log.d(DB_TAG, "onDataChange: EXPERIENCES");
-                    // a better approach would be Experience experience = experienceSnapshot.getValue(Experience.class)
-                    String id = experienceSnapshot.getKey();
-                    String name = experienceSnapshot.child("name").getValue(String.class);
-                    String description = experienceSnapshot.child("description").getValue(String.class);
-                    ExperienceType type = experienceSnapshot.child("type").getValue(ExperienceType.class);
-                    Double latitude = experienceSnapshot.child("coordinates").child("latitude").getValue(Double.class);
-                    Double longitude = experienceSnapshot.child("coordinates").child("longitude").getValue(Double.class);
-                    Integer points = experienceSnapshot.child("points").getValue(Integer.class);
-
-                    LatLng coordinates = new LatLng(latitude, longitude);
-
-                    if (points == null) {
-                        points = 0;
-                    }
-
-                    experiences.add(new Experience(id, name, description, type, coordinates, points));
+                    Log.d(DB_TAG, "Received new remote experiences from database");
+                    Experience databaseExperience = experienceSnapshot.getValue(Experience.class);
+                    experiences.add(databaseExperience);
                 }
                 MapViewModel.this.databaseExperiences.setValue(experiences);
             }
@@ -73,13 +62,9 @@ public class MapViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Zone> zones = new ArrayList<>();
                 for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
-                    Log.d(DB_TAG, "onDataChange: ZONES");
-                    // a better approach would be Zone zone = zoneSnapshot.getValue(Zone.class)
-                    String zoneName = zoneSnapshot.child("name").getValue(String.class);
-                    Double latitude = zoneSnapshot.child("coordinates").child("latitude").getValue(Double.class);
-                    Double longitude = zoneSnapshot.child("coordinates").child("longitude").getValue(Double.class);
-                    LatLng zoneCoordinates = new LatLng(latitude, longitude);
-                    zones.add(new Zone(zoneName, zoneCoordinates));
+                    Log.d(DB_TAG, "Received new remote zones from database");
+                    Zone databaseZone = zoneSnapshot.getValue(Zone.class);
+                    zones.add(databaseZone);
                 }
                 MapViewModel.this.databaseZones.setValue(zones);
             }
@@ -112,6 +97,21 @@ public class MapViewModel extends ViewModel {
             }
             return filteredExperiences;
         });
+    }
+
+    public Task<Void> uploadNewExperience(@NonNull String name,
+                                          @NonNull String description,
+                                          @NonNull ExperienceType type,
+                                          @NonNull LatLng coordinates,
+                                          int points) {
+        DatabaseReference experienceReference = database.getReference(EXPERIENCES_REFERENCE).push();
+        Experience experience = new Experience(Objects.requireNonNull(experienceReference.getKey(), "This reference should never point at database root"),
+                name,
+                description,
+                type,
+                coordinates,
+                points);
+        return experienceReference.setValue(experience);
     }
 
 

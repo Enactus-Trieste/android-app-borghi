@@ -45,9 +45,7 @@ public class Experience {
     }
 
     // required to use Firebase's getValue(Experience.class)
-    public Experience() {
-
-    }
+    private Experience() {}
 
     public String getId() {
         return id;

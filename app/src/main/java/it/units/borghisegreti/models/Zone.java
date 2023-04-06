@@ -19,9 +19,7 @@ public class Zone {
     }
 
     // required for Firebase's getValue(Zone.class)
-    public Zone() {
-
-    }
+    private Zone() {}
 
     public String getName() {
         return name;
