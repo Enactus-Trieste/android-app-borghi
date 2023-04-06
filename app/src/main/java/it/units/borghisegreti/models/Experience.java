@@ -2,6 +2,7 @@ package it.units.borghisegreti.models;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -24,6 +25,7 @@ public class Experience {
     // not stored in the database
     private boolean isTheObjective;
     private boolean isCompletedByUser;
+    @Nullable
     private String formattedDateOfCompletion;
 
     public Experience(
@@ -41,24 +43,27 @@ public class Experience {
         this.points = points;
         this.isTheObjective = false;
         this.isCompletedByUser = false;
-        this.formattedDateOfCompletion = "";
     }
 
     // required to use Firebase's getValue(Experience.class)
     private Experience() {}
 
+    @NonNull
     public String getId() {
         return id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
+    @NonNull
     public String getDescription() {
         return description;
     }
 
+    @NonNull
     public String getType() {
         return type;
     }
@@ -86,6 +91,7 @@ public class Experience {
         return isCompletedByUser;
     }
 
+    @Nullable
     public String getFormattedDateOfCompletion() {
         return formattedDateOfCompletion;
     }
@@ -98,7 +104,7 @@ public class Experience {
         this.isCompletedByUser = isCompletedByUser;
     }
 
-    public void setFormattedDateOfCompletion(String date) {
+    public void setFormattedDateOfCompletion(@NonNull String date) {
         this.formattedDateOfCompletion = date;
     }
 
