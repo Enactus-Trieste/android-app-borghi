@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import it.units.borghisegreti.R;
-import it.units.borghisegreti.fragments.BottomSheetFragment;
 import it.units.borghisegreti.interfaces.DataEventListener;
 import it.units.borghisegreti.interfaces.Database;
 import it.units.borghisegreti.models.Experience;

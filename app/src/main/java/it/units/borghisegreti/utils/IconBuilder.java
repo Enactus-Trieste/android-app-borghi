@@ -2,6 +2,8 @@ package it.units.borghisegreti.utils;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
@@ -12,10 +14,12 @@ import it.units.borghisegreti.models.Experience;
 
 public class IconBuilder {
 
-    private Context context;
+    @NonNull
+    private final Context context;
+    @NonNull
     private final Experience experience;
 
-    public IconBuilder(Context context, Experience experience) {
+    public IconBuilder(@NonNull Context context,@NonNull  Experience experience) {
         this.context = context;
         this.experience = experience;
     }

@@ -6,6 +6,7 @@ import static it.units.borghisegreti.viewmodels.MapViewModel.DB_URL;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -98,7 +99,7 @@ public class UserDataViewModel extends ViewModel {
         return databaseUserPoints;
     }
 
-    public Task<Void> setObjectiveExperience(@NonNull String experienceId) {
+    public Task<Void> setObjectiveExperience(@Nullable String experienceId) {
         return database.getReference()
                 .child(USER_DATA_REFERENCE)
                 .child(userId)

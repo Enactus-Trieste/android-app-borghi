@@ -1,6 +1,6 @@
 package it.units.borghisegreti.fragments;
 
-import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.TAG;
+import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -253,7 +253,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
                 @Override
                 public void onFinish() {
                     ExperienceBottomSheetFragment dialog = ExperienceBottomSheetFragment.newInstance(experience.getId());
-                    dialog.show(getParentFragmentManager(), TAG);
+                    dialog.show(getParentFragmentManager(), FRAGMENT_TAG);
                 }
 
                 @Override

@@ -99,6 +99,17 @@ public class MapViewModel extends ViewModel {
         });
     }
 
+    public LiveData<Experience> getExperienceById(@NonNull String experienceId) {
+        return Transformations.map(databaseExperiences, experiences -> {
+            for (Experience experience : experiences) {
+                if (experience.getId().equals(experienceId)) {
+                    return experience;
+                }
+            }
+            return null;
+        });
+    }
+
     public Task<Void> uploadNewExperience(@NonNull String name,
                                           @NonNull String description,
                                           @NonNull ExperienceType type,
