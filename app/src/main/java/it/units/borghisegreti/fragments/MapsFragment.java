@@ -1,5 +1,7 @@
 package it.units.borghisegreti.fragments;
 
+import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.TAG;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -250,7 +252,8 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    // TODO insert BottomSheetDialogFragment
+                    ExperienceBottomSheetFragment dialog = ExperienceBottomSheetFragment.newInstance(experience.getId());
+                    dialog.show(getParentFragmentManager(), TAG);
                 }
 
                 @Override

@@ -3,17 +3,19 @@ package it.units.borghisegreti.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import it.units.borghisegreti.R;
 
-public class ExperienceBottomSheetFragment extends Fragment {
+public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
 
-    private static String EXPERIENCE_ID;
+    private static final String EXPERIENCE_ID = "EXPERIENCE_ID";
+    public static final String TAG = "EXPERIENCE_BOTTOM_DIALOG";
     private String experienceId;
 
     public ExperienceBottomSheetFragment() {
