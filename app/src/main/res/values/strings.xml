@@ -39,6 +39,6 @@
     <string name="user_signed_out_toast">User signed out</string>
     <string name="borghi_segreti">Borghi Segreti</string>
     <string name="permissions_not_granted">Permissions not granted, unable to show map</string>
-    <string name="educational_permission_request_title">Need permission to access user location</string>
+    <string name="educational_permission_request_title">Need permissions to access user location</string>
     <string name="educational_permission_request_content">These permissions are necessary to use the map correctly</string>
 </resources>

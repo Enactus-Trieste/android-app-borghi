@@ -90,7 +90,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         View fragmentView = viewBinding.getRoot();
         if (arePermissionsAlreadyGranted()) {
             getMapAsync(this);
-        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        } else if (shouldShowRequestPermissionsRationale()) {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.educational_permission_request_title)
                     .setMessage(R.string.educational_permission_request_content)
@@ -101,6 +101,10 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         }
         // TODO move map handling from MapActivity here
         return fragmentView;
+    }
+
+    private boolean shouldShowRequestPermissionsRationale() {
+        return shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION);
     }
 
     private boolean arePermissionsAlreadyGranted() {
