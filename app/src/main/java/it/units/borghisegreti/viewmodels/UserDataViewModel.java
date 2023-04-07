@@ -108,7 +108,7 @@ public class UserDataViewModel extends ViewModel {
 
     @NonNull
     public Task<Void> setExperienceAsCompleted(@NonNull Experience experience) {
-        experience.setFormattedDateOfCompletion(buildStringOfCurrentDate());
+        experience.setDateOfCompletion(new Date());
         setUserPoints(experience.getPoints() + Objects.requireNonNull(databaseUserPoints.getValue(), "User points should already be initialized")).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(DB_TAG, "Successfully updated user points");
@@ -141,12 +141,6 @@ public class UserDataViewModel extends ViewModel {
                 .child(userId)
                 .child(POINTS_REFERENCE)
                 .get();
-    }
-
-    @NonNull
-    private static String buildStringOfCurrentDate() {
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.ITALY);
-        return dateFormat.format(new Date());
     }
 
     @Override

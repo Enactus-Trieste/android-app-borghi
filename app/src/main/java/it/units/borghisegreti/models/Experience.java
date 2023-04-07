@@ -6,6 +6,9 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import it.units.borghisegreti.utils.ExperienceType;
@@ -112,8 +115,9 @@ public class Experience {
         this.isCompletedByUser = isCompletedByUser;
     }
 
-    public void setFormattedDateOfCompletion(@NonNull String date) {
-        this.formattedDateOfCompletion = date;
+    public void setDateOfCompletion(@NonNull Date date) {
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.ITALY);
+        this.formattedDateOfCompletion = dateFormat.format(date);
     }
 
     @Override
