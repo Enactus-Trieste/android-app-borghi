@@ -3,7 +3,13 @@ package it.units.borghisegreti.fragments;
 import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -13,11 +19,17 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -59,6 +71,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     @Nullable
     private String objectiveExperienceId;
     private ActivityResultLauncher<String[]> requestMapPermissions;
+    private ActivityResultLauncher<Intent> requestLocationSourceSetting;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -69,10 +82,20 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
+
         requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
             if (areBothPermissionsGranted(arePermissionsGranted)) {
                 getMapAsync(this);
             } else {
+                // could also change view appearance
+                Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        requestLocationSourceSetting = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), activityResult -> {
+            if (activityResult.getResultCode() == Activity.RESULT_OK) {
+                buildAndSubmitLocationRequest();
+            } else {
+                // could also change view appearance
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -134,7 +157,6 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         map.setOnCameraMoveListener(this::drawMarkers);
 
-
         userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
             objectiveExperienceId = experienceId;
             for (Experience experienceOnTheMap : experiencesOnTheMapByMarker.values()) {
@@ -167,6 +189,35 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
             }
         });
 
+        if (isLocationEnabled()) {
+            buildAndSubmitLocationRequest();
+        } else {
+            requestLocationSourceSetting.launch(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void buildAndSubmitLocationRequest() {
+        FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        LocationRequest.Builder builder = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5);
+        builder.setMaxUpdateDelayMillis(0);
+        LocationRequest locationRequest = builder.build();
+        locationProviderClient.requestLocationUpdates(locationRequest, this::drawUserLocationMarker, Looper.myLooper());
+    }
+
+    private void drawUserLocationMarker(@NonNull Location location) {
+        LatLng userCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
+        map.addMarker(new MarkerOptions()
+                .position(userCoordinates)
+                .title("User location")
+                .anchor(0.5f, 0.5f)
+                .icon(BitmapDescriptorFactory.fromAsset("markers/UserIcon.png")));
+        map.animateCamera(CameraUpdateFactory.newLatLng(userCoordinates));
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     private void drawMarkers() {
