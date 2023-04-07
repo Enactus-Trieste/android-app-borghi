@@ -72,6 +72,8 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private String objectiveExperienceId;
     private ActivityResultLauncher<String[]> requestMapPermissions;
     private ActivityResultLauncher<Intent> requestLocationSourceSetting;
+    @Nullable
+    private Marker userMarker;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -202,17 +204,21 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         LocationRequest.Builder builder = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5);
         builder.setMaxUpdateDelayMillis(0);
         LocationRequest locationRequest = builder.build();
-        locationProviderClient.requestLocationUpdates(locationRequest, this::drawUserLocationMarker, Looper.myLooper());
+        locationProviderClient.requestLocationUpdates(locationRequest, this::drawUserLocationMarkerAndCheckObjectiveRange, Looper.myLooper());
     }
 
-    private void drawUserLocationMarker(@NonNull Location location) {
+    private void drawUserLocationMarkerAndCheckObjectiveRange(@NonNull Location location) {
         LatLng userCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
-        map.addMarker(new MarkerOptions()
+        if (userMarker != null) {
+            userMarker.remove();
+        }
+        userMarker = map.addMarker(new MarkerOptions()
                 .position(userCoordinates)
                 .title("User location")
                 .anchor(0.5f, 0.5f)
                 .icon(BitmapDescriptorFactory.fromAsset("markers/UserIcon.png")));
         map.animateCamera(CameraUpdateFactory.newLatLng(userCoordinates));
+        // TODO if the objective is in range, do something
     }
 
     private boolean isLocationEnabled() {
