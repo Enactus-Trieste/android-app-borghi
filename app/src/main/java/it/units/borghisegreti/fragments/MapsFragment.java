@@ -217,7 +217,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         if (marker == null) {
             Log.e(MAPS_TAG, "Error while drawing marker in drawExperienceMarker");
         } else {
-            IconBuilder markerBuilder = new IconBuilder(getContext(), experience);
+            IconBuilder markerBuilder = new IconBuilder(requireContext(), experience);
             marker.setIcon(markerBuilder.buildMarkerDescriptor());
             marker.setAlpha(markerBuilder.getMarkerAlpha());
         }
