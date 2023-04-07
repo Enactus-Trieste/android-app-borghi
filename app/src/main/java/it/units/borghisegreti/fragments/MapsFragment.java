@@ -1,9 +1,14 @@
 package it.units.borghisegreti.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -19,6 +24,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
@@ -48,6 +56,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     private FragmentMapsBinding viewBinding;
     @Nullable
     private String objectiveExperienceId;
+    private ActivityResultLauncher<String[]> requestMapPermissions;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -58,6 +67,18 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
+        requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
+            if (areBothPermissionsGranted(arePermissionsGranted)) {
+                getMapAsync(this);
+            } else {
+                Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private boolean areBothPermissionsGranted(@NonNull Map<String, Boolean> arePermissionsGranted) {
+        return Boolean.TRUE.equals(arePermissionsGranted.get(Manifest.permission.ACCESS_COARSE_LOCATION))
+                && Boolean.TRUE.equals(arePermissionsGranted.get(Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
     @NonNull
@@ -67,9 +88,24 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
-        getMapAsync(this);
+        if (arePermissionsAlreadyGranted()) {
+            getMapAsync(this);
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.educational_permission_request_title)
+                    .setMessage(R.string.educational_permission_request_content)
+                    .setPositiveButton(R.string.ok, ((dialogInterface, i) -> dialogInterface.dismiss()))
+                    .show();
+        } else {
+            requestMapPermissions.launch(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
+        }
         // TODO move map handling from MapActivity here
         return fragmentView;
+    }
+
+    private boolean arePermissionsAlreadyGranted() {
+        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

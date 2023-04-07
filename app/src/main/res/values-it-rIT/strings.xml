@@ -6,7 +6,7 @@
     <string name="log_in_button_text">Accedi</string>
     <string name="logout_confirmation">Sei sicuro di voler effettuare il log out?</string>
     <string name="dialog_title">Log Out</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Annulla</string>
     <string name="activate_location_title">Attiva Localizzazione</string>
     <string name="activate_location_message">Per favore arriva la localizzazione per accedere a questa funzione.</string>
@@ -37,4 +37,7 @@
     <string name="borghi_segreti">Borghi Segreti</string>
     <string name="map_view">Mappa</string>
     <string name="title_activity_main">Attività principale</string>
+    <string name="permissions_not_granted">Impossibile mostrare la mappa, permessi insufficient</string>
+    <string name="educational_permission_request_title">Permessi richiesti per accedere alla posizione</string>
+    <string name="educational_permission_request_content">Permessi necessari per l\'utilizzo corretto della mappa</string>
 </resources>
