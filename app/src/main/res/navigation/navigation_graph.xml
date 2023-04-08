@@ -33,5 +33,11 @@
         android:id="@+id/registrationFragment"
         android:name="it.units.borghisegreti.fragments.RegistrationFragment"
         android:label="fragment_registration"
-        tools:layout="@layout/fragment_registration" />
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_registrationFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
