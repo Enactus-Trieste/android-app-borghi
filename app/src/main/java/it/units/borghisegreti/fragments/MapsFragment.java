@@ -37,6 +37,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -81,6 +82,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private ActivityResultLauncher<Intent> requestLocationSourceSetting;
     @Nullable
     private Marker userMarker;
+    private SupportMapFragment mapFragment;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -99,7 +101,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
             if (areBothPermissionsGranted(arePermissionsGranted)) {
-                viewBinding.map.getMapAsync(this);
+                MapsInitializer.initialize(requireContext());
+                mapFragment.getMapAsync(this);
             } else {
                 // could also change view appearance
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
@@ -127,8 +130,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         // Inflate the layout for this fragment
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (arePermissionsAlreadyGranted()) {
-            viewBinding.map.getMapAsync(this);
+            if (mapFragment != null) {
+                Log.d(MAPS_TAG, "Start to retrieve Google map");
+                MapsInitializer.initialize(requireContext());
+                mapFragment.getMapAsync(this);
+            }
         } else if (shouldShowRequestPermissionsRationale()) {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.educational_permission_request_title)
@@ -148,11 +156,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private boolean arePermissionsAlreadyGranted() {
         return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -184,7 +187,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
         mapViewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
-            Log.d(MAPS_TAG, "New experiences received from Firebase");
+            Log.d(MAPS_TAG, "Obtained " + experiences.size() + " experiences from Firebase");
             this.experiences = experiences;
             if (map.getCameraPosition().zoom >= 12) {
                 drawAllExperienceMarkers();
@@ -217,7 +220,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             });
         });
         mapViewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
-            Log.d(MAPS_TAG, "New zones received from Firebase");
+            Log.d(MAPS_TAG, "Obtained " + zones.size() + " zones from Firebase");
             this.zones = zones;
             if (map.getCameraPosition().zoom < 12) {
                 drawAllZoneMarkers();
@@ -301,9 +304,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 .title("User location")
                 .anchor(0.5f, 0.5f)
                 .icon(BitmapDescriptorFactory.fromAsset("markers/UserIcon.png")));
-        map.animateCamera(CameraUpdateFactory.newLatLng(userCoordinates));
-        // TODO if the objective is in range, do something
-
+        //map.animateCamera(CameraUpdateFactory.newLatLng(userCoordinates));
     }
 
     private boolean isLocationEnabled() {
@@ -312,6 +313,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void drawMarkers() {
+        Log.d(MAPS_TAG, "Starting to draw markers");
         if (experiences != null && zones != null) {
             if (map.getCameraPosition().zoom < 12) {
                 drawAllZoneMarkers();
