@@ -14,4 +14,10 @@ public class LoginFragmentDirections {
     public static NavDirections actionLoginFragmentToMapsFragment() {
         return new ActionOnlyNavDirections(R.id.action_loginFragment_to_mapsFragment);
     }
+
+    @NonNull
+    @Contract(" -> new")
+    public static NavDirections actionLoginFragmentToRegistrationFragment() {
+        return new ActionOnlyNavDirections(R.id.action_loginFragment_to_registrationFragment);
+    }
 }

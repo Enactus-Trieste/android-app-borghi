@@ -20,10 +20,18 @@
             app:destination="@id/mapsFragment"
             app:popUpTo="@id/navigation_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/loginFragment"
         app:popUpTo="@id/navigation_graph"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="it.units.borghisegreti.fragments.RegistrationFragment"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" />
 </navigation>

@@ -44,4 +44,5 @@
     <string name="password">Password</string>
     <string name="login_button">Login</string>
     <string name="sign_up_button">Registrazione</string>
+    <string name="field_required">Campo obbligatorio</string>
 </resources>
