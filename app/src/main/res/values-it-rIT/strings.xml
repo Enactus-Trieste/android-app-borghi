@@ -45,4 +45,10 @@
     <string name="login_button">Login</string>
     <string name="sign_up_button">Registrazione</string>
     <string name="field_required">Campo obbligatorio</string>
+    <string name="registration_email">Inserisci email</string>
+    <string name="registration_confirm_email">Conferma email</string>
+    <string name="registration_password">Inserisci password</string>
+    <string name="registration_password_confirm">Conferma password</string>
+    <string name="registration_button">Registrazione</string>
+    <string name="registration_cancel">Annulla</string>
 </resources>

@@ -46,4 +46,10 @@
     <string name="login_button">Login</string>
     <string name="sign_up_button">Sign-up</string>
     <string name="field_required">Field required</string>
+    <string name="registration_email">Insert email</string>
+    <string name="registration_confirm_email">Confirm email</string>
+    <string name="registration_password">Insert password</string>
+    <string name="registration_password_confirm">Confirm password</string>
+    <string name="registration_button">Register</string>
+    <string name="registration_cancel">Cancel</string>
 </resources>
