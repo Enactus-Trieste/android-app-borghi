@@ -88,6 +88,11 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
+            return;
+        }
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
 
@@ -121,11 +126,6 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
-            return viewBinding.getRoot();
-        }
         if (arePermissionsAlreadyGranted()) {
             getMapAsync(this);
         } else if (shouldShowRequestPermissionsRationale()) {
