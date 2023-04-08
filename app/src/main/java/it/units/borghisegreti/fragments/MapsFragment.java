@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -61,7 +62,7 @@ import it.units.borghisegreti.utils.IconBuilder;
 import it.units.borghisegreti.viewmodels.MapViewModel;
 import it.units.borghisegreti.viewmodels.UserDataViewModel;
 
-public class MapsFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     public static final String MAPS_TAG = "MAPS_FRAGMENT";
     private MapViewModel mapViewModel;
@@ -98,7 +99,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
 
         requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
             if (areBothPermissionsGranted(arePermissionsGranted)) {
-                getMapAsync(this);
+                viewBinding.map.getMapAsync(this);
             } else {
                 // could also change view appearance
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
@@ -127,7 +128,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
         if (arePermissionsAlreadyGranted()) {
-            getMapAsync(this);
+            viewBinding.map.getMapAsync(this);
         } else if (shouldShowRequestPermissionsRationale()) {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.educational_permission_request_title)
