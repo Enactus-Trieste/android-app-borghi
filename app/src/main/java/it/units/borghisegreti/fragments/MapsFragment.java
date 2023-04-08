@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.ActionOnlyNavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Looper;
 import android.provider.Settings;
@@ -42,6 +44,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashMap;
 import java.util.List;
@@ -117,6 +121,11 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
+            return viewBinding.getRoot();
+        }
         if (arePermissionsAlreadyGranted()) {
             getMapAsync(this);
         } else if (shouldShowRequestPermissionsRationale()) {
@@ -128,7 +137,6 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         } else {
             requestMapPermissions.launch(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
         }
-        // TODO move map handling from MapActivity here
         return fragmentView;
     }
 
