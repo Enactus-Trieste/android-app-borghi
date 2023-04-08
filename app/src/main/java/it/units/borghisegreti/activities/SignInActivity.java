@@ -3,11 +3,9 @@ package it.units.borghisegreti.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,12 +26,7 @@ public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "SIGN_IN";
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
-            new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
-                @Override
-                public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
-                    onSignInResult(result);
-                }
-            }
+            this::onSignInResult
     );
 
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
@@ -41,7 +34,7 @@ public class SignInActivity extends AppCompatActivity {
         if (result.getResultCode() == RESULT_OK) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             Log.d(TAG, "User authentication: " + user);
-            Intent mainActivityIntent = new Intent(this, MapsActivity.class);
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
             startActivity(mainActivityIntent);
             finish();
         } else {
@@ -65,17 +58,14 @@ public class SignInActivity extends AppCompatActivity {
         logInBtn.setOnClickListener(logInBtnClickListener);
     }
 
-    private final OnClickListener logInBtnClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent signInIntent = AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(
-                            Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build())
-                    )
-                    .setIsSmartLockEnabled(false)
-                    .build();
-            signInLauncher.launch(signInIntent);
-        }
+    private final OnClickListener logInBtnClickListener = view -> {
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(
+                        Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build())
+                )
+                .setIsSmartLockEnabled(false)
+                .build();
+        signInLauncher.launch(signInIntent);
     };
 }

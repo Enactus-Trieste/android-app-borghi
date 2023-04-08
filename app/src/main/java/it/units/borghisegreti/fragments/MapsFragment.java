@@ -16,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -25,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -180,6 +182,30 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
             } else {
                 Log.d(MAPS_TAG, "Zoom is less than 12, not drawing experience markers");
             }
+            viewBinding.completeExpButton.setOnClickListener(view -> {
+                Experience objectiveExperience = null;
+                for (Experience experience : Objects.requireNonNull(this.experiences, "Database should always have at least one experience available")) {
+                    if (experience.getId().equals(objectiveExperienceId)) {
+                        objectiveExperience = experience;
+                        break;
+                    }
+                }
+                if (objectiveExperience != null) {
+                    userDataViewModel.setExperienceAsCompleted(objectiveExperience)
+                            .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Experience set as completed"))
+                            .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Unable to set experience as completed", exception));
+                    userDataViewModel.setObjectiveExperience(null)
+                            .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Objective experience reset"))
+                            .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Failed to reset objective experience", exception));
+                    AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                            .setTitle(R.string.experience_completed)
+                            .setMessage(String.format(getString(R.string.gained_points_alert), objectiveExperience.getPoints()))
+                            .setPositiveButton(R.string.ok, ((dialogInterface, i) -> Toast.makeText(requireContext(), R.string.next_objective_toast, Toast.LENGTH_SHORT).show()))
+                            .create();
+                    viewBinding.completeExpButton.setVisibility(View.GONE);
+                    dialog.show();
+                }
+            });
         });
         mapViewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
             Log.d(MAPS_TAG, "New zones received from Firebase");
@@ -204,10 +230,59 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
         LocationRequest.Builder builder = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5);
         builder.setMaxUpdateDelayMillis(0);
         LocationRequest locationRequest = builder.build();
-        locationProviderClient.requestLocationUpdates(locationRequest, this::drawUserLocationMarkerAndCheckObjectiveRange, Looper.myLooper());
+        locationProviderClient.requestLocationUpdates(locationRequest, location -> {
+            drawUserLocationMarker(location);
+            if (isObjectiveInRange(location)) {
+                Log.d(MAPS_TAG, "Objective experience is in range");
+                viewBinding.completeExpButton.setVisibility(View.VISIBLE);
+            } else {
+                Log.d(MAPS_TAG, "Objective experience is out of range");
+                viewBinding.completeExpButton.setVisibility(View.GONE);
+            }
+        }, Looper.myLooper());
     }
 
-    private void drawUserLocationMarkerAndCheckObjectiveRange(@NonNull Location location) {
+    private boolean isObjectiveInRange(Location location) {
+        if (experiences != null) {
+            Experience objectiveExperience = null;
+            for (Experience experience : experiences) {
+                if (experience.getId().equals(objectiveExperienceId)) {
+                    objectiveExperience = experience;
+                    break;
+                }
+            }
+            double distanceBetweenPoints = 500;
+            if (objectiveExperience != null) {
+                distanceBetweenPoints = computeDistanceBetweenPoints(objectiveExperience.getLatitude(),
+                        objectiveExperience.getLongitude(), location.getLatitude(), location.getLongitude());
+            } else {
+                Log.e(MAPS_TAG, "Unable to find objective among experiences");
+            }
+            Log.d(MAPS_TAG, "Distance from the objective is: " + distanceBetweenPoints);
+            return distanceBetweenPoints < 50;
+        }
+        Log.w(MAPS_TAG, "Experiences not loaded yet");
+        return false;
+    }
+
+    private double computeDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(degreeToRadians(lat1)) * Math.sin(degreeToRadians(lat2)) + Math.cos(degreeToRadians(lat1)) * Math.cos(degreeToRadians(lat2)) * Math.cos(degreeToRadians(theta));
+        dist = Math.acos(dist);
+        dist = radiansToDegree(dist);
+        dist = dist * 60 * 1.1515 * 1609.344;
+        return dist;
+    }
+
+    private double degreeToRadians(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double radiansToDegree(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
+    private void drawUserLocationMarker(@NonNull Location location) {
         LatLng userCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
         if (userMarker != null) {
             userMarker.remove();
@@ -219,6 +294,7 @@ public class MapsFragment extends SupportMapFragment implements OnMapReadyCallba
                 .icon(BitmapDescriptorFactory.fromAsset("markers/UserIcon.png")));
         map.animateCamera(CameraUpdateFactory.newLatLng(userCoordinates));
         // TODO if the objective is in range, do something
+
     }
 
     private boolean isLocationEnabled() {
