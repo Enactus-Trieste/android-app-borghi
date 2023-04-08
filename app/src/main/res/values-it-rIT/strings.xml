@@ -40,4 +40,8 @@
     <string name="permissions_not_granted">Impossibile mostrare la mappa, permessi insufficient</string>
     <string name="educational_permission_request_title">Permessi richiesti per accedere alla posizione</string>
     <string name="educational_permission_request_content">Permessi necessari per l\'utilizzo corretto della mappa</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="sign_up_button">Registrazione</string>
 </resources>

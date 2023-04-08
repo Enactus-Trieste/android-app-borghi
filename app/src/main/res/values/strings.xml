@@ -41,4 +41,8 @@
     <string name="permissions_not_granted">Permissions not granted, unable to show map</string>
     <string name="educational_permission_request_title">Need permissions to access user location</string>
     <string name="educational_permission_request_content">These permissions are necessary to use the map correctly</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="sign_up_button">Sign-up</string>
 </resources>
