@@ -25,8 +25,8 @@ jobs:
           name: Decode proguard-rules.pro
           command: echo '$(echo $ENCODED_PROGUARD | base64 -d)' > app/proguard-rules.pro
       - run:
-          name: set Google Maps API kwy
-          command: echo ${MAPS_API_KEY} > local.properties
+          name: set Google Maps API key
+          command: echo "MAPS_API_KEY=${MAPS_API_KEY}" > local.properties
 
       # The next step will run the unit tests
       - android/run-tests:
