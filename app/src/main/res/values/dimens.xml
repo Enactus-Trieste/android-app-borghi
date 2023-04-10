@@ -1,28 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="spacing">8dp</dimen>
-    <dimen name="buttons_elevation">8dp</dimen>
-    <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="main_fragment_height">500dp</dimen>
-    <dimen name="main_view_top_margin">8dp</dimen>
-    <dimen name="sign_in_top_margin">4dp</dimen>
-    <dimen name="activity_horizontal_margin">8dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="experienceTitleSize">22sp</dimen>
     <dimen name="experienceDescriptionSize">16sp</dimen>
-    <dimen name="completed_exp_end_padding_inner_card">10dp</dimen>
-    <dimen name="completed_exp_title_text_size">20sp</dimen>
-    <dimen name="completed_exp_date_text_size">10sp</dimen>
-    <dimen name="first_button_top_margin">70dp</dimen>
-    <dimen name="first_button_width">200dp</dimen>
-    <dimen name="first_logo_bottom_padding">10dp</dimen>
-    <dimen name="first_logo_height">400dp</dimen>
     <dimen name="complete_experience_button_margin_bottom">50dp</dimen>
-    <dimen name="card_text_size_main_view_tab">24sp</dimen>
-    <dimen name="card_text_size">20sp</dimen>
-    <dimen name="data_user_text_size">18sp</dimen>
     <dimen name="completedTextSize">16sp</dimen>
-    <dimen name="gained_points_text_size">22sp</dimen>
     <dimen name="complete_experience_button_text_size">16sp</dimen>
     <dimen name="experience_points_text_size">20sp</dimen>
 </resources>

@@ -1,43 +1,14 @@
 <resources>
     <string name="app_name">Borghi Segreti</string>
-    <string name="title_activity_maps" translatable="false">MapsActivity</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="sign_in_button_text">Sign In</string>
-    <string name="log_in_button_text">Log In</string>
-    <string name="logout_confirmation">Are you sure you want to log out?</string>
-    <string name="dialog_title">Log Out</string>
     <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="activate_location_title">Activate Location</string>
-    <string name="activate_location_message">Please turn on your location to use this function.</string>
-    <string name="activate_location_positive_button">Turn on location</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="test_key">test_mode</string>
     <string name="setObjective_buttonText">set as objective</string>
     <string name="removeObjective_buttonText">remove as objective</string>
-    <string name="application_logo_description">Application Logo</string>
-    <string name="map_choose_experience">Choose your next experience</string>
-    <string name="map_title">Map</string>
-    <string name="zero_point" translatable="false">0</string>
-    <string name="points">points</string>
-    <string name="no_objective">You don\'t have an objective.</string>
-    <string name="open_map">Open the map to see the eligible experiences.</string>
-    <string name="actual_objective">Your actual objective</string>
     <string name="complete_experience">Complete the experience</string>
-    <string name="log_out">Log out</string>
-    <string name="completed_experiences">Completed Experiences</string>
-    <string name="map_view">Map</string>
-    <string name="user">User</string>
-    <string name="user_info">User Info</string>
     <string name="completed">Completed in date </string>
-    <string name="completed_experiences_activity_title">Yours completed experiences</string>
     <string name="gained_points">+ %d points</string>
     <string name="next_objective_toast">What would be your next objective?</string>
     <string name="experience_completed">EXPERIENCE COMPLETED</string>
     <string name="gained_points_alert">You gained %d points!</string>
-    <string name="user_signed_out_toast">User signed out</string>
-    <string name="borghi_segreti">Borghi Segreti</string>
     <string name="permissions_not_granted">Permissions not granted, unable to show map</string>
     <string name="educational_permission_request_title">Need permissions to access user location</string>
     <string name="educational_permission_request_content">These permissions are necessary to use the map correctly</string>
