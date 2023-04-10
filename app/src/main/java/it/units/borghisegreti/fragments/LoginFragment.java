@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
@@ -22,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentLoginBinding;
-import it.units.borghisegreti.directions.LoginFragmentDirections;
+import it.units.borghisegreti.fragments.directions.LoginFragmentDirections;
 
 public class LoginFragment extends Fragment {
 

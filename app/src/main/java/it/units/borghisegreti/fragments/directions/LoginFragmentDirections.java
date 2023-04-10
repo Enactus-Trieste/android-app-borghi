@@ -1,4 +1,4 @@
-package it.units.borghisegreti.directions;
+package it.units.borghisegreti.fragments.directions;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.ActionOnlyNavDirections;

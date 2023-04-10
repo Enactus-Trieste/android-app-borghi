@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
@@ -25,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentRegistrationBinding;
-import it.units.borghisegreti.directions.RegistrationFragmentDirections;
+import it.units.borghisegreti.fragments.directions.RegistrationFragmentDirections;
 
 
 public class RegistrationFragment extends Fragment {
