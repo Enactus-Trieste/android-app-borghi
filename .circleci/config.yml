@@ -13,14 +13,6 @@ jobs:
     executor:
       name: android/android-machine
 
-    parameters:
-      encoded_google_services:
-        type: string
-        default: ${ENCODED_GOOGLE_SERVICES}
-      encoded_proguard:
-        type: string
-        default: ${ENCODED_PROGUARD}
-
     steps:
       # checkout the code from the repository
       - checkout
