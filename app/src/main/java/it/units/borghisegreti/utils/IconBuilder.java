@@ -2,6 +2,8 @@ package it.units.borghisegreti.utils;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
@@ -12,10 +14,12 @@ import it.units.borghisegreti.models.Experience;
 
 public class IconBuilder {
 
-    private Context context;
+    @NonNull
+    private final Context context;
+    @NonNull
     private final Experience experience;
 
-    public IconBuilder(Context context, Experience experience) {
+    public IconBuilder(@NonNull Context context,@NonNull  Experience experience) {
         this.context = context;
         this.experience = experience;
     }
@@ -23,7 +27,7 @@ public class IconBuilder {
     public BitmapDescriptor buildMarkerDescriptor() {
         BitmapDescriptor descriptor;
 
-        switch (experience.getType()) {
+        switch (ExperienceType.valueOf(experience.getType())) {
             case MOUNTAIN:
                 descriptor = BitmapDescriptorFactory.fromAsset("markers/MountainIcon.png");
                 break;
@@ -49,7 +53,7 @@ public class IconBuilder {
                 descriptor = BitmapDescriptorFactory.defaultMarker();
         }
 
-        if (experience.getIsTheObjective()) {
+        if (experience.isTheObjective()) {
             descriptor = BitmapDescriptorFactory.fromAsset("icons/star.png");
         }
 
@@ -57,7 +61,7 @@ public class IconBuilder {
     }
 
     public float getMarkerAlpha() {
-        if (experience.getIsCompletedByUser()) {
+        if (experience.isCompletedByUser()) {
             return 0.5f;
         }
         return 1f;
@@ -65,7 +69,7 @@ public class IconBuilder {
 
     public InputStream getExperienceIcon() throws IOException {
         InputStream iconImage;
-        switch (experience.getType()) {
+        switch (ExperienceType.valueOf(experience.getType())) {
             case MOUNTAIN:
                 iconImage = context.getAssets().open("icons/MountainIcon.png");
                 break;

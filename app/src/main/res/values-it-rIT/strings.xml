@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BorghiSegreti</string>
+    <string name="app_name">Borghi Segreti</string>
     <string name="action_settings">Impostazioni</string>
     <string name="sign_in_button_text">Accedi</string>
     <string name="log_in_button_text">Accedi</string>
     <string name="logout_confirmation">Sei sicuro di voler effettuare il log out?</string>
     <string name="dialog_title">Log Out</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Annulla</string>
     <string name="activate_location_title">Attiva Localizzazione</string>
     <string name="activate_location_message">Per favore arriva la localizzazione per accedere a questa funzione.</string>
@@ -37,4 +37,22 @@
     <string name="borghi_segreti">Borghi Segreti</string>
     <string name="map_view">Mappa</string>
     <string name="title_activity_main">Attività principale</string>
+    <string name="permissions_not_granted">Impossibile mostrare la mappa, permessi insufficient</string>
+    <string name="educational_permission_request_title">Permessi richiesti per accedere alla posizione</string>
+    <string name="educational_permission_request_content">Permessi necessari per l\'utilizzo corretto della mappa</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="sign_up_button">Registrazione</string>
+    <string name="field_required">Campo obbligatorio</string>
+    <string name="registration_email">Inserisci email</string>
+    <string name="registration_confirm_email">Conferma email</string>
+    <string name="registration_password">Inserisci password</string>
+    <string name="registration_password_confirm">Conferma password</string>
+    <string name="registration_button">Registrazione</string>
+    <string name="registration_cancel">Annulla</string>
+    <string name="email_mismatch">Le email non coincidono</string>
+    <string name="email_bad_format">Formato email non valido</string>
+    <string name="password_mismatch">Le password non coincidono</string>
+    <string name="password_weak">La password deve avere almeno 6 caratteri</string>
 </resources>
