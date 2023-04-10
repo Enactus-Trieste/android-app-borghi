@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "489302138778",
+    "project_id": "adventuremaps-1205",
+    "storage_bucket": "adventuremaps-1205.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489302138778:android:5e021b3a2de80583762423",
+        "android_client_info": {
+          "package_name": "it.units.borghisegreti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489302138778-u0nb2sfur2ukrfpbvig4m874fpd80kiv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrHs5bJHgR2_ye09BuqcgUKyMJhj82JFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489302138778-u0nb2sfur2ukrfpbvig4m874fpd80kiv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

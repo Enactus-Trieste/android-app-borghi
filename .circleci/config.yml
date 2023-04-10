@@ -19,12 +19,6 @@ jobs:
       - run:
           command: chmod +x ./gradlew
       - run:
-          name: Decode google-services.json file
-          command: echo '$(echo $ENCODED_GOOGLE_SERVICES | base64 -d)' > app/google-services.json
-      - run:
-          name: Decode proguard-rules.pro
-          command: echo '$(echo $ENCODED_PROGUARD | base64 -d)' > app/proguard-rules.pro
-      - run:
           name: set Google Maps API key
           command: echo "MAPS_API_KEY=${MAPS_API_KEY}" > local.properties
 
