@@ -13,6 +13,14 @@ jobs:
     executor:
       name: android/android-machine
 
+    parameters:
+      encoded_google_services:
+        type: string
+        default: ${ENCODED_GOOGLE_SERVICES}
+      encoded_proguard:
+        type: string
+        default: ${ENCODED_PROGUARD}
+
     steps:
       # checkout the code from the repository
       - checkout
@@ -20,10 +28,10 @@ jobs:
           command: chmod +x ./gradlew
       - run:
           name: Decode google-services.json file
-          command: echo ${ENCODED_GOOGLE_SERVICES} | base64 -d > app/google-services.json
+          command: base64 -d < parameters.encoded_google_services > app/google-services.json
       - run:
           name: Decode proguard-rules.pro
-          command: echo ${ENCODED_PROGUARD} | base64 -d > app/proguard-rules.pro
+          command: base64 -d < parameters.encoded_proguard > app/proguard-rules.pro
       - run:
           name: set Google Maps API kwy
           command: echo ${MAPS_API_KEY} > local.properties
