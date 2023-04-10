@@ -20,10 +20,10 @@ jobs:
           command: chmod +x ./gradlew
       - run:
           name: Decode google-services.json file
-          command: base64 -d < "${ENCODED_GOOGLE_SERVICES}" > app/google-services.json
+          command: echo '$(echo $ENCODED_GOOGLE_SERVICES | base64 -d)' > app/google-services.json
       - run:
           name: Decode proguard-rules.pro
-          command: base64 -d < "{ENCODED_PROGUARD}" > app/proguard-rules.pro
+          command: echo '$(echo $ENCODED_PROGUARD | base64 -d)' > app/proguard-rules.pro
       - run:
           name: set Google Maps API kwy
           command: echo ${MAPS_API_KEY} > local.properties
