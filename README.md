@@ -1,5 +1,6 @@
 # L'app
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Enactus-Trieste/android-app-borghi/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Enactus-Trieste/android-app-borghi/tree/master)
+
 App realizzata come progetto per il corso di Sistemi Integrati e Mobili dell'Università degli Studi di Trieste.
 
 L'obiettivo dell'applicazione è quello di far scoprire le ricchezze paesaggistiche, naturalistiche e storiche dei piccoli borghi di montagna situati nelle cosiddette aree interne del nostro Paese.
