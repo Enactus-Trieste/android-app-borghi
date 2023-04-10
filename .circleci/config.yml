@@ -6,8 +6,8 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   build-and-test:
-    docker:
-      - image: cimg/android:2022.07
+    executor:
+      name: android/android-machine
 
     steps:
       # checkout the code from the repository
@@ -17,10 +17,6 @@ jobs:
       - run:
           name: set Google Maps API key
           command: echo "MAPS_API_KEY=${MAPS_API_KEY}" > local.properties
-
-      - run:
-          name: Download dependencies
-          command: ./gradlew androidDependencies
 
       # The next step will run the unit tests
       - android/run-tests:
