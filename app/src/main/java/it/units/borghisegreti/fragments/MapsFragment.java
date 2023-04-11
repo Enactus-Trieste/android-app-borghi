@@ -274,7 +274,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         builder.setMaxUpdateDelayMillis(0);
         LocationRequest locationRequest = builder.build();
         locationProviderClient.requestLocationUpdates(locationRequest, location -> {
-            drawUserLocationMarker(location);
             if (isObjectiveInRange(location)) {
                 Log.d(MAPS_TAG, "Objective experience is in range");
                 viewBinding.completeExpButton.setVisibility(View.VISIBLE);
@@ -283,6 +282,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 viewBinding.completeExpButton.setVisibility(View.GONE);
             }
         }, Looper.myLooper());
+        map.setMyLocationEnabled(true);
     }
 
     private boolean isObjectiveInRange(Location location) {
@@ -323,19 +323,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private double radiansToDegree(double rad) {
         return (rad * 180.0 / Math.PI);
-    }
-
-    private void drawUserLocationMarker(@NonNull Location location) {
-        LatLng userCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
-        if (userMarker != null) {
-            userMarker.remove();
-        }
-        userMarker = map.addMarker(new MarkerOptions()
-                .position(userCoordinates)
-                .title("User location")
-                .anchor(0.5f, 0.5f)
-                .icon(BitmapDescriptorFactory.fromAsset("markers/UserIcon.png")));
-        //map.animateCamera(CameraUpdateFactory.newLatLng(userCoordinates));
     }
 
     private boolean isLocationEnabled() {
