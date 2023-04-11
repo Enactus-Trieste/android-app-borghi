@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             // here we can check the destination id and handle changes accordingly
         }));
+
+        // viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {});
     }
 
     @Override
