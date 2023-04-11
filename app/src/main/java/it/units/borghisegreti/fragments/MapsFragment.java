@@ -39,7 +39,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -82,7 +81,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private ActivityResultLauncher<Intent> requestLocationSourceSetting;
     @Nullable
     private Marker userMarker;
-    private SupportMapFragment mapFragment;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -102,7 +100,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
             if (areBothPermissionsGranted(arePermissionsGranted)) {
                 MapsInitializer.initialize(requireContext());
-                mapFragment.getMapAsync(this);
+                viewBinding.map.getMapAsync(this);
             } else {
                 // could also change view appearance
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
@@ -130,13 +128,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         // Inflate the layout for this fragment
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
         View fragmentView = viewBinding.getRoot();
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        viewBinding.map.onCreate(savedInstanceState);
         if (arePermissionsAlreadyGranted()) {
-            if (mapFragment != null) {
-                Log.d(MAPS_TAG, "Start to retrieve Google map");
-                MapsInitializer.initialize(requireContext());
-                mapFragment.getMapAsync(this);
-            }
+            Log.d(MAPS_TAG, "Start to retrieve Google map");
+            MapsInitializer.initialize(requireContext());
+            viewBinding.map.getMapAsync(this);
         } else if (shouldShowRequestPermissionsRationale()) {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.educational_permission_request_title)
@@ -144,7 +140,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                     .setPositiveButton(R.string.ok, ((dialogInterface, i) -> dialogInterface.dismiss()))
                     .show();
         } else {
-            requestMapPermissions.launch(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
+            requestMapPermissions.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
         }
         return fragmentView;
     }
@@ -159,9 +155,46 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        viewBinding.map.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewBinding.map.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        viewBinding.map.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        viewBinding.map.onStop();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        viewBinding.map.onDestroy();
         viewBinding = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        viewBinding.map.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        viewBinding.map.onLowMemory();
     }
 
     @Override
