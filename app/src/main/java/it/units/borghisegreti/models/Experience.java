@@ -131,6 +131,12 @@ public class Experience {
         return Objects.hash(id);
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public enum Type {
         PANORAMIC_VIEW,
         RESTAURANT,

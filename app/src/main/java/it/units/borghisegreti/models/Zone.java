@@ -53,4 +53,10 @@ public class Zone {
     public int hashCode() {
         return Objects.hash(name, latitude, longitude);
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
+    }
 }
