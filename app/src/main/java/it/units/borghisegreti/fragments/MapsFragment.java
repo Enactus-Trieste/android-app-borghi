@@ -274,7 +274,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         builder.setMaxUpdateDelayMillis(0);
         LocationRequest locationRequest = builder.build();
         locationProviderClient.requestLocationUpdates(locationRequest, location -> {
-            drawUserLocationMarker(location);
             if (isObjectiveInRange(location)) {
                 Log.d(MAPS_TAG, "Objective experience is in range");
                 viewBinding.completeExpButton.setVisibility(View.VISIBLE);
@@ -283,6 +282,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 viewBinding.completeExpButton.setVisibility(View.GONE);
             }
         }, Looper.myLooper());
+        map.setMyLocationEnabled(true);
     }
 
     private boolean isObjectiveInRange(Location location) {
@@ -325,19 +325,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return (rad * 180.0 / Math.PI);
     }
 
-    private void drawUserLocationMarker(@NonNull Location location) {
-        LatLng userCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
-        if (userMarker != null) {
-            userMarker.remove();
-        }
-        userMarker = map.addMarker(new MarkerOptions()
-                .position(userCoordinates)
-                .title("User location")
-                .anchor(0.5f, 0.5f)
-                .icon(BitmapDescriptorFactory.fromAsset("markers/UserIcon.png")));
-        //map.animateCamera(CameraUpdateFactory.newLatLng(userCoordinates));
-    }
-
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -347,18 +334,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Log.d(MAPS_TAG, "Starting to draw markers");
         if (experiences != null && zones != null) {
             if (map.getCameraPosition().zoom < 12) {
+                clearFromTheMap(experiencesOnTheMapByMarker.keySet());
+                experiencesOnTheMapByMarker.clear();
                 drawAllZoneMarkers();
             } else {
+                clearFromTheMap(zonesOnTheMapByMarker.keySet());
+                zonesOnTheMapByMarker.clear();
                 drawAllExperienceMarkers();
             }
         }
     }
 
     private void drawAllExperienceMarkers() {
-        clearFromTheMap(zonesOnTheMapByMarker.keySet());
-        zonesOnTheMapByMarker.clear();
         for (Experience experience : Objects.requireNonNull(experiences, "No experiences found, value is null")) {
-            drawExperienceMarker(experience);
+            if (!experiencesOnTheMapByMarker.containsValue(experience)) {
+                drawExperienceMarker(experience);
+            } else {
+                Log.d(MAPS_TAG, "Marker for experience " + experience + " already on the map, not drawing");
+            }
             if (experience.getId().equals(objectiveExperienceId)) {
                 Marker foundMarker = findMarkerAssociatedToExperience(experience);
                 if (foundMarker != null) {
@@ -399,15 +392,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void drawAllZoneMarkers() {
-        clearFromTheMap(experiencesOnTheMapByMarker.keySet());
-        experiencesOnTheMapByMarker.clear();
         for (Zone zone : Objects.requireNonNull(zones, "No zones found, value is null")) {
-            Marker zoneMarker = map.addMarker(new MarkerOptions()
-                    .position(zone.getCoordinates())
-                    .title(zone.getName())
-                    .anchor(0.5f, 0.5f)
-                    .icon(BitmapDescriptorFactory.fromAsset("icons/BorgoIcon.png")));
-            zonesOnTheMapByMarker.put(zoneMarker, zone);
+            if (!zonesOnTheMapByMarker.containsValue(zone)) {
+                Marker zoneMarker = map.addMarker(new MarkerOptions()
+                        .position(zone.getCoordinates())
+                        .title(zone.getName())
+                        .anchor(0.5f, 0.5f)
+                        .icon(BitmapDescriptorFactory.fromAsset("icons/BorgoIcon.png")));
+                zonesOnTheMapByMarker.put(zoneMarker, zone);
+            } else {
+                Log.d(MAPS_TAG, "Marker for zone " + zone + " already on the map, not drawing");
+            }
         }
     }
 
