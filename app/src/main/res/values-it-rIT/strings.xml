@@ -28,4 +28,7 @@
     <string name="email_bad_format">Formato email non valido</string>
     <string name="password_mismatch">Le password non coincidono</string>
     <string name="password_weak">La password deve avere almeno 6 caratteri</string>
+    <string name="menu_completed_experiences_label">Esperienze</string>
+    <string name="menu_map_label">Mappa</string>
+    <string name="menu_user_label">Profilo</string>
 </resources>

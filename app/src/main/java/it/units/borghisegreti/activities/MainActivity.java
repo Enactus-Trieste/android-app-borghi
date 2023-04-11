@@ -1,10 +1,8 @@
 package it.units.borghisegreti.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 
@@ -30,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             // here we can check the destination id and handle changes accordingly
         }));
+
+        // viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {});
     }
 
     @Override

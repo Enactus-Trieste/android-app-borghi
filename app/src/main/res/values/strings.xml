@@ -27,4 +27,7 @@
     <string name="email_bad_format">The email address is badly formatted</string>
     <string name="password_mismatch">Passwords not matching</string>
     <string name="password_weak">Password has to be at least 6 characters long</string>
+    <string name="menu_completed_experiences_label">Experiences</string>
+    <string name="menu_map_label">Map</string>
+    <string name="menu_user_label">Profile</string>
 </resources>
