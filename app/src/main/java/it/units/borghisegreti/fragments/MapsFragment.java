@@ -99,7 +99,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
             if (areBothPermissionsGranted(arePermissionsGranted)) {
-                MapsInitializer.initialize(requireContext());
                 viewBinding.map.getMapAsync(this);
             } else {
                 // could also change view appearance
@@ -131,7 +130,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         viewBinding.map.onCreate(savedInstanceState);
         if (arePermissionsAlreadyGranted()) {
             Log.d(MAPS_TAG, "Start to retrieve Google map");
-            MapsInitializer.initialize(requireContext());
             viewBinding.map.getMapAsync(this);
         } else if (shouldShowRequestPermissionsRationale()) {
             new MaterialAlertDialogBuilder(requireContext())
