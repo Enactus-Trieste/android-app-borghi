@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-import it.units.borghisegreti.utils.ExperienceType;
-
 public class Experience {
     // stored in the database
     @NonNull
@@ -37,7 +35,7 @@ public class Experience {
             @NonNull String id,
             @NonNull String name,
             @NonNull String description,
-            @NonNull ExperienceType type,
+            @NonNull Type type,
             @NonNull LatLng coordinates, int points) {
         this.id = id;
         this.name = name;
@@ -79,8 +77,8 @@ public class Experience {
     }
 
     @NonNull
-    public ExperienceType getEnumType() {
-        return ExperienceType.valueOf(type);
+    public Type getEnumType() {
+        return Type.valueOf(type);
     }
 
     public double getLatitude() {
@@ -131,5 +129,15 @@ public class Experience {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public enum Type {
+        PANORAMIC_VIEW,
+        RESTAURANT,
+        TYPICAL_FOOD,
+        RIVER_WATERFALL,
+        NATURALISTIC_AREA,
+        MOUNTAIN,
+        POINT_OF_HISTORICAL_INTEREST
     }
 }

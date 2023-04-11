@@ -22,7 +22,6 @@ import java.util.Objects;
 
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
-import it.units.borghisegreti.utils.ExperienceType;
 
 
 public class MapViewModel extends ViewModel {
@@ -112,7 +111,7 @@ public class MapViewModel extends ViewModel {
 
     public Task<Void> uploadNewExperience(@NonNull String name,
                                           @NonNull String description,
-                                          @NonNull ExperienceType type,
+                                          @NonNull Experience.Type type,
                                           @NonNull LatLng coordinates,
                                           int points) {
         DatabaseReference experienceReference = database.getReference(EXPERIENCES_REFERENCE).push();
