@@ -5,6 +5,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
+import android.view.View;
 
 import java.util.Objects;
 
@@ -27,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             // here we can check the destination id and handle changes accordingly
+            if (destination.getId() == R.id.mapsFragment) {
+                View decorView = getWindow().getDecorView();
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            } else {
+                View decorView = getWindow().getDecorView();
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            }
         }));
 
         // viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {});
