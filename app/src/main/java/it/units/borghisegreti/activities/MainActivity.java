@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.util.Objects;
 
@@ -29,11 +31,9 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             // here we can check the destination id and handle changes accordingly
             if (destination.getId() == R.id.mapsFragment) {
-                View decorView = getWindow().getDecorView();
-                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else {
-                View decorView = getWindow().getDecorView();
-                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             }
         }));
 
