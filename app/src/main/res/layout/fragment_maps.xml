@@ -6,28 +6,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MapsFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+    <Button
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/maps_search_button_layout"
-        android:hint="@string/map_search_button_label"
+        android:id="@+id/maps_search_button"
+        android:text="@string/map_search_button_label"
+        android:textAlignment="viewStart"
         android:layout_marginTop="20dp"
         android:layout_marginHorizontal="10dp"
-        android:elevation="1dp"
-        app:startIconDrawable="@drawable/ic_baseline_search_24"
-        app:startIconContentDescription="@string/map_search_button_label"
-        app:endIconMode="clear_text"
+        app:icon="@drawable/ic_baseline_search_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/map_search_button_text"
-            android:inputType="text|textAutoComplete|textAutoCorrect|textFilter"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:layout_width="match_parent"
