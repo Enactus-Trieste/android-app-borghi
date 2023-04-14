@@ -200,7 +200,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         map = googleMap;
         map.setOnMarkerClickListener(this);
         map.setMinZoomPreference(7f);
-        map.setPadding(0, 230, 0, 0);
+        map.getUiSettings().setMyLocationButtonEnabled(false);
+        map.getUiSettings().setZoomControlsEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         map.setOnCameraMoveListener(this::drawMarkers);
 
