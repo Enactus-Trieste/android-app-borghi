@@ -64,7 +64,9 @@ import it.units.borghisegreti.viewmodels.UserDataViewModel;
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     public static final String MAPS_TAG = "MAPS_FRAGMENT";
+    @Nullable
     private MapViewModel mapViewModel;
+    @Nullable
     private UserDataViewModel userDataViewModel;
     @Nullable
     private List<Experience> experiences;
@@ -78,8 +80,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private String objectiveExperienceId;
     private ActivityResultLauncher<String[]> requestMapPermissions;
     private ActivityResultLauncher<Intent> requestLocationSourceSetting;
-    @Nullable
-    private Marker userMarker;
 
     public MapsFragment() {
         // Required empty public constructor
