@@ -30,4 +30,5 @@
     <string name="menu_completed_experiences_label">Experiences</string>
     <string name="menu_map_label">Map</string>
     <string name="menu_user_label">Profile</string>
+    <string name="map_search_button_label">Search for experiences</string>
 </resources>
