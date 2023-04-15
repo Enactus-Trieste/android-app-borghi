@@ -47,10 +47,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import it.units.borghisegreti.R;
@@ -64,16 +64,16 @@ import it.units.borghisegreti.viewmodels.UserDataViewModel;
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     public static final String MAPS_TAG = "MAPS_FRAGMENT";
-    @Nullable
     private MapViewModel mapViewModel;
-    @Nullable
     private UserDataViewModel userDataViewModel;
-    @Nullable
-    private List<Experience> experiences;
-    @Nullable
-    private List<Zone> zones;
+    @NonNull
+    private List<Experience> experiences = Collections.emptyList();
+    @NonNull
+    private List<Zone> zones = Collections.emptyList();
     private GoogleMap map;
+    @NonNull
     private final Map<Marker, Experience> experiencesOnTheMapByMarker = new HashMap<>();
+    @NonNull
     private final Map<Marker, Zone> zonesOnTheMapByMarker = new HashMap<>();
     private FragmentMapsBinding viewBinding;
     @Nullable
@@ -228,7 +228,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             }
             viewBinding.completeExpButton.setOnClickListener(view -> {
                 Experience objectiveExperience = null;
-                for (Experience experience : Objects.requireNonNull(this.experiences, "Database should always have at least one experience available")) {
+                for (Experience experience : this.experiences) {
                     if (experience.getId().equals(objectiveExperienceId)) {
                         objectiveExperience = experience;
                         break;
@@ -287,26 +287,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private boolean isObjectiveInRange(Location location) {
-        if (experiences != null) {
-            Experience objectiveExperience = null;
-            for (Experience experience : experiences) {
-                if (experience.getId().equals(objectiveExperienceId)) {
-                    objectiveExperience = experience;
-                    break;
-                }
+        Experience objectiveExperience = null;
+        for (Experience experience : experiences) {
+            if (experience.getId().equals(objectiveExperienceId)) {
+                objectiveExperience = experience;
+                break;
             }
-            double distanceBetweenPoints = 500;
-            if (objectiveExperience != null) {
-                distanceBetweenPoints = computeDistanceBetweenPoints(objectiveExperience.getLatitude(),
-                        objectiveExperience.getLongitude(), location.getLatitude(), location.getLongitude());
-            } else {
-                Log.e(MAPS_TAG, "Unable to find objective among experiences");
-            }
-            Log.d(MAPS_TAG, "Distance from the objective is: " + distanceBetweenPoints);
-            return distanceBetweenPoints < 50;
         }
-        Log.w(MAPS_TAG, "Experiences not loaded yet");
-        return false;
+        double distanceBetweenPoints = 500;
+        if (objectiveExperience != null) {
+            distanceBetweenPoints = computeDistanceBetweenPoints(objectiveExperience.getLatitude(),
+                    objectiveExperience.getLongitude(), location.getLatitude(), location.getLongitude());
+        } else {
+            Log.e(MAPS_TAG, "Unable to find objective among experiences");
+        }
+        Log.d(MAPS_TAG, "Distance from the objective is: " + distanceBetweenPoints);
+        return distanceBetweenPoints < 50;
     }
 
     private double computeDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
@@ -333,21 +329,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void drawMarkers() {
         Log.d(MAPS_TAG, "Starting to draw markers");
-        if (experiences != null && zones != null) {
-            if (map.getCameraPosition().zoom < 12) {
-                clearFromTheMap(experiencesOnTheMapByMarker.keySet());
-                experiencesOnTheMapByMarker.clear();
-                drawAllZoneMarkers();
-            } else {
-                clearFromTheMap(zonesOnTheMapByMarker.keySet());
-                zonesOnTheMapByMarker.clear();
-                drawAllExperienceMarkers();
-            }
+        if (map.getCameraPosition().zoom < 12) {
+            clearFromTheMap(experiencesOnTheMapByMarker.keySet());
+            experiencesOnTheMapByMarker.clear();
+            drawAllZoneMarkers();
+        } else {
+            clearFromTheMap(zonesOnTheMapByMarker.keySet());
+            zonesOnTheMapByMarker.clear();
+            drawAllExperienceMarkers();
         }
     }
 
     private void drawAllExperienceMarkers() {
-        for (Experience experience : Objects.requireNonNull(experiences, "No experiences found, value is null")) {
+        for (Experience experience : experiences) {
             if (!experiencesOnTheMapByMarker.containsValue(experience)) {
                 drawExperienceMarker(experience);
             } else {
@@ -393,7 +387,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void drawAllZoneMarkers() {
-        for (Zone zone : Objects.requireNonNull(zones, "No zones found, value is null")) {
+        for (Zone zone : zones) {
             if (!zonesOnTheMapByMarker.containsValue(zone)) {
                 Marker zoneMarker = map.addMarker(new MarkerOptions()
                         .position(zone.getCoordinates())
