@@ -151,6 +151,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             requestMapPermissions.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
         }
+
+        viewBinding.completeExpButton.setOnClickListener(view -> {
+            Experience objectiveExperience = null;
+            for (Experience experience : this.experiences) {
+                if (experience.getId().equals(objectiveExperienceId)) {
+                    objectiveExperience = experience;
+                    break;
+                }
+            }
+            if (objectiveExperience != null) {
+                userDataViewModel.setExperienceAsCompleted(objectiveExperience)
+                        .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Experience set as completed"))
+                        .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Unable to set experience as completed", exception));
+                userDataViewModel.setObjectiveExperience(null)
+                        .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Objective experience reset"))
+                        .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Failed to reset objective experience", exception));
+                AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.experience_completed)
+                        .setMessage(String.format(getString(R.string.gained_points_alert), objectiveExperience.getPoints()))
+                        .setPositiveButton(R.string.ok, ((dialogInterface, i) -> Toast.makeText(requireContext(), R.string.next_objective_toast, Toast.LENGTH_SHORT).show()))
+                        .create();
+                viewBinding.completeExpButton.setVisibility(View.GONE);
+                dialog.show();
+            }
+        });
         return fragmentView;
     }
 
@@ -242,30 +267,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             } else {
                 Log.d(MAPS_TAG, "Zoom is less than 12, not drawing experience markers");
             }
-            viewBinding.completeExpButton.setOnClickListener(view -> {
-                Experience objectiveExperience = null;
-                for (Experience experience : this.experiences) {
-                    if (experience.getId().equals(objectiveExperienceId)) {
-                        objectiveExperience = experience;
-                        break;
-                    }
-                }
-                if (objectiveExperience != null) {
-                    userDataViewModel.setExperienceAsCompleted(objectiveExperience)
-                            .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Experience set as completed"))
-                            .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Unable to set experience as completed", exception));
-                    userDataViewModel.setObjectiveExperience(null)
-                            .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Objective experience reset"))
-                            .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Failed to reset objective experience", exception));
-                    AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                            .setTitle(R.string.experience_completed)
-                            .setMessage(String.format(getString(R.string.gained_points_alert), objectiveExperience.getPoints()))
-                            .setPositiveButton(R.string.ok, ((dialogInterface, i) -> Toast.makeText(requireContext(), R.string.next_objective_toast, Toast.LENGTH_SHORT).show()))
-                            .create();
-                    viewBinding.completeExpButton.setVisibility(View.GONE);
-                    dialog.show();
-                }
-            });
         });
         mapViewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
             Log.d(MAPS_TAG, "Obtained " + zones.size() + " zones from Firebase");
