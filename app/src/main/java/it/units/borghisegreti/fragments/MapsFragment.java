@@ -376,6 +376,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Experience experience = experiencesOnTheMapByMarker.get(marker);
         if (zone != null) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 12f));
+            return true;
         } else if (experience != null) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
@@ -388,7 +389,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 public void onCancel() {
                 }
             });
+            return true;
         }
-        return true;
+        return false;
     }
 }
