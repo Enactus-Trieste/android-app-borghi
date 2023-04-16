@@ -1,6 +1,7 @@
 package it.units.borghisegreti.fragments;
 
 import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
+import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -8,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,10 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -58,6 +54,7 @@ import it.units.borghisegreti.databinding.FragmentMapsBinding;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
+import it.units.borghisegreti.utils.Locator;
 import it.units.borghisegreti.viewmodels.MapViewModel;
 import it.units.borghisegreti.viewmodels.UserDataViewModel;
 
@@ -80,6 +77,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private String objectiveExperienceId;
     private ActivityResultLauncher<String[]> requestMapPermissions;
     private ActivityResultLauncher<Intent> requestLocationSourceSetting;
+    private Locator locator;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -96,6 +94,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
 
+        locator = new Locator(requireContext(), getLifecycle(), new Locator.Callback() {
+            @Override
+            public void onObjectiveInRange() {
+                Log.d(LOCATOR_TAG, "Objective experience is in range");
+                viewBinding.completeExpButton.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onObjectiveOutOfRange() {
+                Log.d(LOCATOR_TAG, "Objective experience is out of range");
+                viewBinding.completeExpButton.setVisibility(View.GONE);
+            }
+        });
+
         requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
             if (areBothPermissionsGranted(arePermissionsGranted)) {
                 viewBinding.map.getMapAsync(this);
@@ -106,7 +118,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         });
         requestLocationSourceSetting = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), activityResult -> {
             if (activityResult.getResultCode() == Activity.RESULT_OK) {
-                buildAndSubmitLocationRequest();
+                locator.start();
             } else {
                 // could also change view appearance
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
@@ -194,6 +206,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         viewBinding.map.onLowMemory();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(MAPS_TAG, "Map is ready, entering callback");
@@ -202,11 +215,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         map.setMinZoomPreference(7f);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setZoomControlsEnabled(true);
+        map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         map.setOnCameraMoveListener(this::drawMarkers);
 
         userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
             objectiveExperienceId = experienceId;
+            locator.submitObjectiveId(experienceId);
             for (Experience experienceOnTheMap : experiencesOnTheMapByMarker.values()) {
                 if (experienceOnTheMap.getId().equals(objectiveExperienceId)) {
                     Marker marker = findMarkerAssociatedToExperience(experienceOnTheMap);
@@ -221,6 +236,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapViewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
             Log.d(MAPS_TAG, "Obtained " + experiences.size() + " experiences from Firebase");
             this.experiences = experiences;
+            locator.submitExperiences(experiences);
             if (map.getCameraPosition().zoom >= 12) {
                 drawAllExperienceMarkers();
             } else {
@@ -262,64 +278,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         });
 
         if (isLocationEnabled()) {
-            buildAndSubmitLocationRequest();
+            locator.start();
         } else {
             requestLocationSourceSetting.launch(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void buildAndSubmitLocationRequest() {
-        FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        LocationRequest.Builder builder = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5);
-        builder.setMaxUpdateDelayMillis(0);
-        LocationRequest locationRequest = builder.build();
-        locationProviderClient.requestLocationUpdates(locationRequest, location -> {
-            if (isObjectiveInRange(location)) {
-                Log.d(MAPS_TAG, "Objective experience is in range");
-                viewBinding.completeExpButton.setVisibility(View.VISIBLE);
-            } else {
-                Log.d(MAPS_TAG, "Objective experience is out of range");
-                viewBinding.completeExpButton.setVisibility(View.GONE);
-            }
-        }, Looper.myLooper());
-        map.setMyLocationEnabled(true);
-    }
-
-    private boolean isObjectiveInRange(Location location) {
-        Experience objectiveExperience = null;
-        for (Experience experience : experiences) {
-            if (experience.getId().equals(objectiveExperienceId)) {
-                objectiveExperience = experience;
-                break;
-            }
-        }
-        double distanceBetweenPoints = 500;
-        if (objectiveExperience != null) {
-            distanceBetweenPoints = computeDistanceBetweenPoints(objectiveExperience.getLatitude(),
-                    objectiveExperience.getLongitude(), location.getLatitude(), location.getLongitude());
-        } else {
-            Log.e(MAPS_TAG, "Unable to find objective among experiences");
-        }
-        Log.d(MAPS_TAG, "Distance from the objective is: " + distanceBetweenPoints);
-        return distanceBetweenPoints < 50;
-    }
-
-    private double computeDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(degreeToRadians(lat1)) * Math.sin(degreeToRadians(lat2)) + Math.cos(degreeToRadians(lat1)) * Math.cos(degreeToRadians(lat2)) * Math.cos(degreeToRadians(theta));
-        dist = Math.acos(dist);
-        dist = radiansToDegree(dist);
-        dist = dist * 60 * 1.1515 * 1609.344;
-        return dist;
-    }
-
-    private double degreeToRadians(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private double radiansToDegree(double rad) {
-        return (rad * 180.0 / Math.PI);
     }
 
     private boolean isLocationEnabled() {

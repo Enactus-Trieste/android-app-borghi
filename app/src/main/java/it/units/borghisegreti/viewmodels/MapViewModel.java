@@ -83,12 +83,18 @@ public class MapViewModel extends ViewModel {
         database.getReference(EXPERIENCES_REFERENCE).addValueEventListener(experiencesListener);
     }
 
-    @NonNull
+    /**
+     *
+     * @return All the zones stored in the database
+     */
     public LiveData<List<Zone>> getZones() {
         return databaseZones;
     }
 
-    @NonNull
+    /**
+     *
+     * @return All the experiences stored in the database
+     */
     public LiveData<List<Experience>> getExperiences() {
         return databaseExperiences;
     }
@@ -106,7 +112,11 @@ public class MapViewModel extends ViewModel {
         });
     }
 
-    @Nullable
+    /**
+     *
+     * @param experienceId - the ID that we're interested in
+     * @return The experience associated with the given ID, or null if such an experience isn't found
+     */
     public LiveData<Experience> getExperienceById(@NonNull String experienceId) {
         return Transformations.map(databaseExperiences, experiences -> {
             for (Experience experience : experiences) {
