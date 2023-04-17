@@ -3,6 +3,7 @@ package it.units.borghisegreti.viewmodels;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -26,13 +27,18 @@ import it.units.borghisegreti.models.Zone;
 
 public class MapViewModel extends ViewModel {
     public static final String DB_URL = "https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app";
-    public static final String DB_TAG = "FIREBASE_DB_CONNECTOR";
+    public static final String DB_TAG = "FIREBASE_DB";
     public static final String ZONES_REFERENCE = "zones";
     public static final String EXPERIENCES_REFERENCE = "experiences";
+    @NonNull
     private final FirebaseDatabase database;
+    @NonNull
     private final ValueEventListener experiencesListener;
+    @NonNull
     private final ValueEventListener zonesListener;
+    @NonNull
     private final MutableLiveData<List<Zone>> databaseZones;
+    @NonNull
     private final MutableLiveData<List<Experience>> databaseExperiences;
 
     public MapViewModel() {
@@ -44,8 +50,8 @@ public class MapViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Experience> experiences = new ArrayList<>();
                 for (DataSnapshot experienceSnapshot : snapshot.getChildren()) {
-                    Log.d(DB_TAG, "Received new remote experiences from database");
                     Experience databaseExperience = experienceSnapshot.getValue(Experience.class);
+                    Log.d(DB_TAG, "Received new remote experience from database: " + databaseExperience);
                     experiences.add(databaseExperience);
                 }
                 MapViewModel.this.databaseExperiences.setValue(experiences);
@@ -53,7 +59,7 @@ public class MapViewModel extends ViewModel {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(DB_TAG, "error: " + error.getMessage());
+                Log.e(DB_TAG, "Error while getting new experiences: " + error.getMessage());
             }
         };
         zonesListener = new ValueEventListener() {
@@ -61,8 +67,8 @@ public class MapViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Zone> zones = new ArrayList<>();
                 for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
-                    Log.d(DB_TAG, "Received new remote zones from database");
                     Zone databaseZone = zoneSnapshot.getValue(Zone.class);
+                    Log.d(DB_TAG, "Received new remote zone from database: " + databaseZone);
                     zones.add(databaseZone);
                 }
                 MapViewModel.this.databaseZones.setValue(zones);
@@ -70,17 +76,25 @@ public class MapViewModel extends ViewModel {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(DB_TAG, "error: " + error.getMessage());
+                Log.e(DB_TAG, "Error while getting new zones: " + error.getMessage());
             }
         };
         database.getReference(ZONES_REFERENCE).addValueEventListener(zonesListener);
         database.getReference(EXPERIENCES_REFERENCE).addValueEventListener(experiencesListener);
     }
 
+    /**
+     *
+     * @return All the zones stored in the database
+     */
     public LiveData<List<Zone>> getZones() {
         return databaseZones;
     }
 
+    /**
+     *
+     * @return All the experiences stored in the database
+     */
     public LiveData<List<Experience>> getExperiences() {
         return databaseExperiences;
     }
@@ -98,6 +112,11 @@ public class MapViewModel extends ViewModel {
         });
     }
 
+    /**
+     *
+     * @param experienceId - the ID that we're interested in
+     * @return The experience associated with the given ID, or null if such an experience isn't found
+     */
     public LiveData<Experience> getExperienceById(@NonNull String experienceId) {
         return Transformations.map(databaseExperiences, experiences -> {
             for (Experience experience : experiences) {
@@ -109,13 +128,14 @@ public class MapViewModel extends ViewModel {
         });
     }
 
+    @NonNull
     public Task<Void> uploadNewExperience(@NonNull String name,
                                           @NonNull String description,
                                           @NonNull Experience.Type type,
                                           @NonNull LatLng coordinates,
                                           int points) {
         DatabaseReference experienceReference = database.getReference(EXPERIENCES_REFERENCE).push();
-        Experience experience = new Experience(Objects.requireNonNull(experienceReference.getKey(), "This reference should never point at database root"),
+        Experience experience = new Experience(Objects.requireNonNull(experienceReference.getKey(), "New experience reference should never point at database root"),
                 name,
                 description,
                 type,

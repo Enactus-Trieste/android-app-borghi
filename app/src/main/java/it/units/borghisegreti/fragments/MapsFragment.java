@@ -1,6 +1,7 @@
 package it.units.borghisegreti.fragments;
 
 import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
+import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -8,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,10 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -47,10 +43,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import it.units.borghisegreti.R;
@@ -58,6 +54,7 @@ import it.units.borghisegreti.databinding.FragmentMapsBinding;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
+import it.units.borghisegreti.utils.Locator;
 import it.units.borghisegreti.viewmodels.MapViewModel;
 import it.units.borghisegreti.viewmodels.UserDataViewModel;
 
@@ -66,20 +63,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public static final String MAPS_TAG = "MAPS_FRAGMENT";
     private MapViewModel mapViewModel;
     private UserDataViewModel userDataViewModel;
-    @Nullable
-    private List<Experience> experiences;
-    @Nullable
-    private List<Zone> zones;
+    @NonNull
+    private List<Experience> experiences = Collections.emptyList();
+    @NonNull
+    private List<Zone> zones = Collections.emptyList();
     private GoogleMap map;
+    @NonNull
     private final Map<Marker, Experience> experiencesOnTheMapByMarker = new HashMap<>();
+    @NonNull
     private final Map<Marker, Zone> zonesOnTheMapByMarker = new HashMap<>();
     private FragmentMapsBinding viewBinding;
     @Nullable
     private String objectiveExperienceId;
     private ActivityResultLauncher<String[]> requestMapPermissions;
     private ActivityResultLauncher<Intent> requestLocationSourceSetting;
-    @Nullable
-    private Marker userMarker;
+    private Locator locator;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -96,6 +94,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
 
+        locator = new Locator(requireContext(), getLifecycle(), new Locator.Callback() {
+            @Override
+            public void onObjectiveInRange() {
+                Log.d(LOCATOR_TAG, "Objective experience is in range");
+                viewBinding.completeExpButton.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onObjectiveOutOfRange() {
+                Log.d(LOCATOR_TAG, "Objective experience is out of range");
+                viewBinding.completeExpButton.setVisibility(View.GONE);
+            }
+        });
+
         requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
             if (areBothPermissionsGranted(arePermissionsGranted)) {
                 viewBinding.map.getMapAsync(this);
@@ -106,7 +118,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         });
         requestLocationSourceSetting = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), activityResult -> {
             if (activityResult.getResultCode() == Activity.RESULT_OK) {
-                buildAndSubmitLocationRequest();
+                locator.start();
             } else {
                 // could also change view appearance
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
@@ -139,6 +151,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             requestMapPermissions.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
         }
+
+        viewBinding.completeExpButton.setOnClickListener(view -> {
+            Experience objectiveExperience = null;
+            for (Experience experience : this.experiences) {
+                if (experience.getId().equals(objectiveExperienceId)) {
+                    objectiveExperience = experience;
+                    break;
+                }
+            }
+            if (objectiveExperience != null) {
+                userDataViewModel.setExperienceAsCompleted(objectiveExperience)
+                        .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Experience set as completed"))
+                        .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Unable to set experience as completed", exception));
+                userDataViewModel.setObjectiveExperience(null)
+                        .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Objective experience reset"))
+                        .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Failed to reset objective experience", exception));
+                AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.experience_completed)
+                        .setMessage(String.format(getString(R.string.gained_points_alert), objectiveExperience.getPoints()))
+                        .setPositiveButton(R.string.ok, ((dialogInterface, i) -> Toast.makeText(requireContext(), R.string.next_objective_toast, Toast.LENGTH_SHORT).show()))
+                        .create();
+                viewBinding.completeExpButton.setVisibility(View.GONE);
+                dialog.show();
+            }
+        });
         return fragmentView;
     }
 
@@ -194,6 +231,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         viewBinding.map.onLowMemory();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(MAPS_TAG, "Map is ready, entering callback");
@@ -202,11 +240,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         map.setMinZoomPreference(7f);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setZoomControlsEnabled(true);
+        map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         map.setOnCameraMoveListener(this::drawMarkers);
 
         userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
             objectiveExperienceId = experienceId;
+            locator.submitObjectiveId(experienceId);
             for (Experience experienceOnTheMap : experiencesOnTheMapByMarker.values()) {
                 if (experienceOnTheMap.getId().equals(objectiveExperienceId)) {
                     Marker marker = findMarkerAssociatedToExperience(experienceOnTheMap);
@@ -221,35 +261,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapViewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
             Log.d(MAPS_TAG, "Obtained " + experiences.size() + " experiences from Firebase");
             this.experiences = experiences;
+            locator.submitExperiences(experiences);
             if (map.getCameraPosition().zoom >= 12) {
                 drawAllExperienceMarkers();
             } else {
                 Log.d(MAPS_TAG, "Zoom is less than 12, not drawing experience markers");
             }
-            viewBinding.completeExpButton.setOnClickListener(view -> {
-                Experience objectiveExperience = null;
-                for (Experience experience : Objects.requireNonNull(this.experiences, "Database should always have at least one experience available")) {
-                    if (experience.getId().equals(objectiveExperienceId)) {
-                        objectiveExperience = experience;
-                        break;
-                    }
-                }
-                if (objectiveExperience != null) {
-                    userDataViewModel.setExperienceAsCompleted(objectiveExperience)
-                            .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Experience set as completed"))
-                            .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Unable to set experience as completed", exception));
-                    userDataViewModel.setObjectiveExperience(null)
-                            .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Objective experience reset"))
-                            .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Failed to reset objective experience", exception));
-                    AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                            .setTitle(R.string.experience_completed)
-                            .setMessage(String.format(getString(R.string.gained_points_alert), objectiveExperience.getPoints()))
-                            .setPositiveButton(R.string.ok, ((dialogInterface, i) -> Toast.makeText(requireContext(), R.string.next_objective_toast, Toast.LENGTH_SHORT).show()))
-                            .create();
-                    viewBinding.completeExpButton.setVisibility(View.GONE);
-                    dialog.show();
-                }
-            });
         });
         mapViewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
             Log.d(MAPS_TAG, "Obtained " + zones.size() + " zones from Firebase");
@@ -262,68 +279,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         });
 
         if (isLocationEnabled()) {
-            buildAndSubmitLocationRequest();
+            locator.start();
         } else {
             requestLocationSourceSetting.launch(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void buildAndSubmitLocationRequest() {
-        FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        LocationRequest.Builder builder = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5);
-        builder.setMaxUpdateDelayMillis(0);
-        LocationRequest locationRequest = builder.build();
-        locationProviderClient.requestLocationUpdates(locationRequest, location -> {
-            if (isObjectiveInRange(location)) {
-                Log.d(MAPS_TAG, "Objective experience is in range");
-                viewBinding.completeExpButton.setVisibility(View.VISIBLE);
-            } else {
-                Log.d(MAPS_TAG, "Objective experience is out of range");
-                viewBinding.completeExpButton.setVisibility(View.GONE);
-            }
-        }, Looper.myLooper());
-        map.setMyLocationEnabled(true);
-    }
-
-    private boolean isObjectiveInRange(Location location) {
-        if (experiences != null) {
-            Experience objectiveExperience = null;
-            for (Experience experience : experiences) {
-                if (experience.getId().equals(objectiveExperienceId)) {
-                    objectiveExperience = experience;
-                    break;
-                }
-            }
-            double distanceBetweenPoints = 500;
-            if (objectiveExperience != null) {
-                distanceBetweenPoints = computeDistanceBetweenPoints(objectiveExperience.getLatitude(),
-                        objectiveExperience.getLongitude(), location.getLatitude(), location.getLongitude());
-            } else {
-                Log.e(MAPS_TAG, "Unable to find objective among experiences");
-            }
-            Log.d(MAPS_TAG, "Distance from the objective is: " + distanceBetweenPoints);
-            return distanceBetweenPoints < 50;
-        }
-        Log.w(MAPS_TAG, "Experiences not loaded yet");
-        return false;
-    }
-
-    private double computeDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(degreeToRadians(lat1)) * Math.sin(degreeToRadians(lat2)) + Math.cos(degreeToRadians(lat1)) * Math.cos(degreeToRadians(lat2)) * Math.cos(degreeToRadians(theta));
-        dist = Math.acos(dist);
-        dist = radiansToDegree(dist);
-        dist = dist * 60 * 1.1515 * 1609.344;
-        return dist;
-    }
-
-    private double degreeToRadians(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private double radiansToDegree(double rad) {
-        return (rad * 180.0 / Math.PI);
     }
 
     private boolean isLocationEnabled() {
@@ -333,21 +292,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void drawMarkers() {
         Log.d(MAPS_TAG, "Starting to draw markers");
-        if (experiences != null && zones != null) {
-            if (map.getCameraPosition().zoom < 12) {
-                clearFromTheMap(experiencesOnTheMapByMarker.keySet());
-                experiencesOnTheMapByMarker.clear();
-                drawAllZoneMarkers();
-            } else {
-                clearFromTheMap(zonesOnTheMapByMarker.keySet());
-                zonesOnTheMapByMarker.clear();
-                drawAllExperienceMarkers();
-            }
+        if (map.getCameraPosition().zoom < 12) {
+            clearFromTheMap(experiencesOnTheMapByMarker.keySet());
+            experiencesOnTheMapByMarker.clear();
+            drawAllZoneMarkers();
+        } else {
+            clearFromTheMap(zonesOnTheMapByMarker.keySet());
+            zonesOnTheMapByMarker.clear();
+            drawAllExperienceMarkers();
         }
     }
 
     private void drawAllExperienceMarkers() {
-        for (Experience experience : Objects.requireNonNull(experiences, "No experiences found, value is null")) {
+        for (Experience experience : experiences) {
             if (!experiencesOnTheMapByMarker.containsValue(experience)) {
                 drawExperienceMarker(experience);
             } else {
@@ -393,7 +350,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void drawAllZoneMarkers() {
-        for (Zone zone : Objects.requireNonNull(zones, "No zones found, value is null")) {
+        for (Zone zone : zones) {
             if (!zonesOnTheMapByMarker.containsValue(zone)) {
                 Marker zoneMarker = map.addMarker(new MarkerOptions()
                         .position(zone.getCoordinates())
@@ -419,6 +376,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Experience experience = experiencesOnTheMapByMarker.get(marker);
         if (zone != null) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 12f));
+            return true;
         } else if (experience != null) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
@@ -431,7 +389,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 public void onCancel() {
                 }
             });
+            return true;
         }
-        return true;
+        return false;
     }
 }

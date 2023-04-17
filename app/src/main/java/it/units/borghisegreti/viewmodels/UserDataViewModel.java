@@ -18,10 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -80,7 +78,7 @@ public class UserDataViewModel extends ViewModel {
         };
         database.getReference()
                 .child(USER_DATA_REFERENCE)
-                .child(this.userId)
+                .child(userId)
                 .addValueEventListener(userDataListener);
     }
 
@@ -92,14 +90,23 @@ public class UserDataViewModel extends ViewModel {
         return databaseCompletedExperiencesFormattedDatesById;
     }
 
+    /**
+     *
+     * @return The objective experience's ID for the current user, or null if the user has no objective experience set
+     */
     public LiveData<String> getObjectiveExperienceId() {
         return databaseObjectiveExperienceId;
     }
 
+    /**
+     *
+     * @return The number of points held by the current user
+     */
     public LiveData<Integer> getUserPoints() {
         return databaseUserPoints;
     }
 
+    @NonNull
     public Task<Void> setObjectiveExperience(@Nullable String experienceId) {
         return database.getReference()
                 .child(USER_DATA_REFERENCE)
