@@ -40,11 +40,13 @@ public class Locator implements DefaultLifecycleObserver {
     private List<Experience> experiences = Collections.emptyList();
     @NonNull
     private final LocationListener locationListener;
-    private FusedLocationProviderClient locationProviderClient;
+    @NonNull
+    private final FusedLocationProviderClient locationProviderClient;
 
     public Locator(@NonNull Context context, @NonNull Lifecycle lifecycle, @NonNull Callback callback) {
         this.context = context;
         this.lifecycle = lifecycle;
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
         locationListener = location -> {
             if (isObjectiveInRange(location)) {
@@ -64,12 +66,11 @@ public class Locator implements DefaultLifecycleObserver {
     @SuppressLint("MissingPermission")
     private void startRequestingLocationUpdates() {
         hasStarted = true;
-        locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         LocationRequest.Builder builder = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS);
         builder.setMaxUpdateDelayMillis(MAX_DELAY_MILLIS);
         LocationRequest locationRequest = builder.build();
         locationProviderClient.requestLocationUpdates(locationRequest, locationListener, context.getMainLooper())
-                .addOnSuccessListener(task -> Log.d(LOCATOR_TAG, "location updates successfully requested"))
+                .addOnSuccessListener(task -> Log.d(LOCATOR_TAG, "Location updates successfully requested"))
                 .addOnFailureListener(exception -> Log.e(LOCATOR_TAG, "Error while requesting location updates", exception));
     }
 
