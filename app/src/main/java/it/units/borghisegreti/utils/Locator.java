@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,11 +41,13 @@ public class Locator implements DefaultLifecycleObserver {
     private List<Experience> experiences = Collections.emptyList();
     @NonNull
     private final LocationListener locationListener;
-    private FusedLocationProviderClient locationProviderClient;
+    @NonNull
+    private final FusedLocationProviderClient locationProviderClient;
 
     public Locator(@NonNull Context context, @NonNull Lifecycle lifecycle, @NonNull Callback callback) {
         this.context = context;
         this.lifecycle = lifecycle;
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
         locationListener = location -> {
             if (isObjectiveInRange(location)) {
@@ -56,22 +59,23 @@ public class Locator implements DefaultLifecycleObserver {
     }
 
     public void start() {
-        Log.d(LOCATOR_TAG, "Inside start() method now");
         if (lifecycle.getCurrentState().isAtLeast(STARTED) && !hasStarted) {
-            startRequestingLocationUpdates();
+            startRequestingLocationUpdates()
+                    .addOnSuccessListener(task -> {
+                        Log.d(LOCATOR_TAG, "Location updates successfully requested");
+                        hasStarted = true;
+                    })
+                    .addOnFailureListener(exception -> Log.e(LOCATOR_TAG, "Error while requesting location updates", exception));
         }
     }
 
+    @NonNull
     @SuppressLint("MissingPermission")
-    private void startRequestingLocationUpdates() {
-        hasStarted = true;
-        locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+    private Task<Void> startRequestingLocationUpdates() {
         LocationRequest.Builder builder = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS);
         builder.setMaxUpdateDelayMillis(MAX_DELAY_MILLIS);
         LocationRequest locationRequest = builder.build();
-        locationProviderClient.requestLocationUpdates(locationRequest, locationListener, context.getMainLooper())
-                .addOnSuccessListener(task -> Log.d(LOCATOR_TAG, "location updates successfully requested"))
-                .addOnFailureListener(exception -> Log.e(LOCATOR_TAG, "Error while requesting location updates", exception));
+        return locationProviderClient.requestLocationUpdates(locationRequest, locationListener, context.getMainLooper());
     }
 
     private boolean isObjectiveInRange(Location location) {
@@ -113,7 +117,12 @@ public class Locator implements DefaultLifecycleObserver {
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
         if (!hasStarted) {
-            startRequestingLocationUpdates();
+            startRequestingLocationUpdates()
+                    .addOnSuccessListener(task -> {
+                        Log.d(LOCATOR_TAG, "Location updates successfully requested");
+                        hasStarted = true;
+                    })
+                    .addOnFailureListener(exception -> Log.e(LOCATOR_TAG, "Error while requesting location updates", exception));
         } else {
             Log.d(LOCATOR_TAG, "Locator already started");
         }
@@ -122,9 +131,11 @@ public class Locator implements DefaultLifecycleObserver {
     @Override
     public void onStop(@NonNull LifecycleOwner owner) {
         locationProviderClient.removeLocationUpdates(locationListener)
-                .addOnSuccessListener(task -> Log.d(LOCATOR_TAG, "Location updates successfully removed"))
+                .addOnSuccessListener(task -> {
+                    Log.d(LOCATOR_TAG, "Location updates successfully removed");
+                    hasStarted = false;
+                })
                 .addOnFailureListener(exception -> Log.e(LOCATOR_TAG, "Error while removing location updates", exception));
-        hasStarted = false;
     }
 
     public void submitObjectiveId(@NonNull String objectiveExperienceId) {

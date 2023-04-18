@@ -51,6 +51,7 @@ import java.util.Set;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
+import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
@@ -76,7 +77,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Nullable
     private String objectiveExperienceId;
     private ActivityResultLauncher<String[]> requestMapPermissions;
-    private ActivityResultLauncher<Intent> requestLocationSourceSetting;
+    private ActivityResultLauncher<Intent> requestEnableLocation;
     private Locator locator;
 
     public MapsFragment() {
@@ -91,6 +92,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
             return;
         }
+        // view models must be initialized after the fragment is attached
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
 
@@ -108,15 +110,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
 
-        requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), arePermissionsGranted -> {
-            if (areBothPermissionsGranted(arePermissionsGranted)) {
+        requestMapPermissions = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), grantedPermissions -> {
+            if (areBothPermissionsGranted(grantedPermissions)) {
                 viewBinding.map.getMapAsync(this);
             } else {
                 // could also change view appearance
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
             }
         });
-        requestLocationSourceSetting = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), activityResult -> {
+        requestEnableLocation = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), activityResult -> {
             if (activityResult.getResultCode() == Activity.RESULT_OK) {
                 locator.start();
             } else {
@@ -140,7 +142,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         View fragmentView = viewBinding.getRoot();
         viewBinding.map.onCreate(savedInstanceState);
         if (arePermissionsAlreadyGranted()) {
-            Log.d(MAPS_TAG, "Start to retrieve Google map");
             viewBinding.map.getMapAsync(this);
         } else if (shouldShowRequestPermissionsRationale()) {
             new MaterialAlertDialogBuilder(requireContext())
@@ -154,7 +155,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         viewBinding.completeExpButton.setOnClickListener(view -> {
             Experience objectiveExperience = null;
-            for (Experience experience : this.experiences) {
+            for (Experience experience : experiences) {
                 if (experience.getId().equals(objectiveExperienceId)) {
                     objectiveExperience = experience;
                     break;
@@ -188,6 +189,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    // when using MapView, we need to manually forward lifecycle stages
     @Override
     public void onStart() {
         super.onStart();
@@ -281,7 +283,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (isLocationEnabled()) {
             locator.start();
         } else {
-            requestLocationSourceSetting.launch(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            requestEnableLocation.launch(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         }
     }
 
@@ -306,7 +308,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private void drawAllExperienceMarkers() {
         for (Experience experience : experiences) {
             if (!experiencesOnTheMapByMarker.containsValue(experience)) {
-                drawExperienceMarker(experience);
+                try {
+                    drawExperienceMarker(experience);
+                } catch (MarkerNotDrawnException e) {
+                    Log.e(MAPS_TAG, e.getMessage(), e);
+                }
             } else {
                 Log.d(MAPS_TAG, "Marker for experience " + experience + " already on the map, not drawing");
             }
@@ -315,7 +321,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 if (foundMarker != null) {
                     foundMarker.setZIndex(1f);
                 } else {
-                    Log.e(MAPS_TAG, "No marker found in findMarkerAssociatedToExperience");
+                    Log.e(MAPS_TAG, "No marker found for the objective experience, even though it should be on the map");
                 }
             }
         }
@@ -331,36 +337,45 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return null;
     }
 
-    private void drawExperienceMarker(@NonNull Experience experience) {
-        Marker marker = findMarkerAssociatedToExperience(experience);
-        if (marker == null) {
-            marker = map.addMarker(new MarkerOptions()
-                    .position(experience.getCoordinates())
-                    .title(experience.getName())
-                    .snippet(experience.getDescription()));
-            experiencesOnTheMapByMarker.put(marker, experience);
-        }
-        if (marker == null) {
-            Log.e(MAPS_TAG, "Error while drawing marker in drawExperienceMarker");
+    private void drawExperienceMarker(@NonNull Experience experience) throws MarkerNotDrawnException {
+        Marker experienceMarker = map.addMarker(new MarkerOptions()
+                .position(experience.getCoordinates())
+                .title(experience.getName())
+                .snippet(experience.getDescription()));
+        if (experienceMarker == null) {
+            throw new MarkerNotDrawnException("Error while drawing marker for experience " + experience);
         } else {
-            IconBuilder markerBuilder = new IconBuilder(requireContext(), experience);
-            marker.setIcon(markerBuilder.buildMarkerDescriptor());
-            marker.setAlpha(markerBuilder.getMarkerAlpha());
+            experiencesOnTheMapByMarker.put(experienceMarker, experience);
+            IconBuilder iconBuilder = new IconBuilder(requireContext(), experience);
+            experienceMarker.setIcon(iconBuilder.buildMarkerDescriptor());
+            experienceMarker.setAlpha(iconBuilder.getMarkerAlpha());
         }
     }
 
     private void drawAllZoneMarkers() {
         for (Zone zone : zones) {
             if (!zonesOnTheMapByMarker.containsValue(zone)) {
-                Marker zoneMarker = map.addMarker(new MarkerOptions()
-                        .position(zone.getCoordinates())
-                        .title(zone.getName())
-                        .anchor(0.5f, 0.5f)
-                        .icon(BitmapDescriptorFactory.fromAsset("icons/BorgoIcon.png")));
-                zonesOnTheMapByMarker.put(zoneMarker, zone);
+                try {
+                    drawZoneMarker(zone);
+                } catch (MarkerNotDrawnException e) {
+                    Log.e(MAPS_TAG, e.getMessage(), e);
+                }
             } else {
                 Log.d(MAPS_TAG, "Marker for zone " + zone + " already on the map, not drawing");
             }
+        }
+    }
+
+    private void drawZoneMarker(@NonNull Zone zone) throws MarkerNotDrawnException {
+        Marker zoneMarker = map.addMarker(new MarkerOptions()
+                .position(zone.getCoordinates())
+                .title(zone.getName())
+                .anchor(0.5f, 0.5f)
+                .icon(BitmapDescriptorFactory.fromAsset("icons/BorgoIcon.png")));
+        if (zoneMarker == null) {
+            throw new MarkerNotDrawnException("Error while drawing marker for zone " + zone);
+        } else {
+            zonesOnTheMapByMarker.put(zoneMarker, zone);
         }
     }
 
