@@ -56,7 +56,6 @@ public class Locator implements DefaultLifecycleObserver {
     }
 
     public void start() {
-        Log.d(LOCATOR_TAG, "Inside start() method now");
         if (lifecycle.getCurrentState().isAtLeast(STARTED) && !hasStarted) {
             startRequestingLocationUpdates();
         }
