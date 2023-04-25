@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.google.android.material.divider.MaterialDividerItemDecoration;
 
 import it.units.borghisegreti.R;
+import it.units.borghisegreti.adapters.ExperiencesAdapter;
 import it.units.borghisegreti.databinding.FragmentExperiencesBinding;
 
 public class ExperiencesFragment extends Fragment {
@@ -32,10 +33,14 @@ public class ExperiencesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewBinding = FragmentExperiencesBinding.inflate(inflater, container, false);
+        ExperiencesAdapter experiencesAdapter = new ExperiencesAdapter(requireContext());
         MaterialDividerItemDecoration divider = new MaterialDividerItemDecoration(viewBinding.completedExperiencesRecycler.getContext(), LinearLayoutManager.VERTICAL);
+        viewBinding.completedExperiencesRecycler.setAdapter(experiencesAdapter);
         viewBinding.completedExperiencesRecycler.addItemDecoration(divider);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         viewBinding.completedExperiencesRecycler.setLayoutManager(layoutManager);
+
+
         return viewBinding.getRoot();
     }
 
