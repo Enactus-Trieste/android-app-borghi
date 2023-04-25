@@ -15,8 +15,4 @@
         <item name="android:background">@drawable/rounded_dialog</item>
 
     </style>
-    
-    <style name="Widget.Material3.Button.ElevatedButton.MapsSearchButton" parent="Widget.Material3.Button.ElevatedButton">
-        <item name="android:textSize">22sp</item>
-    </style>
 </resources>

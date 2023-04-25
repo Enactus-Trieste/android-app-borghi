@@ -7,7 +7,7 @@
     tools:context=".fragments.MapsFragment">
 
     <Button
-        style="@style/Widget.Material3.Button.ElevatedButton.MapsSearchButton"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/maps_search_button"
