@@ -37,7 +37,7 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: xlarge
-      tag: 2022.07.1
+      tag: 2022.09.1
     steps:
       - checkout
       - run:
@@ -48,7 +48,7 @@ jobs:
           command: echo "MAPS_API_KEY=${MAPS_API_KEY}" > local.properties
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
-          system-image: system-images;android-24;google_apis;x86
+          system-image: system-images;android-28;google_apis;x86
       - run:
           name: Save test results
           command: |
@@ -64,7 +64,7 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: xlarge
-      tag: 2022.07.1
+      tag: 2022.09.1
     steps:
       - checkout
       - android/restore-gradle-cache
