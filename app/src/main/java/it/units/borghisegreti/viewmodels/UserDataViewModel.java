@@ -60,7 +60,7 @@ public class UserDataViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Map<String, Experience> completedExperiencesById = new HashMap<>();
-                for (DataSnapshot completedExperienceSnapshot : snapshot.child(COMPLETED_EXPERIENCES_REFERENCE).getChildren()) {
+                for (DataSnapshot completedExperienceSnapshot : snapshot.getChildren()) {
                     String experienceId = completedExperienceSnapshot.getKey();
                     Experience completedExperience = completedExperienceSnapshot.getValue(Experience.class);
                     completedExperiencesById.put(experienceId, completedExperience);
@@ -76,7 +76,7 @@ public class UserDataViewModel extends ViewModel {
         objectiveExperienceListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String objectiveExperienceId = snapshot.child(OBJECTIVE_REFERENCE).getValue(String.class);
+                String objectiveExperienceId = snapshot.getValue(String.class);
                 databaseObjectiveExperienceId.setValue(objectiveExperienceId);
             }
 
@@ -88,7 +88,7 @@ public class UserDataViewModel extends ViewModel {
         userPointsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Integer points = snapshot.child(POINTS_REFERENCE).getValue(Integer.class);
+                Integer points = snapshot.getValue(Integer.class);
                 databaseUserPoints.setValue(points);
             }
 
@@ -140,7 +140,7 @@ public class UserDataViewModel extends ViewModel {
      * @return The number of points held by the current user
      */
     public LiveData<Integer> getUserPoints() {
-        return Transformations.map(databaseUserPoints, points -> points != null ? points : 0);
+        return databaseUserPoints;
     }
 
     @NonNull
