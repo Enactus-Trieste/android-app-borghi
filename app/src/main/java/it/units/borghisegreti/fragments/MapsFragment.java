@@ -100,13 +100,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onObjectiveInRange() {
                 Log.d(LOCATOR_TAG, "Objective experience is in range");
-                viewBinding.completeExpButton.setVisibility(View.VISIBLE);
+                //viewBinding.completeExpButton.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onObjectiveOutOfRange() {
                 Log.d(LOCATOR_TAG, "Objective experience is out of range");
-                viewBinding.completeExpButton.setVisibility(View.GONE);
+                //viewBinding.completeExpButton.setVisibility(View.GONE);
             }
         });
 

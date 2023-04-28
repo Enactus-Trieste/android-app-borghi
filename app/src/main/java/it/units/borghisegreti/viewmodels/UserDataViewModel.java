@@ -140,7 +140,7 @@ public class UserDataViewModel extends ViewModel {
      * @return The number of points held by the current user
      */
     public LiveData<Integer> getUserPoints() {
-        return databaseUserPoints;
+        return Transformations.map(databaseUserPoints, points -> points != null ? points : 0);
     }
 
     @NonNull
