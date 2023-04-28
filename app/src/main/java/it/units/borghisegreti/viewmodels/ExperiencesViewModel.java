@@ -3,6 +3,7 @@ package it.units.borghisegreti.viewmodels;
 import static it.units.borghisegreti.viewmodels.MapViewModel.DB_TAG;
 import static it.units.borghisegreti.viewmodels.MapViewModel.DB_URL;
 import static it.units.borghisegreti.viewmodels.UserDataViewModel.COMPLETED_EXPERIENCES_REFERENCE;
+import static it.units.borghisegreti.viewmodels.UserDataViewModel.USER_DATA_REFERENCE;
 
 import android.util.Log;
 
@@ -58,9 +59,22 @@ public class ExperiencesViewModel extends ViewModel {
                 Log.e(DB_TAG, "Error: " + error.getMessage(), error.toException());
             }
         };
+        database.getReference(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(COMPLETED_EXPERIENCES_REFERENCE)
+                .addValueEventListener(completedExperiencesListener);
     }
 
     public LiveData<List<Experience>> getCompletedExperiences() {
         return Transformations.map(databaseCompletedExperiencesById, completedExperiencesById -> new ArrayList<>(completedExperiencesById.values()));
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        database.getReference(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(COMPLETED_EXPERIENCES_REFERENCE)
+                .removeEventListener(completedExperiencesListener);
     }
 }
