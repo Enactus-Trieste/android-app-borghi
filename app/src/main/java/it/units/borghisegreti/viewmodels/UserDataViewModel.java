@@ -151,13 +151,13 @@ public class UserDataViewModel extends ViewModel {
                 Log.e(DB_TAG, "Error while updating user points");
             }
         });
-        Map<String, String> mapToUpload = new HashMap<>();
-        mapToUpload.put(experience.getId(), experience.getFormattedDateOfCompletion());
+        Map<String, Experience> completedExperienceById = new HashMap<>();
+        completedExperienceById.put(experience.getId(), experience);
         return database.getReference()
                 .child(USER_DATA_REFERENCE)
                 .child(userId)
                 .child(COMPLETED_EXPERIENCES_REFERENCE)
-                .setValue(mapToUpload);
+                .setValue(completedExperienceById);
     }
 
     @NonNull
@@ -167,15 +167,6 @@ public class UserDataViewModel extends ViewModel {
                 .child(userId)
                 .child(POINTS_REFERENCE)
                 .setValue(points);
-    }
-
-    @NonNull
-    private Task<DataSnapshot> getUserUpdatedPoints() {
-        return database.getReference()
-                .child(USER_DATA_REFERENCE)
-                .child(userId)
-                .child(POINTS_REFERENCE)
-                .get();
     }
 
     @Override
