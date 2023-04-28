@@ -14,7 +14,7 @@ public class User {
     @Nullable
     private String objectiveExperienceId;
 
-    public User() {
+    private User() {
         completedExperiences = new HashMap<>();
         this.points = 0;
     }
