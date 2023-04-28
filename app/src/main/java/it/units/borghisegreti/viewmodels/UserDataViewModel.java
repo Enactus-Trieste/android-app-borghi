@@ -67,7 +67,7 @@ public class UserDataViewModel extends ViewModel {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(DB_TAG, "Error: " + error.getMessage());
+                Log.e(DB_TAG, "Error: " + error.getMessage(), error.toException());
             }
         };
         objectiveExperienceListener = new ValueEventListener() {
@@ -79,7 +79,7 @@ public class UserDataViewModel extends ViewModel {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(DB_TAG, "Error: " + error.getMessage());
+                Log.e(DB_TAG, "Error: " + error.getMessage(), error.toException());
             }
         };
         userPointsListener = new ValueEventListener() {
@@ -91,7 +91,7 @@ public class UserDataViewModel extends ViewModel {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(DB_TAG, "Error: " + error.getMessage());
+                Log.e(DB_TAG, "Error: " + error.getMessage(), error.toException());
             }
         };
         database.getReference(USER_DATA_REFERENCE)
