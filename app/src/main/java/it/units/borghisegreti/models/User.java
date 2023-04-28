@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class User {
 
@@ -15,8 +16,11 @@ public class User {
     private Map<String, Experience> completedExperiences;
     @Nullable
     private String objectiveExperienceId;
+    @NonNull
+    private String email;
 
-    public User(@NonNull String userId) {
+    public User(@NonNull String userId, @NonNull String email) {
+        this.email = email;
         points = 0;
         this.userId = userId;
     }
@@ -51,5 +55,24 @@ public class User {
             completedExperiences.put(experience.getId(), experience);
         }
         points += experience.getPoints();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId.equals(user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
     }
 }
