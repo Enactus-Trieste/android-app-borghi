@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.Task;
@@ -18,8 +19,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -114,6 +117,14 @@ public class UserDataViewModel extends ViewModel {
      */
     public LiveData<Map<String, Experience>> getCompletedExperiencesMap() {
         return databaseCompletedExperiencesById;
+    }
+
+    /**
+     *
+     * @return All the experiences completed by the current user
+     */
+    public LiveData<List<Experience>> getCompletedExperiences() {
+        return Transformations.map(databaseCompletedExperiencesById, completedExperiencesById -> new ArrayList<>(completedExperiencesById.values()));
     }
 
     /**

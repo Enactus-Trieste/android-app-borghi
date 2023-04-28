@@ -37,6 +37,7 @@ public class ExperiencesViewModel extends ViewModel {
     private final String userId;
     @NonNull
     private final ValueEventListener completedExperiencesListener;
+    private final ValueEventListener userPointsListener;
 
     public ExperiencesViewModel() {
         database = FirebaseDatabase.getInstance(DB_URL);
@@ -57,6 +58,17 @@ public class ExperiencesViewModel extends ViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(DB_TAG, "Error: " + error.getMessage(), error.toException());
+            }
+        };
+        userPointsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         };
         database.getReference(USER_DATA_REFERENCE)
