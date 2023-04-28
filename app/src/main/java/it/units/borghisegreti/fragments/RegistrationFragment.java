@@ -49,6 +49,7 @@ public class RegistrationFragment extends Fragment {
 
         viewBinding.registrationButton.setOnClickListener(new View.OnClickListener() {
 
+            // used to prevent triggering the request multiple times
             private final AtomicBoolean alreadySentOnce = new AtomicBoolean(false);
 
             @Override
@@ -62,7 +63,7 @@ public class RegistrationFragment extends Fragment {
                     authentication.createUserWithEmailAndPassword(Objects.requireNonNull(viewBinding.registrationEmail.getText()).toString(), viewBinding.registrationPassword.getText().toString())
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    Log.d(AUTH_TAG, "User " + authentication.getUid() + " created successfully");
+                                    Log.d(AUTH_TAG, "User " + task.getResult().getUser() + " created successfully");
                                     NavHostFragment.findNavController(RegistrationFragment.this)
                                             .navigate(RegistrationFragmentDirections.actionRegistrationFragmentToMapsFragment());
                                 } else {
