@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@2.1.2
+  android: circleci/android@2.2.0
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -36,19 +36,19 @@ jobs:
   android-test:
     executor:
       name: android/android-machine
-      resource-class: xlarge
-      tag: 2022.07.1
+      resource-class: large
+      tag: 2022.09.1
     steps:
       - checkout
       - run:
-          name: Make ./gradle executable
+          name: Make ./gradlew executable
           command: chmod +x ./gradlew
       - run:
           name: set Google Maps API key
           command: echo "MAPS_API_KEY=${MAPS_API_KEY}" > local.properties
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
-          system-image: system-images;android-24;google_apis;x86
+          system-image: system-images;android-28;google_apis;x86
       - run:
           name: Save test results
           command: |
@@ -63,14 +63,14 @@ jobs:
   release-build:
     executor:
       name: android/android-machine
-      resource-class: xlarge
-      tag: 2022.07.1
+      resource-class: large
+      tag: 2022.09.1
     steps:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
       - run:
-          name: Make ./gradle executable
+          name: Make ./gradlew executable
           command: chmod +x ./gradlew
       - run:
           name: set Google Maps API key
@@ -91,11 +91,11 @@ workflows:
       - android-test:
           filters:
             branches:
-              only: main
+              only: master
       - release-build:
           requires:
             - unit-test
             - android-test
           filters:
             branches:
-              only: main
+              only: master
