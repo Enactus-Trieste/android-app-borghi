@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -53,7 +54,7 @@ public class ExperiencesAdapter extends RecyclerView.Adapter<ExperiencesAdapter.
     @NonNull
     @Override
     public ExperienceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ExperienceViewHolder(CompletedExperienceBinding.inflate(LayoutInflater.from(parent.getContext())));
+        return new ExperienceViewHolder(CompletedExperienceBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
