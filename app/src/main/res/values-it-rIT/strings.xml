@@ -32,4 +32,5 @@
     <string name="menu_map_label">Mappa</string>
     <string name="menu_user_label">Profilo</string>
     <string name="map_search_button_label">Cerca esperienze</string>
+    <string name="completed_experience_logo_description">Logo esperienza completata</string>
 </resources>

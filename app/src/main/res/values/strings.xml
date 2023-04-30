@@ -31,4 +31,5 @@
     <string name="menu_map_label">Map</string>
     <string name="menu_user_label">Profile</string>
     <string name="map_search_button_label">Search for experiences</string>
+    <string name="completed_experience_logo_description">Completed experience logo</string>
 </resources>

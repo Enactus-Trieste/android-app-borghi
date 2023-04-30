@@ -27,7 +27,7 @@ public class IconBuilder {
     public BitmapDescriptor buildMarkerDescriptor() {
         BitmapDescriptor descriptor;
 
-        switch (Experience.Type.valueOf(experience.getType())) {
+        switch (experience.getEnumType()) {
             case MOUNTAIN:
                 descriptor = BitmapDescriptorFactory.fromAsset("markers/MountainIcon.png");
                 break;
@@ -69,7 +69,7 @@ public class IconBuilder {
 
     public InputStream getExperienceIcon() throws IOException {
         InputStream iconImage;
-        switch (Experience.Type.valueOf(experience.getType())) {
+        switch (experience.getEnumType()) {
             case MOUNTAIN:
                 iconImage = context.getAssets().open("icons/MountainIcon.png");
                 break;

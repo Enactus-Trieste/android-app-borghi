@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.Task;
@@ -18,8 +19,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,63 +34,97 @@ public class UserDataViewModel extends ViewModel {
     public static final String COMPLETED_EXPERIENCES_REFERENCE = "completed_experiences";
     public static final String POINTS_REFERENCE = "points";
     @NonNull
-    private final MutableLiveData<Map<String, String>> databaseCompletedExperiencesFormattedDatesById;
+    private final MutableLiveData<Map<String, Experience>> databaseCompletedExperiencesById;
     @NonNull
     private final MutableLiveData<String> databaseObjectiveExperienceId;
     @NonNull
     private final MutableLiveData<Integer> databaseUserPoints;
     @NonNull
-    private final ValueEventListener userDataListener;
-    @NonNull
     private final FirebaseDatabase database;
     @NonNull
     private final String userId;
+    @NonNull
+    private final ValueEventListener completedExperiencesListener;
+    @NonNull
+    private final ValueEventListener objectiveExperienceListener;
+    @NonNull
+    private final ValueEventListener userPointsListener;
 
     public UserDataViewModel() {
         database = FirebaseDatabase.getInstance(DB_URL);
-        databaseCompletedExperiencesFormattedDatesById = new MutableLiveData<>();
+        databaseCompletedExperiencesById = new MutableLiveData<>();
         databaseObjectiveExperienceId = new MutableLiveData<>();
         databaseUserPoints = new MutableLiveData<>();
         userId = Objects.requireNonNull(FirebaseAuth.getInstance().getUid(), "User should be already authenticated");
-        userDataListener = new ValueEventListener() {
+        completedExperiencesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // completed experiences
-                Log.d(DB_TAG, "Received new remote user data from database");
-                Map<String, String> completedExperiencesFormattedDatesById = new HashMap<>();
-                for (DataSnapshot completedExperienceSnapshot : snapshot.child(COMPLETED_EXPERIENCES_REFERENCE).getChildren()) {
+                Map<String, Experience> completedExperiencesById = new HashMap<>();
+                for (DataSnapshot completedExperienceSnapshot : snapshot.getChildren()) {
                     String experienceId = completedExperienceSnapshot.getKey();
-                    String formattedCompletionDate = completedExperienceSnapshot.getValue(String.class);
-                    completedExperiencesFormattedDatesById.put(experienceId, formattedCompletionDate);
+                    Experience completedExperience = completedExperienceSnapshot.getValue(Experience.class);
+                    completedExperiencesById.put(experienceId, completedExperience);
                 }
-                databaseCompletedExperiencesFormattedDatesById.setValue(completedExperiencesFormattedDatesById);
+                databaseCompletedExperiencesById.setValue(completedExperiencesById);
+            }
 
-                // objective experience
-                String objectiveExperienceId = snapshot.child(OBJECTIVE_REFERENCE).getValue(String.class);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(DB_TAG, "Error: " + error.getMessage(), error.toException());
+            }
+        };
+        objectiveExperienceListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String objectiveExperienceId = snapshot.getValue(String.class);
                 databaseObjectiveExperienceId.setValue(objectiveExperienceId);
+            }
 
-                // user points
-                Integer points = snapshot.child(POINTS_REFERENCE).getValue(Integer.class);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(DB_TAG, "Error: " + error.getMessage(), error.toException());
+            }
+        };
+        userPointsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer points = snapshot.getValue(Integer.class);
                 databaseUserPoints.setValue(points);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(DB_TAG, "Error: " + error.getMessage());
+                Log.e(DB_TAG, "Error: " + error.getMessage(), error.toException());
             }
         };
-        database.getReference()
-                .child(USER_DATA_REFERENCE)
+        database.getReference(USER_DATA_REFERENCE)
                 .child(userId)
-                .addValueEventListener(userDataListener);
+                .child(COMPLETED_EXPERIENCES_REFERENCE)
+                .addValueEventListener(completedExperiencesListener);
+        database.getReference(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(OBJECTIVE_REFERENCE)
+                .addValueEventListener(objectiveExperienceListener);
+        database.getReference(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(POINTS_REFERENCE)
+                .addValueEventListener(userPointsListener);
     }
 
     /**
      *
-     * @return A map of formatted experiences' completion dates, accessible by experience ID
+     * @return A map of completed experiences, accessible by experience ID
      */
-    public LiveData<Map<String, String>> getCompletedExperiencesMap() {
-        return databaseCompletedExperiencesFormattedDatesById;
+    public LiveData<Map<String, Experience>> getCompletedExperiencesMap() {
+        return databaseCompletedExperiencesById;
+    }
+
+    /**
+     *
+     * @return All the experiences completed by the current user
+     */
+    public LiveData<List<Experience>> getCompletedExperiences() {
+        return Transformations.map(databaseCompletedExperiencesById, completedExperiencesById -> new ArrayList<>(completedExperiencesById.values()));
     }
 
     /**
@@ -125,13 +162,13 @@ public class UserDataViewModel extends ViewModel {
                 Log.e(DB_TAG, "Error while updating user points");
             }
         });
-        Map<String, String> mapToUpload = new HashMap<>();
-        mapToUpload.put(experience.getId(), experience.getFormattedDateOfCompletion());
+        Map<String, Experience> completedExperienceById = new HashMap<>();
+        completedExperienceById.put(experience.getId(), experience);
         return database.getReference()
                 .child(USER_DATA_REFERENCE)
                 .child(userId)
                 .child(COMPLETED_EXPERIENCES_REFERENCE)
-                .setValue(mapToUpload);
+                .setValue(completedExperienceById);
     }
 
     @NonNull
@@ -143,21 +180,20 @@ public class UserDataViewModel extends ViewModel {
                 .setValue(points);
     }
 
-    @NonNull
-    private Task<DataSnapshot> getUserUpdatedPoints() {
-        return database.getReference()
-                .child(USER_DATA_REFERENCE)
-                .child(userId)
-                .child(POINTS_REFERENCE)
-                .get();
-    }
-
     @Override
     protected void onCleared() {
         super.onCleared();
-        database.getReference()
-                .child(USER_DATA_REFERENCE)
+        database.getReference(USER_DATA_REFERENCE)
                 .child(userId)
-                .removeEventListener(userDataListener);
+                .child(COMPLETED_EXPERIENCES_REFERENCE)
+                .removeEventListener(completedExperiencesListener);
+        database.getReference(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(OBJECTIVE_REFERENCE)
+                .removeEventListener(objectiveExperienceListener);
+        database.getReference(USER_DATA_REFERENCE)
+                .child(userId)
+                .child(POINTS_REFERENCE)
+                .removeEventListener(userPointsListener);
     }
 }

@@ -1,6 +1,7 @@
 package it.units.borghisegreti.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -32,12 +33,30 @@ public class MainActivity extends AppCompatActivity {
             // here we can check the destination id and handle changes accordingly
             if (destination.getId() == R.id.mapsFragment) {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            } else if (destination.getId() == R.id.experiencesFragment) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             }
         }));
 
-        // viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {});
+        viewBinding.bottomNavigation.setSelectedItemId(R.id.menu_map);
+        viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.menu_completed_experiences) {
+                // this prevents page reload in case the user already reached this destination
+                if (navController.getCurrentDestination().getId() != R.id.experiencesFragment) {
+                    navController.navigate(new ActionOnlyNavDirections(R.id.action_global_experiencesFragment));
+                    return true;
+                }
+            } else if (item.getItemId() == R.id.menu_map) {
+                // this prevents page reload in case the user already reached this destination
+                if (navController.getCurrentDestination().getId() != R.id.mapsFragment) {
+                    navController.navigate(new ActionOnlyNavDirections(R.id.action_global_mapsFragment));
+                    return true;
+                }
+            }
+            return false;
+        });
     }
 
     @Override

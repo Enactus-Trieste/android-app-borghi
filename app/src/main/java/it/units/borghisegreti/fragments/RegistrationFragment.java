@@ -3,11 +3,6 @@ package it.units.borghisegreti.fragments;
 import static it.units.borghisegreti.fragments.LoginFragment.AUTH_TAG;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +10,11 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentRegistrationBinding;
 import it.units.borghisegreti.fragments.directions.RegistrationFragmentDirections;
+import it.units.borghisegreti.models.User;
+import it.units.borghisegreti.viewmodels.RegistrationViewModel;
 
 
 public class RegistrationFragment extends Fragment {
@@ -49,6 +51,7 @@ public class RegistrationFragment extends Fragment {
 
         viewBinding.registrationButton.setOnClickListener(new View.OnClickListener() {
 
+            // used to prevent triggering the request multiple times
             private final AtomicBoolean alreadySentOnce = new AtomicBoolean(false);
 
             @Override
@@ -62,7 +65,14 @@ public class RegistrationFragment extends Fragment {
                     authentication.createUserWithEmailAndPassword(Objects.requireNonNull(viewBinding.registrationEmail.getText()).toString(), viewBinding.registrationPassword.getText().toString())
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    Log.d(AUTH_TAG, "User " + authentication.getUid() + " created successfully");
+                                    Log.d(AUTH_TAG, "User " + task.getResult().getUser() + " created successfully");
+                                    User newUser = new User(
+                                            Objects.requireNonNull(authentication.getUid(), "User should be successfully logged-in"),
+                                            viewBinding.registrationEmail.getText().toString());
+                                    RegistrationViewModel viewModel = new ViewModelProvider(RegistrationFragment.this).get(RegistrationViewModel.class);
+                                    viewModel.uploadNewUser(newUser)
+                                            .addOnSuccessListener(newUserTask -> Log.d(AUTH_TAG, "User " + newUser + " added to database"))
+                                            .addOnFailureListener(exception -> Log.w(AUTH_TAG, "Unable to add user " + newUser + " to database", exception));
                                     NavHostFragment.findNavController(RegistrationFragment.this)
                                             .navigate(RegistrationFragmentDirections.actionRegistrationFragmentToMapsFragment());
                                 } else {

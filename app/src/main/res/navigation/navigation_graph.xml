@@ -40,4 +40,15 @@
             app:popUpTo="@id/navigation_graph"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/experiencesFragment"
+        android:name="it.units.borghisegreti.fragments.ExperiencesFragment"
+        android:label="fragment_experiences"
+        tools:layout="@layout/fragment_experiences" />
+    <action
+        android:id="@+id/action_global_experiencesFragment"
+        app:destination="@id/experiencesFragment" />
+    <action
+        android:id="@+id/action_global_mapsFragment"
+        app:destination="@id/mapsFragment" />
 </navigation>
