@@ -215,8 +215,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         viewBinding.map.onDestroy();
         viewBinding = null;
     }
