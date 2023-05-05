@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Borghi Segreti</string>
+    <string name="app_name">QuietOffice</string>
     <string name="ok">OK</string>
     <string name="setObjective_buttonText">imposta obiettivo</string>
     <string name="removeObjective_buttonText">rimuovi obiettivo</string>

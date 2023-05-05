@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
@@ -30,6 +31,9 @@ public class MapViewModel extends ViewModel {
     public static final String DB_TAG = "FIREBASE_DB";
     public static final String ZONES_REFERENCE = "zones";
     public static final String EXPERIENCES_REFERENCE = "experiences";
+    private static final String CAMERA_LATITUDE = "latitude";
+    private static final String CAMERA_LONGITUDE = "longitude";
+    private static final String CAMERA_ZOOM = "zoom";
     @NonNull
     private final FirebaseDatabase database;
     @NonNull
@@ -40,8 +44,11 @@ public class MapViewModel extends ViewModel {
     private final MutableLiveData<List<Zone>> databaseZones;
     @NonNull
     private final MutableLiveData<List<Experience>> databaseExperiences;
+    @NonNull
+    private final SavedStateHandle savedState;
 
-    public MapViewModel() {
+    public MapViewModel(@NonNull SavedStateHandle savedState) {
+        this.savedState = savedState;
         database = FirebaseDatabase.getInstance(DB_URL);
         databaseZones = new MutableLiveData<>();
         databaseExperiences = new MutableLiveData<>();
@@ -144,6 +151,32 @@ public class MapViewModel extends ViewModel {
         return experienceReference.setValue(experience);
     }
 
+    @Nullable
+    public Double getCameraLatitude() {
+        return savedState.get(CAMERA_LATITUDE);
+    }
+
+    public void saveCameraLatitude(double latitude) {
+        savedState.set(CAMERA_LATITUDE, latitude);
+    }
+
+    @Nullable
+    public Double getCameraLongitude() {
+        return savedState.get(CAMERA_LONGITUDE);
+    }
+
+    public void saveCameraLongitude(double longitude) {
+        savedState.set(CAMERA_LONGITUDE, longitude);
+    }
+
+    @Nullable
+    public Float getCameraZoom() {
+        return savedState.get(CAMERA_ZOOM);
+    }
+
+    public void saveCameraZoom(float zoom) {
+        savedState.set(CAMERA_ZOOM, zoom);
+    }
 
     @Override
     protected void onCleared() {

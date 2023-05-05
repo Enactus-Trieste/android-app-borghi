@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.SavedStateViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -215,14 +216,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         viewBinding.map.onDestroy();
         viewBinding = null;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (mapViewModel != null) {
+            mapViewModel.saveCameraLatitude(map.getCameraPosition().target.latitude);
+            mapViewModel.saveCameraLongitude(map.getCameraPosition().target.longitude);
+            mapViewModel.saveCameraZoom(map.getCameraPosition().zoom);
+        }
         super.onSaveInstanceState(outState);
         viewBinding.map.onSaveInstanceState(outState);
     }
@@ -243,7 +249,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
+        Double cameraLatitude = mapViewModel.getCameraLatitude();
+        Double cameraLongitude = mapViewModel.getCameraLongitude();
+        Float cameraZoom = mapViewModel.getCameraZoom();
+        if (cameraLatitude != null && cameraLongitude != null && cameraZoom != null) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude, cameraLongitude), cameraZoom));
+        } else {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
+        }
         map.setOnCameraMoveListener(this::drawMarkers);
 
         userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
