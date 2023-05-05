@@ -249,7 +249,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
+        Double cameraLatitude = mapViewModel.getCameraLatitude();
+        Double cameraLongitude = mapViewModel.getCameraLongitude();
+        Float cameraZoom = mapViewModel.getCameraZoom();
+        if (cameraLatitude != null && cameraLongitude != null && cameraZoom != null) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude, cameraLongitude), cameraZoom));
+        } else {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
+        }
         map.setOnCameraMoveListener(this::drawMarkers);
 
         userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {

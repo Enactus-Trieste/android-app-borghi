@@ -3,6 +3,7 @@ package it.units.borghisegreti.viewmodels;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
@@ -150,24 +151,27 @@ public class MapViewModel extends ViewModel {
         return experienceReference.setValue(experience);
     }
 
-    public LiveData<Double> getCameraLatitude() {
-        return savedState.getLiveData(CAMERA_LATITUDE);
+    @Nullable
+    public Double getCameraLatitude() {
+        return savedState.get(CAMERA_LATITUDE);
     }
 
     public void saveCameraLatitude(double latitude) {
         savedState.set(CAMERA_LATITUDE, latitude);
     }
 
-    public LiveData<Double> getCameraLongitude() {
-        return savedState.getLiveData(CAMERA_LONGITUDE);
+    @Nullable
+    public Double getCameraLongitude() {
+        return savedState.get(CAMERA_LONGITUDE);
     }
 
     public void saveCameraLongitude(double longitude) {
         savedState.set(CAMERA_LONGITUDE, longitude);
     }
 
-    public LiveData<Float> getCameraZoom() {
-        return savedState.getLiveData(CAMERA_ZOOM);
+    @Nullable
+    public Float getCameraZoom() {
+        return savedState.get(CAMERA_ZOOM);
     }
 
     public void saveCameraZoom(float zoom) {
