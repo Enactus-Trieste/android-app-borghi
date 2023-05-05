@@ -1,23 +1,15 @@
 package it.units.borghisegreti.viewmodels;
 
-import static androidx.lifecycle.SavedStateHandleSupport.createSavedStateHandle;
-import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
-
-import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.HasDefaultViewModelProviderFactory;
+import androidx.lifecycle.AbstractSavedStateViewModelFactory;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
-import androidx.lifecycle.SavedStateHandleSupport;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.viewmodel.CreationExtras;
-import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
@@ -187,15 +179,27 @@ public class MapViewModel extends ViewModel {
         savedState.set(CAMERA_ZOOM, zoom);
     }
 
-    @NonNull
-    public FirebaseDatabase getDatabase() {
-        return database;
-    }
-
     @Override
     protected void onCleared() {
         super.onCleared();
         database.getReference(ZONES_REFERENCE).removeEventListener(zonesListener);
         database.getReference(EXPERIENCES_REFERENCE).removeEventListener(experiencesListener);
+    }
+
+    public static class Factory extends AbstractSavedStateViewModelFactory {
+
+        @NonNull
+        private final FirebaseDatabase database;
+
+        public Factory(@NonNull FirebaseDatabase database) {
+            this.database = database;
+        }
+
+        @SuppressWarnings("unchecked")
+        @NonNull
+        @Override
+        protected <T extends ViewModel> T create(@NonNull String key, @NonNull Class<T> modelClass, @NonNull SavedStateHandle handle) {
+            return (T) new MapViewModel(database, handle);
+        }
     }
 }

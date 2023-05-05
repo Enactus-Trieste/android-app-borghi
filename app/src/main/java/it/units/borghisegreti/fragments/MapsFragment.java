@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.SavedStateViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -60,7 +59,6 @@ import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
 import it.units.borghisegreti.utils.Locator;
 import it.units.borghisegreti.viewmodels.MapViewModel;
-import it.units.borghisegreti.viewmodels.MapViewModelFactory;
 import it.units.borghisegreti.viewmodels.UserDataViewModel;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -97,7 +95,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             return;
         }
         // view models must be initialized after the fragment is attached
-        mapViewModel = new ViewModelProvider(this, new MapViewModelFactory(FirebaseDatabase.getInstance(DB_URL))).get(MapViewModel.class);
+        mapViewModel = new ViewModelProvider(this, new MapViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(MapViewModel.class);
         userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
 
         locator = new Locator(requireContext(), getLifecycle(), new Locator.Callback() {
