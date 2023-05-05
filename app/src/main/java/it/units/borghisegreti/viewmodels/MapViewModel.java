@@ -1,14 +1,23 @@
 package it.units.borghisegreti.viewmodels;
 
+import static androidx.lifecycle.SavedStateHandleSupport.createSavedStateHandle;
+import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
+
+import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.HasDefaultViewModelProviderFactory;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
+import androidx.lifecycle.SavedStateHandleSupport;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.viewmodel.CreationExtras;
+import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
@@ -47,9 +56,9 @@ public class MapViewModel extends ViewModel {
     @NonNull
     private final SavedStateHandle savedState;
 
-    public MapViewModel(@NonNull SavedStateHandle savedState) {
+    public MapViewModel(@NonNull FirebaseDatabase database, @NonNull SavedStateHandle savedState) {
         this.savedState = savedState;
-        database = FirebaseDatabase.getInstance(DB_URL);
+        this.database = database;
         databaseZones = new MutableLiveData<>();
         databaseExperiences = new MutableLiveData<>();
         experiencesListener = new ValueEventListener() {
@@ -176,6 +185,11 @@ public class MapViewModel extends ViewModel {
 
     public void saveCameraZoom(float zoom) {
         savedState.set(CAMERA_ZOOM, zoom);
+    }
+
+    @NonNull
+    public FirebaseDatabase getDatabase() {
+        return database;
     }
 
     @Override

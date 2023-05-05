@@ -2,6 +2,7 @@ package it.units.borghisegreti.fragments;
 
 import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
 import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
+import static it.units.borghisegreti.viewmodels.MapViewModel.DB_URL;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -43,6 +44,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,6 +60,7 @@ import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
 import it.units.borghisegreti.utils.Locator;
 import it.units.borghisegreti.viewmodels.MapViewModel;
+import it.units.borghisegreti.viewmodels.MapViewModelFactory;
 import it.units.borghisegreti.viewmodels.UserDataViewModel;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -94,7 +97,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             return;
         }
         // view models must be initialized after the fragment is attached
-        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        mapViewModel = new ViewModelProvider(this, new MapViewModelFactory(FirebaseDatabase.getInstance(DB_URL))).get(MapViewModel.class);
         userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
 
         locator = new Locator(requireContext(), getLifecycle(), new Locator.Callback() {
