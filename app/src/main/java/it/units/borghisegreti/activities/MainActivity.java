@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
             } else if (destination.getId() == R.id.experiencesFragment) {
                 viewBinding.bottomNavigation.setVisibility(View.VISIBLE);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            } else if (destination.getId() == R.id.userProfileFragment) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else if (destination.getId() == R.id.loginFragment) {
                 viewBinding.bottomNavigation.setVisibility(View.GONE);
             } else if (destination.getId() == R.id.registrationFragment) {
@@ -52,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
                 // this prevents page reload in case the user already reached this destination
                 if (navController.getCurrentDestination().getId() != R.id.experiencesFragment) {
                     navController.navigate(new ActionOnlyNavDirections(R.id.action_global_experiencesFragment));
+                    return true;
+                }
+            } else if (item.getItemId() == R.id.menu_user) {
+                if (navController.getCurrentDestination().getId() != R.id.userProfileFragment) {
+                    navController.navigate(new ActionOnlyNavDirections(R.id.action_global_userProfileFragment));
                     return true;
                 }
             } else if (item.getItemId() == R.id.menu_map) {
