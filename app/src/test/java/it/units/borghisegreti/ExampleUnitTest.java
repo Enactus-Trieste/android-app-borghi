@@ -7,7 +7,7 @@ import androidx.test.filters.SmallTest;
 import org.junit.Test;
 
 @SmallTest
-public class MapDataRetrievalTests {
+public class ExampleUnitTest {
 
     @Test
     public void example_test() {
