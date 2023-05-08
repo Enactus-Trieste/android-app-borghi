@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "experiences": {
+      ".read": true,
+      ".write": false
+    },
+    "user_data": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "auth !== null"
+      }
+    },
+    "zones": {
+      ".read": true,
+      ".write": false
+    }
+  }
+}

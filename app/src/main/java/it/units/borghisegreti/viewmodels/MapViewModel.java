@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.AbstractSavedStateViewModelFactory;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
@@ -47,9 +48,9 @@ public class MapViewModel extends ViewModel {
     @NonNull
     private final SavedStateHandle savedState;
 
-    public MapViewModel(@NonNull SavedStateHandle savedState) {
+    public MapViewModel(@NonNull FirebaseDatabase database, @NonNull SavedStateHandle savedState) {
         this.savedState = savedState;
-        database = FirebaseDatabase.getInstance(DB_URL);
+        this.database = database;
         databaseZones = new MutableLiveData<>();
         databaseExperiences = new MutableLiveData<>();
         experiencesListener = new ValueEventListener() {
@@ -183,5 +184,22 @@ public class MapViewModel extends ViewModel {
         super.onCleared();
         database.getReference(ZONES_REFERENCE).removeEventListener(zonesListener);
         database.getReference(EXPERIENCES_REFERENCE).removeEventListener(experiencesListener);
+    }
+
+    public static class Factory extends AbstractSavedStateViewModelFactory {
+
+        @NonNull
+        private final FirebaseDatabase database;
+
+        public Factory(@NonNull FirebaseDatabase database) {
+            this.database = database;
+        }
+
+        @SuppressWarnings("unchecked")
+        @NonNull
+        @Override
+        protected <T extends ViewModel> T create(@NonNull String key, @NonNull Class<T> modelClass, @NonNull SavedStateHandle handle) {
+            return (T) new MapViewModel(database, handle);
+        }
     }
 }
