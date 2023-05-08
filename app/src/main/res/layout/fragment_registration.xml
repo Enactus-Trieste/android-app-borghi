@@ -38,11 +38,9 @@
         app:counterEnabled="true"
         app:counterMaxLength="@integer/max_email_text_length"
         app:errorEnabled="true"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/registration_email_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/registration_email_layout"
-        app:layout_constraintBottom_toTopOf="@+id/registration_password_confirm_layout">
+        app:layout_constraintStart_toEndOf="@+id/registration_email_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -85,10 +83,9 @@
         app:counterMaxLength="@integer/max_password_text_length"
         app:endIconMode="password_toggle"
         app:errorEnabled="true"
+        app:layout_constraintBaseline_toBaselineOf="@+id/registration_password_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/registration_password_layout"
-        app:layout_constraintTop_toBottomOf="@+id/registration_email_confirm_layout"
-        app:layout_constraintBottom_toTopOf="@+id/cancel_registration_button">
+        app:layout_constraintStart_toEndOf="@+id/registration_password_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -117,9 +114,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="@string/registration_cancel"
+        app:layout_constraintBaseline_toBaselineOf="@+id/registration_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registration_password_confirm_layout"
-        app:layout_constraintStart_toEndOf="@+id/registration_button"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toEndOf="@+id/registration_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
