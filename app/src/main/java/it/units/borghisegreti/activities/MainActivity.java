@@ -32,10 +32,17 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             // here we can check the destination id and handle changes accordingly
             if (destination.getId() == R.id.mapsFragment) {
+                viewBinding.bottomNavigation.setVisibility(View.VISIBLE);
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else if (destination.getId() == R.id.experiencesFragment) {
+                viewBinding.bottomNavigation.setVisibility(View.VISIBLE);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            } else if (destination.getId() == R.id.loginFragment) {
+                viewBinding.bottomNavigation.setVisibility(View.GONE);
+            } else if (destination.getId() == R.id.registrationFragment) {
+                viewBinding.bottomNavigation.setVisibility(View.GONE);
             } else {
+                viewBinding.bottomNavigation.setVisibility(View.VISIBLE);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             }
         }));
