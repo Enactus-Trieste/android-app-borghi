@@ -193,44 +193,46 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     // when using MapView, we need to manually forward lifecycle stages
     @Override
     public void onStart() {
-        super.onStart();
         viewBinding.map.onStart();
+        super.onStart();
     }
 
     @Override
     public void onResume() {
-        super.onResume();
         viewBinding.map.onResume();
+        super.onResume();
     }
 
     @Override
     public void onPause() {
-        super.onPause();
         viewBinding.map.onPause();
+        super.onPause();
     }
 
     @Override
     public void onStop() {
-        super.onStop();
         viewBinding.map.onStop();
+        super.onStop();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
         viewBinding.map.onDestroy();
         viewBinding = null;
+        super.onDestroyView();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (mapViewModel != null) {
+        if (mapViewModel != null && map != null) {
             mapViewModel.saveCameraLatitude(map.getCameraPosition().target.latitude);
             mapViewModel.saveCameraLongitude(map.getCameraPosition().target.longitude);
             mapViewModel.saveCameraZoom(map.getCameraPosition().zoom);
         }
         super.onSaveInstanceState(outState);
-        viewBinding.map.onSaveInstanceState(outState);
+        if (viewBinding != null) {
+            viewBinding.map.onSaveInstanceState(outState);
+        }
     }
 
     @Override
