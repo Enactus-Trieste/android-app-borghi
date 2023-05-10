@@ -214,13 +214,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
-    public void onDestroyView() {
-        viewBinding.map.onDestroy();
-        viewBinding = null;
-        super.onDestroyView();
-    }
-
-    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         if (mapViewModel != null && map != null) {
             mapViewModel.saveCameraLatitude(map.getCameraPosition().target.latitude);
@@ -231,6 +224,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (viewBinding != null) {
             viewBinding.map.onSaveInstanceState(outState);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        viewBinding.map.onDestroy();
+        viewBinding = null;
+        super.onDestroyView();
     }
 
     @Override
