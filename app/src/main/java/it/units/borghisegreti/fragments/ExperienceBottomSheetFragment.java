@@ -93,7 +93,7 @@ public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
         viewModel.getCompletedExperiencesMap().observe(getViewLifecycleOwner(), completedExperiences -> {
             if (completedExperiences.containsKey(experienceId)) {
                 viewBinding.setObjectiveButton.setVisibility(View.GONE);
-                viewBinding.completedTextView.setText(String.format("%s %s", getString(R.string.completed), completedExperiences.get(experienceId)));
+                viewBinding.completedTextView.setText(String.format("%s %s", getString(R.string.completed), completedExperiences.get(experienceId).getFormattedDateOfCompletion()));
                 viewBinding.completedTextView.setVisibility(View.VISIBLE);
             }
         });
