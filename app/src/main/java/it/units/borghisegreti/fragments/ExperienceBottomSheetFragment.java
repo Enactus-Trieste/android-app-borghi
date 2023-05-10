@@ -11,9 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -24,8 +21,7 @@ import java.util.Objects;
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentExperienceBottomSheetBinding;
 import it.units.borghisegreti.utils.IconBuilder;
-import it.units.borghisegreti.viewmodels.MapViewModel;
-import it.units.borghisegreti.viewmodels.UserDataViewModel;
+import it.units.borghisegreti.viewmodels.ObjectiveDialogViewModel;
 
 public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -35,9 +31,8 @@ public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
     @Nullable
     private String experienceId;
     private FragmentExperienceBottomSheetBinding viewBinding;
-    private MapViewModel mapViewModel;
-    private UserDataViewModel userDataViewModel;
     private String objectiveExperienceId;
+    private ObjectiveDialogViewModel viewModel;
 
     public ExperienceBottomSheetFragment() {
         // Required empty public constructor
@@ -58,8 +53,7 @@ public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             experienceId = getArguments().getString(EXPERIENCE_ID);
         }
-        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ObjectiveDialogViewModel.class);
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
     }
 
@@ -69,7 +63,7 @@ public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
         // Inflate the layout for this fragment
         viewBinding = FragmentExperienceBottomSheetBinding.inflate(inflater, container, false);
 
-        mapViewModel.getExperienceById(Objects.requireNonNull(experienceId, "Experience ID shouldn't be null when the dialog's been initialized")).observe(getViewLifecycleOwner(), experience -> {
+        viewModel.getExperienceById(Objects.requireNonNull(experienceId, "Experience ID shouldn't be null when the dialog's been initialized")).observe(getViewLifecycleOwner(), experience -> {
             viewBinding.experienceTitle.setText(experience.getName());
             viewBinding.experienceDescription.setText(experience.getDescription());
             viewBinding.experiencePoints.setText(String.format(getString(R.string.gained_points), experience.getPoints()));
@@ -84,7 +78,7 @@ public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
             }
         });
 
-        userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), objectiveExperienceId -> {
+        viewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), objectiveExperienceId -> {
             this.objectiveExperienceId = objectiveExperienceId;
             if (objectiveExperienceId != null) {
                 viewBinding.setObjectiveButton.setText(R.string.removeObjective_buttonText);
@@ -93,7 +87,7 @@ public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
             }
         });
 
-        userDataViewModel.getCompletedExperiencesMap().observe(getViewLifecycleOwner(), completedExperiences -> {
+        viewModel.getCompletedExperiencesMap().observe(getViewLifecycleOwner(), completedExperiences -> {
             if (completedExperiences.containsKey(experienceId)) {
                 viewBinding.setObjectiveButton.setVisibility(View.GONE);
                 viewBinding.completedTextView.setText(String.format("%s %s", getString(R.string.completed), completedExperiences.get(experienceId)));
@@ -103,11 +97,11 @@ public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
 
         viewBinding.setObjectiveButton.setOnClickListener(view -> {
             if (objectiveExperienceId == null) {
-                userDataViewModel.setObjectiveExperience(experienceId)
+                viewModel.setObjectiveExperience(experienceId)
                         .addOnSuccessListener(task -> Log.d(LOG_TAG, "New objective successfully uploaded"))
                         .addOnFailureListener(exception -> Log.e(LOG_TAG, "Error while uploading new objective", exception));
             } else {
-                userDataViewModel.setObjectiveExperience(null)
+                viewModel.setObjectiveExperience(null)
                         .addOnSuccessListener(task -> Log.d(LOG_TAG, "New objective successfully uploaded"))
                         .addOnFailureListener(exception -> Log.e(LOG_TAG, "Error while uploading new objective", exception));
             }

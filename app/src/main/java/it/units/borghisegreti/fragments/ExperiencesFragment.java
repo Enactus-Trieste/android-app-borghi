@@ -15,12 +15,12 @@ import com.google.android.material.divider.MaterialDividerItemDecoration;
 
 import it.units.borghisegreti.adapters.ExperiencesAdapter;
 import it.units.borghisegreti.databinding.FragmentExperiencesBinding;
-import it.units.borghisegreti.viewmodels.UserDataViewModel;
+import it.units.borghisegreti.viewmodels.ExperiencesViewModel;
 
 public class ExperiencesFragment extends Fragment {
 
     private FragmentExperiencesBinding viewBinding;
-    private UserDataViewModel viewModel;
+    private ExperiencesViewModel viewModel;
 
     public ExperiencesFragment() {
         // Required empty public constructor
@@ -29,7 +29,7 @@ public class ExperiencesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ExperiencesViewModel.class);
     }
 
     @Override
