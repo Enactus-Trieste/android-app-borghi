@@ -52,7 +52,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View loginButtonView) {
                 hideKeyboard();
-                if (!LoginFragment.this.inputValidation()) {
+                if (!LoginFragment.this.isInputValid()) {
                     return;
                 }
                 if (!alreadySentOnce.get()) {
@@ -85,7 +85,7 @@ public class LoginFragment extends Fragment {
         viewBinding.loginPasswordLayout.setEnabled(true);
     }
 
-    private boolean inputValidation() {
+    private boolean isInputValid() {
         boolean isInputValid = true;
         Editable email = viewBinding.loginUsernameText.getText();
         Editable password = viewBinding.loginPasswordText.getText();
