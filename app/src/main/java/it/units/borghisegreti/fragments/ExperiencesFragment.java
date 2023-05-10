@@ -19,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import it.units.borghisegreti.adapters.ExperiencesAdapter;
 import it.units.borghisegreti.databinding.FragmentExperiencesBinding;
 import it.units.borghisegreti.viewmodels.ExperiencesViewModel;
-import it.units.borghisegreti.viewmodels.MapViewModel;
 
 public class ExperiencesFragment extends Fragment {
 
@@ -33,7 +32,7 @@ public class ExperiencesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this, new MapViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(ExperiencesViewModel.class);
+        viewModel = new ViewModelProvider(this, new ExperiencesViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(ExperiencesViewModel.class);
     }
 
     @Override
