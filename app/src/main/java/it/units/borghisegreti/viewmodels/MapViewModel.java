@@ -189,6 +189,15 @@ public class MapViewModel extends ViewModel {
         });
     }
 
+    /**
+     * Uploads a new experience with the given name, description, type, coordinates and points
+     * @param name - new experience name
+     * @param description - new experience description
+     * @param type - new experience type
+     * @param coordinates - new experience coordinates
+     * @param points - new experience points
+     * @return A Task to check whether the operation was successful or not
+     */
     @NonNull
     public Task<Void> uploadNewExperience(@NonNull String name,
                                           @NonNull String description,
@@ -205,6 +214,11 @@ public class MapViewModel extends ViewModel {
         return experienceReference.setValue(experience);
     }
 
+    /**
+     * Sets the given experience as completed for the current user
+     * @param experience - the experience to be set as completed
+     * @return A Task to check whether the operation was successful or not
+     */
     @NonNull
     public Task<Void> setExperienceAsCompleted(@NonNull Experience experience) {
         experience.setDateOfCompletion(new Date());
@@ -233,6 +247,12 @@ public class MapViewModel extends ViewModel {
                 .setValue(points);
     }
 
+    /**
+     * Set the objective experience for the current user
+     * @param experienceId - the experience ID that needs to be set as an objective.
+     *                     If the value is null, the user is considered to not have an objective experience
+     * @return A Task to check whether the operation was successful or not
+     */
     @NonNull
     public Task<Void> setObjectiveExperience(@Nullable String experienceId) {
         return database.getReference()
