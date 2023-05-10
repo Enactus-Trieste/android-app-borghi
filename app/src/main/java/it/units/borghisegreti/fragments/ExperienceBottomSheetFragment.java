@@ -1,5 +1,7 @@
 package it.units.borghisegreti.fragments;
 
+import static it.units.borghisegreti.utils.Database.DB_URL;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +56,7 @@ public class ExperienceBottomSheetFragment extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             experienceId = getArguments().getString(EXPERIENCE_ID);
         }
-        viewModel = new ViewModelProvider(this).get(ObjectiveDialogViewModel.class);
+        viewModel = new ViewModelProvider(this, new ObjectiveDialogViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(ObjectiveDialogViewModel.class);
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
     }
 

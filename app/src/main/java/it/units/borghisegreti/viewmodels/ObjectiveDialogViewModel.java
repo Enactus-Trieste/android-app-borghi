@@ -7,9 +7,11 @@ import static it.units.borghisegreti.utils.Database.USER_DATA_REFERENCE;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AbstractSavedStateViewModelFactory;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
+import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -77,5 +79,22 @@ public class ObjectiveDialogViewModel extends MapViewModel {
                 .child(userId)
                 .child(COMPLETED_EXPERIENCES_REFERENCE)
                 .removeEventListener(completedExperiencesListener);
+    }
+
+    public static class Factory extends AbstractSavedStateViewModelFactory {
+
+        @NonNull
+        private final FirebaseDatabase database;
+
+        public Factory(@NonNull FirebaseDatabase database) {
+            this.database = database;
+        }
+
+        @SuppressWarnings("unchecked")
+        @NonNull
+        @Override
+        protected <T extends ViewModel> T create(@NonNull String key, @NonNull Class<T> modelClass, @NonNull SavedStateHandle handle) {
+            return (T) new ObjectiveDialogViewModel(database, handle);
+        }
     }
 }
