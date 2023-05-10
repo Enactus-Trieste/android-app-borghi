@@ -162,13 +162,13 @@ public class UserDataViewModel extends ViewModel {
                 Log.e(DB_TAG, "Error while updating user points");
             }
         });
-        Map<String, Experience> completedExperienceById = new HashMap<>();
+        Map<String, Object> completedExperienceById = new HashMap<>();
         completedExperienceById.put(experience.getId(), experience);
         return database.getReference()
                 .child(USER_DATA_REFERENCE)
                 .child(userId)
                 .child(COMPLETED_EXPERIENCES_REFERENCE)
-                .setValue(completedExperienceById);
+                .updateChildren(completedExperienceById);
     }
 
     @NonNull
