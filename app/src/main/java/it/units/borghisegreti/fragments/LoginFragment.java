@@ -65,7 +65,9 @@ public class LoginFragment extends Fragment {
                                     NavHostFragment.findNavController(LoginFragment.this).navigate(LoginFragmentDirections.actionLoginFragmentToMapsFragment());
                                 } else {
                                     Log.w(AUTH_TAG, "Sign-in failed", task.getException());
-                                    Snackbar.make(LoginFragment.this.requireView(), Objects.requireNonNull(Objects.requireNonNull(task.getException()).getLocalizedMessage()), Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(LoginFragment.this.requireView(),
+                                            Objects.requireNonNull(Objects.requireNonNull(task.getException(), "Task completed successfully, no exception available").getLocalizedMessage(), "No localized message available"),
+                                            Snackbar.LENGTH_LONG).show();
                                     alreadySentOnce.set(false);
                                 }
                             });
