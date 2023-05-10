@@ -215,15 +215,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (mapViewModel != null && map != null) {
+        if (map != null) {
             mapViewModel.saveCameraLatitude(map.getCameraPosition().target.latitude);
             mapViewModel.saveCameraLongitude(map.getCameraPosition().target.longitude);
             mapViewModel.saveCameraZoom(map.getCameraPosition().zoom);
         }
-        super.onSaveInstanceState(outState);
         if (viewBinding != null) {
             viewBinding.map.onSaveInstanceState(outState);
         }
+        super.onSaveInstanceState(outState);
+
     }
 
     @Override
