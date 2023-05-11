@@ -2,7 +2,7 @@ package it.units.borghisegreti.fragments;
 
 import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
 import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
-import static it.units.borghisegreti.viewmodels.MapViewModel.DB_URL;
+import static it.units.borghisegreti.utils.Database.DB_URL;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -59,13 +59,11 @@ import it.units.borghisegreti.models.Zone;
 import it.units.borghisegreti.utils.IconBuilder;
 import it.units.borghisegreti.utils.Locator;
 import it.units.borghisegreti.viewmodels.MapViewModel;
-import it.units.borghisegreti.viewmodels.UserDataViewModel;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     public static final String MAPS_TAG = "MAPS_FRAGMENT";
     private MapViewModel mapViewModel;
-    private UserDataViewModel userDataViewModel;
     @NonNull
     private List<Experience> experiences = Collections.emptyList();
     @NonNull
@@ -96,7 +94,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
         // view models must be initialized after the fragment is attached
         mapViewModel = new ViewModelProvider(this, new MapViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(MapViewModel.class);
-        userDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
 
         locator = new Locator(requireContext(), getLifecycle(), new Locator.Callback() {
             @Override
@@ -164,10 +161,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 }
             }
             if (objectiveExperience != null) {
-                userDataViewModel.setExperienceAsCompleted(objectiveExperience)
+                mapViewModel.setExperienceAsCompleted(objectiveExperience)
                         .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Experience set as completed"))
                         .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Unable to set experience as completed", exception));
-                userDataViewModel.setObjectiveExperience(null)
+                mapViewModel.setObjectiveExperience(null)
                         .addOnSuccessListener(task -> Log.d(MAPS_TAG, "Objective experience reset"))
                         .addOnFailureListener(exception -> Log.e(MAPS_TAG, "Failed to reset objective experience", exception));
                 AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
@@ -217,23 +214,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
-    public void onDestroyView() {
-        viewBinding.map.onDestroy();
-        viewBinding = null;
-        super.onDestroyView();
-    }
-
-    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (mapViewModel != null && map != null) {
+        if (map != null) {
             mapViewModel.saveCameraLatitude(map.getCameraPosition().target.latitude);
             mapViewModel.saveCameraLongitude(map.getCameraPosition().target.longitude);
             mapViewModel.saveCameraZoom(map.getCameraPosition().zoom);
         }
-        super.onSaveInstanceState(outState);
         if (viewBinding != null) {
             viewBinding.map.onSaveInstanceState(outState);
         }
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        viewBinding.map.onDestroy();
+        viewBinding = null;
+        super.onDestroyView();
     }
 
     @Override
@@ -262,7 +260,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
         map.setOnCameraMoveListener(this::drawMarkers);
 
-        userDataViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
+        mapViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
             objectiveExperienceId = experienceId;
             locator.submitObjectiveId(experienceId);
             for (Experience experienceOnTheMap : experiencesOnTheMapByMarker.values()) {

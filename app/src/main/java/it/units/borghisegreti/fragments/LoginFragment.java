@@ -52,7 +52,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View loginButtonView) {
                 hideKeyboard();
-                if (!LoginFragment.this.inputValidation()) {
+                if (!LoginFragment.this.isInputValid()) {
                     return;
                 }
                 if (!alreadySentOnce.get()) {
@@ -65,7 +65,9 @@ public class LoginFragment extends Fragment {
                                     NavHostFragment.findNavController(LoginFragment.this).navigate(LoginFragmentDirections.actionLoginFragmentToMapsFragment());
                                 } else {
                                     Log.w(AUTH_TAG, "Sign-in failed", task.getException());
-                                    Snackbar.make(LoginFragment.this.requireView(), Objects.requireNonNull(Objects.requireNonNull(task.getException()).getLocalizedMessage()), Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(LoginFragment.this.requireView(),
+                                            Objects.requireNonNull(Objects.requireNonNull(task.getException(), "Task completed successfully, no exception available").getLocalizedMessage(), "No localized message available"),
+                                            Snackbar.LENGTH_LONG).show();
                                     alreadySentOnce.set(false);
                                 }
                             });
@@ -85,7 +87,7 @@ public class LoginFragment extends Fragment {
         viewBinding.loginPasswordLayout.setEnabled(true);
     }
 
-    private boolean inputValidation() {
+    private boolean isInputValid() {
         boolean isInputValid = true;
         Editable email = viewBinding.loginUsernameText.getText();
         Editable password = viewBinding.loginPasswordText.getText();

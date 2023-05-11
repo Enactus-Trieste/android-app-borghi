@@ -57,12 +57,14 @@ public class RegistrationFragment extends Fragment {
             @Override
             public void onClick(View registrationButtonView) {
                 hideKeyboard();
-                if (!RegistrationFragment.this.validateForm()) {
+                if (!RegistrationFragment.this.isInputFormValid()) {
                     return;
                 }
                 if (!alreadySentOnce.get()) {
                     alreadySentOnce.set(true);
-                    authentication.createUserWithEmailAndPassword(Objects.requireNonNull(viewBinding.registrationEmail.getText()).toString(), viewBinding.registrationPassword.getText().toString())
+                    authentication.createUserWithEmailAndPassword(
+                                    Objects.requireNonNull(viewBinding.registrationEmail.getText()).toString(),
+                                    Objects.requireNonNull(viewBinding.registrationPassword.getText(), "User input should be validated first").toString())
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     Log.d(AUTH_TAG, "User " + task.getResult().getUser() + " created successfully");
@@ -78,7 +80,9 @@ public class RegistrationFragment extends Fragment {
                                 } else {
                                     Log.w(AUTH_TAG, "Failed to create new user", task.getException());
                                     // always non-null, checked if task has failed
-                                    Snackbar.make(RegistrationFragment.this.requireView(), task.getException().getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(RegistrationFragment.this.requireView(),
+                                            Objects.requireNonNull(Objects.requireNonNull(task.getException(), "Task completed successfully, no exception available").getLocalizedMessage(), "No localized message available"),
+                                            Snackbar.LENGTH_LONG).show();
                                     alreadySentOnce.set(false);
                                 }
                             });
@@ -103,7 +107,7 @@ public class RegistrationFragment extends Fragment {
         viewBinding.registrationPasswordConfirmLayout.setEnabled(true);
     }
 
-    private boolean validateForm() {
+    private boolean isInputFormValid() {
         boolean isFormValid = true;
         Editable email = viewBinding.registrationEmail.getText();
         Editable confirmEmail = viewBinding.registrationEmailConfirm.getText();

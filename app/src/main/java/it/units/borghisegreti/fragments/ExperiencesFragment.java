@@ -1,5 +1,7 @@
 package it.units.borghisegreti.fragments;
 
+import static it.units.borghisegreti.utils.Database.DB_URL;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,15 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.divider.MaterialDividerItemDecoration;
+import com.google.firebase.database.FirebaseDatabase;
 
 import it.units.borghisegreti.adapters.ExperiencesAdapter;
 import it.units.borghisegreti.databinding.FragmentExperiencesBinding;
-import it.units.borghisegreti.viewmodels.UserDataViewModel;
+import it.units.borghisegreti.viewmodels.ExperiencesViewModel;
 
 public class ExperiencesFragment extends Fragment {
 
     private FragmentExperiencesBinding viewBinding;
-    private UserDataViewModel viewModel;
+    private ExperiencesViewModel viewModel;
 
     public ExperiencesFragment() {
         // Required empty public constructor
@@ -29,7 +32,7 @@ public class ExperiencesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
+        viewModel = new ViewModelProvider(this, new ExperiencesViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(ExperiencesViewModel.class);
     }
 
     @Override

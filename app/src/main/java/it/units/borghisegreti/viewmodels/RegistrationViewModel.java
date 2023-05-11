@@ -1,7 +1,7 @@
 package it.units.borghisegreti.viewmodels;
 
-import static it.units.borghisegreti.viewmodels.MapViewModel.DB_URL;
-import static it.units.borghisegreti.viewmodels.UserDataViewModel.USER_DATA_REFERENCE;
+import static it.units.borghisegreti.utils.Database.DB_URL;
+import static it.units.borghisegreti.utils.Database.USER_DATA_REFERENCE;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
