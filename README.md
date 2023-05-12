@@ -7,9 +7,9 @@ The aim of this application is to let users find out the landscapes, natural and
 (small italian villages) situated in mountain areas in our country. In order to do that, we implemented an earning points system, which encourages users
 to explore the areas around the "borgo" by showing the various possible activities on the map. Every activity features some points of interest such as
 panoramic views, mountain tops, breathtaking waterfalls, ancient buildings and so on. In order to complete the activities, the user has to reach physically    
-the geographic coordinates of the activity. When an activity is completed the user earns points that will be visible in the personal area.
-The completed activity will be saved in a specific section of the personal area. 
+the geographic coordinates of the activity. When an activity is completed the users earn points that will be visible in the personal area.
+The completed activities will be saved in a specific section of the personal area. 
 
 # How it works
 In order to use any app functionality, the user must sign up to the service and have an internet connection.
-From the personal area, the user can view the collected points and the current goal, access to the map, access to the completed activities and to the user information.
+From the personal area, the user can view the collected points, the current goal, access to the map, access to the completed activities and to the user information.
