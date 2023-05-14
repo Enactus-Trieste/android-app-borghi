@@ -33,4 +33,11 @@
     <string name="menu_user_label">Profilo</string>
     <string name="map_search_button_label">Cerca esperienze</string>
     <string name="completed_experience_logo_description">Logo esperienza completata</string>
+    <string name="settings_title">Impostazioni</string>
+    <string name="account_button">Account</string>
+    <string name="settings_button">Impostazioni</string>
+    <string name="assistance_button">Assistenza</string>
+    <string name="legal_terms_button">Termini legali</string>
+    <string name="completed_activities_button">Attività completate</string>
+    <string name="log_out_button">Log out</string>
 </resources>
