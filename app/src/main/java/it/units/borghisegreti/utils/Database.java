@@ -9,4 +9,5 @@ public class Database {
     public static final String OBJECTIVE_REFERENCE = "objective";
     public static final String COMPLETED_EXPERIENCES_REFERENCE = "completed_experiences";
     public static final String POINTS_REFERENCE = "points";
+    public static final String USERNAME_REFERENCE = "email";
 }

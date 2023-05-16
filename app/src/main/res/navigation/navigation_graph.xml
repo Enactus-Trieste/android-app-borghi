@@ -48,7 +48,16 @@
     <action
         android:id="@+id/action_global_experiencesFragment"
         app:destination="@id/experiencesFragment" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="it.units.borghisegreti.fragments.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile"
+        />
     <action
         android:id="@+id/action_global_mapsFragment"
         app:destination="@id/mapsFragment" />
+    <action
+        android:id="@+id/action_global_userProfileFragment"
+        app:destination="@id/userProfileFragment" />
 </navigation>
