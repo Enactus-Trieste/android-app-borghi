@@ -16,6 +16,7 @@ import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import it.units.borghisegreti.R;
+import it.units.borghisegreti.adapters.CarouselAdapter;
 import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
 
 public class ExperienceDialogFragment extends DialogFragment {
@@ -50,6 +51,13 @@ public class ExperienceDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewBinding = FragmentExperienceDialogBinding.inflate(inflater, container, false);
+        viewBinding.dialogCarousel.setLayoutManager(new CarouselLayoutManager());
+        viewBinding.dialogCarousel.setNestedScrollingEnabled(false);
+
+        CarouselAdapter adapter = new CarouselAdapter(
+                (item, position) -> viewBinding.dialogCarousel.scrollToPosition(position)
+        );
+        viewBinding.dialogCarousel.setAdapter(adapter);
         return viewBinding.getRoot();
     }
 
