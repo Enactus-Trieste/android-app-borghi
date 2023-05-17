@@ -40,4 +40,6 @@
     <string name="legal_terms_button">Termini legali</string>
     <string name="completed_activities_button">Attività completate</string>
     <string name="log_out_button">Log out</string>
+    <string name="book_button_text">Prenota ora</string>
+    <string name="experience_image_description">Immagine esperienza</string>
 </resources>
