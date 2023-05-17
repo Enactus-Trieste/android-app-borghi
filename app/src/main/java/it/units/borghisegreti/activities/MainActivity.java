@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavHostFragment hostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         navController = Objects.requireNonNull(hostFragment, "Host fragment container view not found").getNavController();
+        NavigationUI.setupWithNavController(viewBinding.bottomNavigation, navController, false);
 
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             // here we can check the destination id and handle changes accordingly
