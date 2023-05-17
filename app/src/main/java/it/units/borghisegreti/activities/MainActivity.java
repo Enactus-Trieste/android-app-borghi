@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
         NavHostFragment hostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         navController = Objects.requireNonNull(hostFragment, "Host fragment container view not found").getNavController();
-        NavigationUI.setupWithNavController(viewBinding.bottomNavigation, navController, false);
 
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             // here we can check the destination id and handle changes accordingly
@@ -51,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         }));
 
         viewBinding.bottomNavigation.setSelectedItemId(R.id.menu_map);
+        NavigationUI.setupWithNavController(viewBinding.bottomNavigation, navController);
         viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.menu_completed_experiences) {
                 // this prevents page reload in case the user already reached this destination
