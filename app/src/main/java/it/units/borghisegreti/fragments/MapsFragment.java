@@ -53,6 +53,7 @@ import java.util.Set;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
+import it.units.borghisegreti.fragments.dialogs.ExperienceDialogFragment;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
@@ -410,8 +411,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    ExperienceBottomSheetFragment dialog = ExperienceBottomSheetFragment.newInstance(experience.getId());
-                    dialog.show(getParentFragmentManager(), FRAGMENT_TAG);
+                    ExperienceDialogFragment dialog = ExperienceDialogFragment.newInstance(experience.getId());
+                    dialog.show(MapsFragment.this.getParentFragmentManager(), FRAGMENT_TAG);
                 }
 
                 @Override

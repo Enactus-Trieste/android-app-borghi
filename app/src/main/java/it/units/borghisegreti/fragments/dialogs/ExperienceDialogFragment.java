@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Arrays;
+import java.util.List;
+
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.adapters.CarouselAdapter;
 import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
@@ -58,6 +61,8 @@ public class ExperienceDialogFragment extends DialogFragment {
                 (item, position) -> viewBinding.dialogCarousel.scrollToPosition(position)
         );
         viewBinding.dialogCarousel.setAdapter(adapter);
+        List<CarouselAdapter.CarouselItem> testImages = createItems();
+        adapter.submitList(testImages);
         return viewBinding.getRoot();
     }
 
@@ -67,5 +72,16 @@ public class ExperienceDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         return dialog;
+    }
+
+    private static List<CarouselAdapter.CarouselItem> createItems() {
+        return Arrays.asList(
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24)
+                );
     }
 }
