@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -412,7 +413,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 @Override
                 public void onFinish() {
                     ExperienceDialogFragment dialog = ExperienceDialogFragment.newInstance(experience.getId());
-                    dialog.show(MapsFragment.this.getParentFragmentManager(), FRAGMENT_TAG);
+                    dialog.show(getChildFragmentManager(), FRAGMENT_TAG);
                 }
 
                 @Override

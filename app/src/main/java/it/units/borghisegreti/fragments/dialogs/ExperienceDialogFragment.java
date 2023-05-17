@@ -1,5 +1,7 @@
 package it.units.borghisegreti.fragments.dialogs;
 
+import static com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog;
+
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -47,6 +49,7 @@ public class ExperienceDialogFragment extends DialogFragment {
         if (getArguments() != null) {
             experienceId = getArguments().getString(EXPERIENCE_ID);
         }
+        setStyle(ExperienceDialogFragment.STYLE_NORMAL, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog);
     }
 
     // called to get the layout, regardless if it's displayed as a dialog or an embedded fragment
@@ -64,6 +67,12 @@ public class ExperienceDialogFragment extends DialogFragment {
         List<CarouselAdapter.CarouselItem> testImages = createItems();
         adapter.submitList(testImages);
         return viewBinding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewBinding = null;
     }
 
     // called only when creating the layout in a dialog
