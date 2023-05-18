@@ -1,28 +1,23 @@
 package it.units.borghisegreti.fragments.dialogs;
 
-import static com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog;
-
 import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.carousel.CarouselLayoutManager;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 
-import it.units.borghisegreti.R;
 import it.units.borghisegreti.adapters.CarouselAdapter;
 import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
+import it.units.borghisegreti.fragments.MapsFragment;
 
 public class ExperienceDialogFragment extends DialogFragment {
 
@@ -63,7 +58,7 @@ public class ExperienceDialogFragment extends DialogFragment {
                 (item, position) -> viewBinding.dialogCarousel.scrollToPosition(position)
         );
         viewBinding.dialogCarousel.setAdapter(adapter);
-        List<CarouselAdapter.CarouselItem> testImages = createItems();
+        List<CarouselAdapter.CarouselItem> testImages = MapsFragment.createItems();
         adapter.submitList(testImages);
         return viewBinding.getRoot();
     }
@@ -82,14 +77,4 @@ public class ExperienceDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    public static List<CarouselAdapter.CarouselItem> createItems() {
-        return Arrays.asList(
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24)
-                );
-    }
 }

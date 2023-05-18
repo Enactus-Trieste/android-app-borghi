@@ -1,7 +1,5 @@
 package it.units.borghisegreti.fragments;
 
-import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
-import static it.units.borghisegreti.fragments.dialogs.ExperienceDialogFragment.createItems;
 import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
 import static it.units.borghisegreti.utils.Database.DB_URL;
 
@@ -19,11 +17,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -44,16 +39,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.carousel.CarouselLayoutManager;
-import com.google.android.material.carousel.CarouselStrategy;
-import com.google.android.material.carousel.MultiBrowseCarouselStrategy;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.checkerframework.checker.units.qual.C;
-
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +56,6 @@ import it.units.borghisegreti.R;
 import it.units.borghisegreti.adapters.CarouselAdapter;
 import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
-import it.units.borghisegreti.fragments.dialogs.ExperienceDialogFragment;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
@@ -94,6 +85,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public MapsFragment() {
         // Required empty public constructor
+    }
+
+    private static List<CarouselAdapter.CarouselItem> createItems() {
+        return Arrays.asList(
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24)
+                );
     }
 
     @Override
@@ -423,14 +425,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 @Override
                 public void onFinish() {
                     AlertDialog dialog = new MaterialAlertDialogBuilder(MapsFragment.this.requireContext())
-                            .setTitle(experience.getName())
-                            .setNegativeButton(R.string.close, (dialogInterface, i) -> dialogInterface.dismiss())
                             .create();
                     FragmentExperienceDialogBinding binding = FragmentExperienceDialogBinding.inflate(LayoutInflater.from(dialog.getContext()));
                     binding.dialogCarousel.setLayoutManager(new CarouselLayoutManager());
                     CarouselAdapter adapter = new CarouselAdapter(
                             ((item, position) -> binding.dialogCarousel.scrollToPosition(position))
                     );
+                    binding.dialogClose.setOnClickListener(view -> dialog.dismiss());
+                    binding.dialogTitle.setText(experience.getName());
                     binding.dialogCarousel.setAdapter(adapter);
                     adapter.submitList(createItems());
                     binding.dialogCarousel.setNestedScrollingEnabled(false);
