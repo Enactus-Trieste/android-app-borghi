@@ -1,6 +1,7 @@
 package it.units.borghisegreti.fragments;
 
 import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
+import static it.units.borghisegreti.fragments.dialogs.ExperienceDialogFragment.createItems;
 import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
 import static it.units.borghisegreti.utils.Database.DB_URL;
 
@@ -40,6 +41,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,6 +55,8 @@ import java.util.Map;
 import java.util.Set;
 
 import it.units.borghisegreti.R;
+import it.units.borghisegreti.adapters.CarouselAdapter;
+import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
 import it.units.borghisegreti.fragments.dialogs.ExperienceDialogFragment;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
@@ -412,8 +416,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    ExperienceDialogFragment dialog = ExperienceDialogFragment.newInstance(experience.getId());
-                    dialog.show(getChildFragmentManager(), FRAGMENT_TAG);
+                    AlertDialog dialog = new MaterialAlertDialogBuilder(MapsFragment.this.requireContext())
+                            .create();
+                    FragmentExperienceDialogBinding binding = FragmentExperienceDialogBinding.inflate(LayoutInflater.from(dialog.getContext()));
+                    binding.dialogCarousel.setLayoutManager(new CarouselLayoutManager());
+                    binding.dialogCarousel.setNestedScrollingEnabled(false);
+                    CarouselAdapter adapter = new CarouselAdapter(
+                            ((item, position) -> binding.dialogCarousel.scrollToPosition(position))
+                    );
+                    binding.dialogCarousel.setAdapter(adapter);
+                    adapter.submitList(createItems());
+                    dialog.setView(binding.getRoot());
+                    dialog.show();
                 }
 
                 @Override

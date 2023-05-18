@@ -83,7 +83,7 @@ public class ExperienceDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    private static List<CarouselAdapter.CarouselItem> createItems() {
+    public static List<CarouselAdapter.CarouselItem> createItems() {
         return Arrays.asList(
                 new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
                 new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
