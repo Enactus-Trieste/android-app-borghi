@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/dialog_book"
         android:text="@string/book_button_text"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="30dp"
         app:fontFamily="@font/inter"
         app:layout_constraintStart_toStartOf="parent"
