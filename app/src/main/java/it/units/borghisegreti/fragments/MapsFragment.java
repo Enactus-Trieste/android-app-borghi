@@ -56,6 +56,7 @@ import it.units.borghisegreti.R;
 import it.units.borghisegreti.adapters.CarouselAdapter;
 import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
+import it.units.borghisegreti.fragments.dialogs.ExperienceDialog;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
@@ -85,17 +86,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public MapsFragment() {
         // Required empty public constructor
-    }
-
-    private static List<CarouselAdapter.CarouselItem> createItems() {
-        return Arrays.asList(
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24)
-                );
     }
 
     @Override
@@ -424,19 +414,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    AlertDialog dialog = new MaterialAlertDialogBuilder(MapsFragment.this.requireContext())
-                            .create();
-                    FragmentExperienceDialogBinding binding = FragmentExperienceDialogBinding.inflate(LayoutInflater.from(dialog.getContext()));
-                    binding.dialogCarousel.setLayoutManager(new CarouselLayoutManager());
-                    CarouselAdapter adapter = new CarouselAdapter(
-                            ((item, position) -> binding.dialogCarousel.scrollToPosition(position))
-                    );
-                    binding.dialogClose.setOnClickListener(view -> dialog.dismiss());
-                    binding.dialogTitle.setText(experience.getName());
-                    binding.dialogCarousel.setAdapter(adapter);
-                    adapter.submitList(createItems());
-                    binding.dialogCarousel.setNestedScrollingEnabled(false);
-                    dialog.setView(binding.getRoot());
+                    AlertDialog dialog = ExperienceDialog.getDialogInstance(MapsFragment.this.requireContext(), experience);
                     dialog.show();
                 }
 
