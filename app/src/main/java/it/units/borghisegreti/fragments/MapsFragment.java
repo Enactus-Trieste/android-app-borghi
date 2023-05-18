@@ -19,7 +19,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -420,9 +422,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    FragmentManager fragmentManager = MapsFragment.this.getChildFragmentManager();
-                    ExperienceDialogFragment dialog = ExperienceDialogFragment.newInstance(experience.getId());
-                    dialog.show(fragmentManager, FRAGMENT_TAG);
+                    AlertDialog dialog = new MaterialAlertDialogBuilder(MapsFragment.this.requireContext())
+                            .setTitle(experience.getName())
+                            .setNegativeButton(R.string.close, (dialogInterface, i) -> dialogInterface.dismiss())
+                            .create();
+                    FragmentExperienceDialogBinding binding = FragmentExperienceDialogBinding.inflate(LayoutInflater.from(dialog.getContext()));
+                    binding.dialogCarousel.setLayoutManager(new CarouselLayoutManager());
+                    CarouselAdapter adapter = new CarouselAdapter(
+                            ((item, position) -> binding.dialogCarousel.scrollToPosition(position))
+                    );
+                    binding.dialogCarousel.setAdapter(adapter);
+                    adapter.submitList(createItems());
+                    binding.dialogCarousel.setNestedScrollingEnabled(false);
+                    dialog.setView(binding.getRoot());
+                    dialog.show();
                 }
 
                 @Override

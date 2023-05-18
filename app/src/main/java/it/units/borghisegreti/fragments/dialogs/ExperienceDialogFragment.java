@@ -49,7 +49,6 @@ public class ExperienceDialogFragment extends DialogFragment {
         if (getArguments() != null) {
             experienceId = getArguments().getString(EXPERIENCE_ID);
         }
-        setStyle(STYLE_NORMAL, R.style.ThemeOverlay_AdventureMaps_MaterialAlertDialog);
     }
 
     // called to get the layout, regardless if it's displayed as a dialog or an embedded fragment
