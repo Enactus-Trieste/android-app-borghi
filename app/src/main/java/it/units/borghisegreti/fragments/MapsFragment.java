@@ -42,11 +42,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.carousel.CarouselLayoutManager;
+import com.google.android.material.carousel.CarouselStrategy;
+import com.google.android.material.carousel.MultiBrowseCarouselStrategy;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -416,18 +420,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    AlertDialog dialog = new MaterialAlertDialogBuilder(MapsFragment.this.requireContext())
-                            .create();
-                    FragmentExperienceDialogBinding binding = FragmentExperienceDialogBinding.inflate(LayoutInflater.from(dialog.getContext()));
-                    binding.dialogCarousel.setLayoutManager(new CarouselLayoutManager());
-                    binding.dialogCarousel.setNestedScrollingEnabled(false);
-                    CarouselAdapter adapter = new CarouselAdapter(
-                            ((item, position) -> binding.dialogCarousel.scrollToPosition(position))
-                    );
-                    binding.dialogCarousel.setAdapter(adapter);
-                    adapter.submitList(createItems());
-                    dialog.setView(binding.getRoot());
-                    dialog.show();
+                    FragmentManager fragmentManager = MapsFragment.this.getChildFragmentManager();
+                    ExperienceDialogFragment dialog = ExperienceDialogFragment.newInstance(experience.getId());
+                    dialog.show(fragmentManager, FRAGMENT_TAG);
                 }
 
                 @Override
