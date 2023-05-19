@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.view.View;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         }));
 
         viewBinding.bottomNavigation.setSelectedItemId(R.id.menu_map);
+        NavigationUI.setupWithNavController(viewBinding.bottomNavigation, navController);
         viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.menu_completed_experiences) {
                 // this prevents page reload in case the user already reached this destination

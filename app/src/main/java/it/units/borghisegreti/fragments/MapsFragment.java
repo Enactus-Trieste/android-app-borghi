@@ -1,6 +1,5 @@
 package it.units.borghisegreti.fragments;
 
-import static it.units.borghisegreti.fragments.ExperienceBottomSheetFragment.FRAGMENT_TAG;
 import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
 import static it.units.borghisegreti.utils.Database.DB_URL;
 
@@ -39,12 +38,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +53,10 @@ import java.util.Map;
 import java.util.Set;
 
 import it.units.borghisegreti.R;
+import it.units.borghisegreti.adapters.CarouselAdapter;
+import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
+import it.units.borghisegreti.fragments.dialogs.ExperienceDialog;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
@@ -410,8 +414,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    ExperienceBottomSheetFragment dialog = ExperienceBottomSheetFragment.newInstance(experience.getId());
-                    dialog.show(getParentFragmentManager(), FRAGMENT_TAG);
+                    AlertDialog dialog = ExperienceDialog.getDialogInstance(MapsFragment.this.requireContext(), experience);
+                    dialog.show();
                 }
 
                 @Override

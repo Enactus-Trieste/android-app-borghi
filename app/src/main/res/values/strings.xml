@@ -32,11 +32,14 @@
     <string name="menu_user_label">Profile</string>
     <string name="map_search_button_label">Search for experiences</string>
     <string name="completed_experience_logo_description">Completed experience logo</string>
-    <string name="settings_title">Settings</string> 
+    <string name="settings_title">Settings</string>
     <string name="account_button">Account</string>
     <string name="settings_button">Settings</string>
     <string name="assistance_button">Assistance</string>
     <string name="legal_terms_button">Legal terms</string>
     <string name="completed_activities_button">Completed activities</string>
     <string name="log_out_button">Log out</string>
+    <string name="book_button_text">Book now</string>
+    <string name="experience_image_description">Experience image</string>
+    <string name="close_dialog_description">Close the dialog</string>
 </resources>
