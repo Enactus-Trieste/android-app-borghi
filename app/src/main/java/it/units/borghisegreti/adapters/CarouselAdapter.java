@@ -1,20 +1,15 @@
 package it.units.borghisegreti.adapters;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.Objects;
 
 import it.units.borghisegreti.databinding.ExperienceDialogCarouselBinding;
 
-public class CarouselAdapter extends ListAdapter<CarouselAdapter.CarouselItem, CarouselAdapter.CarouselItemViewHolder> {
+public class CarouselAdapter extends ListAdapter<CarouselItem, CarouselItemViewHolder> {
 
     private static final DiffUtil.ItemCallback<CarouselItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<CarouselItem>() {
         @Override
@@ -46,51 +41,6 @@ public class CarouselAdapter extends ListAdapter<CarouselAdapter.CarouselItem, C
     public void onBindViewHolder(@NonNull CarouselItemViewHolder holder, int position) {
         final CarouselItem experienceImage = getItem(position);
         holder.bind(experienceImage);
-    }
-
-    public static class CarouselItemViewHolder extends RecyclerView.ViewHolder {
-
-        @NonNull
-        private final ExperienceDialogCarouselBinding binding;
-        @NonNull
-        private final ItemListener listener;
-
-        public CarouselItemViewHolder(@NonNull ExperienceDialogCarouselBinding binding, @NonNull ItemListener listener) {
-            super(binding.getRoot());
-            this.binding = binding;
-            this.listener = listener;
-        }
-
-        public void bind(@NonNull CarouselItem item) {
-            binding.dialogCarouselImage.setImageResource(item.getDrawableResource());
-            binding.getRoot().setOnClickListener(view -> listener.onItemClicked(item, getAdapterPosition()));
-        }
-    }
-
-    public static class CarouselItem {
-        @DrawableRes
-        private final int drawableResource;
-
-        public CarouselItem(@DrawableRes int drawableResource) {
-            this.drawableResource = drawableResource;
-        }
-
-        public int getDrawableResource() {
-            return drawableResource;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            CarouselItem that = (CarouselItem) o;
-            return drawableResource == that.drawableResource;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(drawableResource);
-        }
     }
 
     public interface ItemListener {

@@ -14,6 +14,7 @@ import java.util.List;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.adapters.CarouselAdapter;
+import it.units.borghisegreti.adapters.CarouselItem;
 import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
 import it.units.borghisegreti.models.Experience;
 
@@ -46,14 +47,14 @@ public class ExperienceDialog {
     }
 
     @NonNull
-    private static List<CarouselAdapter.CarouselItem> createItems() {
+    private static List<CarouselItem> createItems() {
         return Arrays.asList(
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselAdapter.CarouselItem(R.drawable.ic_baseline_image_not_supported_24)
+                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
+                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24)
         );
     }
 }
