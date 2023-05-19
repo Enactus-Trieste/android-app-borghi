@@ -45,8 +45,7 @@ public class CarouselAdapter extends ListAdapter<CarouselAdapter.CarouselItem, C
     @Override
     public void onBindViewHolder(@NonNull CarouselItemViewHolder holder, int position) {
         final CarouselItem experienceImage = getItem(position);
-        holder.binding.dialogCarouselImage.setImageResource(experienceImage.getDrawableResource());
-        holder.binding.getRoot().setOnClickListener(view -> holder.listener.onItemClicked(experienceImage, position));
+        holder.bind(experienceImage);
     }
 
     public static class CarouselItemViewHolder extends RecyclerView.ViewHolder {
@@ -60,6 +59,11 @@ public class CarouselAdapter extends ListAdapter<CarouselAdapter.CarouselItem, C
             super(binding.getRoot());
             this.binding = binding;
             this.listener = listener;
+        }
+
+        public void bind(@NonNull CarouselItem item) {
+            binding.dialogCarouselImage.setImageResource(item.getDrawableResource());
+            binding.getRoot().setOnClickListener(view -> listener.onItemClicked(item, getAdapterPosition()));
         }
     }
 
