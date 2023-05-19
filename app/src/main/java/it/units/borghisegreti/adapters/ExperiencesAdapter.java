@@ -59,17 +59,7 @@ public class ExperiencesAdapter extends RecyclerView.Adapter<ExperiencesAdapter.
     @Override
     public void onBindViewHolder(@NonNull ExperienceViewHolder holder, int position) {
         final Experience experience = differ.getCurrentList().get(position);
-        holder.binding.completedExperienceTitle.setText(experience.getName());
-        holder.binding.completedExperienceDescription.setText(experience.getDescription());
-        try {
-            IconBuilder iconBuilder = new IconBuilder(context, experience);
-            InputStream iconStream = iconBuilder.getExperienceIcon();
-            Drawable icon = Drawable.createFromStream(iconStream, null);
-            holder.binding.completedExperienceLogo.setImageDrawable(icon);
-        } catch (IOException e) {
-            Log.e(EXP_ADAPTER_TAG, "Unable to load the icon for experience: " + experience, e);
-            holder.binding.completedExperienceLogo.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
-        }
+        holder.bind(experience);
     }
 
     @Override
@@ -88,6 +78,20 @@ public class ExperiencesAdapter extends RecyclerView.Adapter<ExperiencesAdapter.
         public ExperienceViewHolder(@NonNull CompletedExperienceBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+        }
+
+        public void bind(@NonNull Experience experience) {
+            binding.completedExperienceTitle.setText(experience.getName());
+            binding.completedExperienceDescription.setText(experience.getDescription());
+            try {
+                IconBuilder iconBuilder = new IconBuilder(itemView.getContext(), experience);
+                InputStream iconStream = iconBuilder.getExperienceIcon();
+                Drawable icon = Drawable.createFromStream(iconStream, null);
+                binding.completedExperienceLogo.setImageDrawable(icon);
+            } catch (IOException e) {
+                Log.e(EXP_ADAPTER_TAG, "Unable to load the icon for experience: " + experience, e);
+                binding.completedExperienceLogo.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
+            }
         }
     }
 }
