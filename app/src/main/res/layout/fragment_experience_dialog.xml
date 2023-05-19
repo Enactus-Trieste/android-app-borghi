@@ -25,6 +25,7 @@
         android:id="@+id/dialog_close"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        android:contentDescription="@string/close_dialog_description"
         app:icon="@drawable/ic_baseline_keyboard_arrow_down_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
