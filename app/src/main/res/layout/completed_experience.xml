@@ -25,7 +25,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:alpha="0.87"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textColor="?attr/colorOnSurface"
         app:fontFamily="@font/pt_sans_bold"
@@ -40,13 +39,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:alpha="0.87"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="?attr/colorOnSurface"
         app:fontFamily="@font/pt_sans"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/completed_experience_logo"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,9 +58,7 @@
         android:textColor="?attr/colorOnPrimary"
         app:fontFamily="@font/pt_sans"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/completed_experience_logo"
-        app:layout_constraintTop_toBottomOf="@+id/completed_experience_description"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/completed_experience_description" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
