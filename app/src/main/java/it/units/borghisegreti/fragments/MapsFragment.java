@@ -38,14 +38,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +51,6 @@ import java.util.Map;
 import java.util.Set;
 
 import it.units.borghisegreti.R;
-import it.units.borghisegreti.adapters.CarouselAdapter;
-import it.units.borghisegreti.databinding.FragmentExperienceDialogBinding;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
 import it.units.borghisegreti.fragments.dialogs.ExperienceDialog;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
@@ -389,7 +385,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 .position(zone.getCoordinates())
                 .title(zone.getName())
                 .anchor(0.5f, 0.5f)
-                .icon(BitmapDescriptorFactory.fromAsset("markers/taipana_round.png")));
+                .icon(BitmapDescriptorFactory.fromAsset("markers/TaipanaIcon.png")));
         if (zoneMarker == null) {
             throw new MarkerNotDrawnException("Error while drawing marker for zone " + zone);
         } else {
