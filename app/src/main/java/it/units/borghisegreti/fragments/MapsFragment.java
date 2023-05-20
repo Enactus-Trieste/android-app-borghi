@@ -389,7 +389,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 .position(zone.getCoordinates())
                 .title(zone.getName())
                 .anchor(0.5f, 0.5f)
-                .icon(BitmapDescriptorFactory.fromAsset("icons/BorgoIcon.png")));
+                .icon(BitmapDescriptorFactory.fromAsset("markers/taipana_round.png")));
         if (zoneMarker == null) {
             throw new MarkerNotDrawnException("Error while drawing marker for zone " + zone);
         } else {
