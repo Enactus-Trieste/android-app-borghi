@@ -10,7 +10,7 @@
         android:id="@+id/completed_experiences_user_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="35dp"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="90dp"
         android:text="@string/experience_completed_title"
         android:textAppearance="?attr/textAppearanceHeadlineLarge"
