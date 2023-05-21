@@ -7,9 +7,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import java.util.Objects;
+
 import it.units.borghisegreti.databinding.ExperienceDialogCarouselBinding;
 
 public class CarouselAdapter extends ListAdapter<CarouselItem, CarouselItemViewHolder> {
+
+    public static final String CAROUSEL_TAG = "CAROUSEL";
 
     private static final DiffUtil.ItemCallback<CarouselItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<CarouselItem>() {
         @Override
@@ -19,7 +23,7 @@ public class CarouselAdapter extends ListAdapter<CarouselItem, CarouselItemViewH
 
         @Override
         public boolean areContentsTheSame(@NonNull CarouselItem oldItem, @NonNull CarouselItem newItem) {
-            return oldItem.getDrawableResource() == newItem.getDrawableResource();
+            return Objects.equals(oldItem.getImage(), newItem.getImage());
         }
     };
 

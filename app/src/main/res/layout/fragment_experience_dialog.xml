@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <TextView
+        android:id="@+id/dialog_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/dialog_title"
-        android:layout_marginTop="70dp"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="5dp"
         android:textAppearance="?attr/textAppearanceHeadlineSmall"
-        android:textAlignment="center"
         app:fontFamily="@font/pt_sans_bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_experience_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_carousel"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_close" />
 
     <Button
+        android:id="@+id/dialog_close"
         style="?attr/materialIconButtonFilledTonalStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialog_close"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:contentDescription="@string/close_dialog_description"
@@ -31,28 +31,57 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="0dp"
-        android:layout_height="196dp"
         android:id="@+id/dialog_carousel"
-        android:layout_marginHorizontal="10dp"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginHorizontal="25dp"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_book"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_title"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_book"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_experience_description" />
 
     <Button
+        android:id="@+id/dialog_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialog_book"
-        android:text="@string/book_button_text"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="30dp"
+        android:text="@string/book_button_text"
+        app:backgroundTint="?attr/colorOnPrimaryContainer"
         app:fontFamily="@font/inter"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_carousel"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_carousel" />
+
+    <TextView
+        android:id="@+id/dialog_experience_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        app:fontFamily="@font/pt_sans"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_carousel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_title" />
+
+    <TextView
+        android:id="@+id/dialog_experience_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/activity_points_background"
+        android:textColor="?attr/colorOnPrimary"
+        app:fontFamily="@font/pt_sans"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_close"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_close"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/dialog_close"
+         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,7 +19,7 @@ public class CarouselItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(@NonNull CarouselItem item) {
-        binding.dialogCarouselImage.setImageResource(item.getDrawableResource());
+        binding.dialogCarouselImage.setImageBitmap(item.getImage());
         binding.getRoot().setOnClickListener(view -> listener.onItemClicked(item, getAdapterPosition()));
     }
 }
