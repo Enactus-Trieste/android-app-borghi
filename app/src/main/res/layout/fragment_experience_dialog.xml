@@ -15,7 +15,6 @@
         app:fontFamily="@font/pt_sans_bold"
         app:layout_constraintBottom_toTopOf="@+id/dialog_experience_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_close" />
 
@@ -69,7 +68,6 @@
         app:fontFamily="@font/pt_sans"
         app:layout_constraintBottom_toTopOf="@+id/dialog_carousel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_title" />
 
@@ -86,6 +84,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/dialog_close"
-        app:layout_constraintVertical_bias="0.296" />
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
