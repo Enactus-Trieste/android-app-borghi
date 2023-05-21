@@ -6,7 +6,7 @@
     <string name="removeObjective_buttonText">rimuovi obiettivo</string>
     <string name="complete_experience">Completa l\'esperienza</string>
     <string name="completed">"Completata in data "</string>
-    <string name="gained_points">+ %d punti</string>
+    <string name="gained_points">%d punti</string>
     <string name="next_objective_toast">Quale sarà il tuo prossimo obiettivo?</string>
     <string name="experience_completed">ESPERIENZA COMPLETATA</string>
     <string name="experience_completed_title">Esperienze</string>
