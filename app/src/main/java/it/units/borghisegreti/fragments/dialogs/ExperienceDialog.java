@@ -34,6 +34,8 @@ public class ExperienceDialog {
         );
         binding.dialogClose.setOnClickListener(view -> dialog.dismiss());
         binding.dialogTitle.setText(experience.getName());
+        binding.dialogExperienceDescription.setText(experience.getDescription());
+        binding.dialogExperiencePoints.setText(String.valueOf(experience.getPoints()));
         binding.dialogCarousel.setAdapter(adapter);
         adapter.submitList(createItems());
         binding.dialogCarousel.setNestedScrollingEnabled(false);
