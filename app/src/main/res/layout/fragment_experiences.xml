@@ -17,7 +17,6 @@
         android:textColor="?attr/colorOnSurface"
         app:fontFamily="@font/pt_sans_bold"
         app:layout_constraintBottom_toTopOf="@+id/completed_experiences_recycler"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
