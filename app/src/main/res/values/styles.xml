@@ -16,7 +16,7 @@
     </style>
 
     <style name="Widget.AdventureMaps.BottomNavigationView"
-        parent="Widget.Design.BottomNavigationView">
+        parent="Widget.Material3.BottomNavigationView">
         <item name="fontFamily">@font/pt_sans</item>
     </style>
 
