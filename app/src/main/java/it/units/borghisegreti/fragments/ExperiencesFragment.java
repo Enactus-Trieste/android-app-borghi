@@ -47,8 +47,6 @@ public class ExperiencesFragment extends Fragment {
         viewBinding.completedExperiencesRecycler.setLayoutManager(layoutManager);
 
         viewModel.getCompletedExperiences().observe(getViewLifecycleOwner(), experiencesAdapter::submitExperiences);
-        viewModel.getUserPoints().observe(getViewLifecycleOwner(), points -> viewBinding.completedExperiencesUserPoints.setText(String.valueOf(points)));
-
         return viewBinding.getRoot();
     }
 

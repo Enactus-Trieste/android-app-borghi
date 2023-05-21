@@ -36,13 +36,15 @@ public class MainActivity extends AppCompatActivity {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else if (destination.getId() == R.id.experiencesFragment) {
                 viewBinding.bottomNavigation.setVisibility(View.VISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else if (destination.getId() == R.id.userProfileFragment) {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else if (destination.getId() == R.id.loginFragment) {
                 viewBinding.bottomNavigation.setVisibility(View.GONE);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else if (destination.getId() == R.id.registrationFragment) {
                 viewBinding.bottomNavigation.setVisibility(View.GONE);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else {
                 viewBinding.bottomNavigation.setVisibility(View.VISIBLE);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

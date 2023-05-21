@@ -9,6 +9,7 @@
     <string name="gained_points">+ %d punti</string>
     <string name="next_objective_toast">Quale sarà il tuo prossimo obiettivo?</string>
     <string name="experience_completed">ESPERIENZA COMPLETATA</string>
+    <string name="experience_completed_title">Esperienze</string>
     <string name="gained_points_alert">Hai ottenuto %d punti</string>
     <string name="permissions_not_granted">Impossibile mostrare la mappa, permessi insufficient</string>
     <string name="educational_permission_request_title">Permessi richiesti per accedere alla posizione</string>
@@ -31,9 +32,8 @@
     <string name="menu_completed_experiences_label">Esperienze</string>
     <string name="menu_map_label">Mappa</string>
     <string name="menu_user_label">Profilo</string>
-    <string name="map_search_button_label">Cerca esperienze</string>
+    <string name="map_search_button_label">Cosa vorresti fare oggi?</string>
     <string name="completed_experience_logo_description">Logo esperienza completata</string>
-    <string name="settings_title">Impostazioni</string>
     <string name="account_button">Account</string>
     <string name="settings_button">Impostazioni</string>
     <string name="assistance_button">Assistenza</string>
