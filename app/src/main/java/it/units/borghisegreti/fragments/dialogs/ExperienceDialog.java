@@ -1,6 +1,7 @@
 package it.units.borghisegreti.fragments.dialogs;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
@@ -47,14 +48,11 @@ public class ExperienceDialog {
     }
 
     @NonNull
-    private static List<CarouselItem> createItems() {
+    private List<CarouselItem> createItems() {
         return Arrays.asList(
-                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24),
-                new CarouselItem(R.drawable.ic_baseline_image_not_supported_24)
+                new CarouselItem(dialog.getContext(), "images/nature_alps.jpg"),
+                new CarouselItem(dialog.getContext(), "images/restaurant_table.jpg"),
+                new CarouselItem(dialog.getContext(), "images/nature_horse.jpg")
         );
     }
 }
