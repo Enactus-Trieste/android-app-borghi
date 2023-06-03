@@ -15,11 +15,8 @@
         android:textColor="?attr/colorOnPrimary"
         app:fontFamily="@font/pt_sans"
         app:layout_constraintBottom_toBottomOf="@+id/dialog_close"
-        app:layout_constraintEnd_toStartOf="@+id/dialog_close"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dialog_close"
-        />
+        app:layout_constraintTop_toTopOf="@+id/dialog_close" />
 
     <Button
         android:id="@+id/dialog_close"
