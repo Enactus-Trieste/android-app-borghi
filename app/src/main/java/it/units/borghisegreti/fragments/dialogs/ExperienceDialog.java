@@ -30,12 +30,12 @@ public class ExperienceDialog {
         FragmentExperienceDialogBinding binding = FragmentExperienceDialogBinding.inflate(LayoutInflater.from(dialog.getContext()));
         binding.dialogCarousel.setLayoutManager(new CarouselLayoutManager());
         CarouselAdapter adapter = new CarouselAdapter(
-                ((item, position) -> binding.dialogCarousel.scrollToPosition(position))
+                (item, position) -> binding.dialogCarousel.scrollToPosition(position)
         );
         binding.dialogClose.setOnClickListener(view -> dialog.dismiss());
         binding.dialogTitle.setText(experience.getName());
         binding.dialogExperienceDescription.setText(experience.getDescription());
-        binding.dialogExperiencePoints.setText(String.format(context.getString(R.string.gained_points),experience.getPoints()));
+        binding.dialogExperiencePoints.setText(String.format(context.getString(R.string.gained_points), experience.getPoints()));
         binding.dialogCarousel.setAdapter(adapter);
         adapter.submitList(createItems());
         binding.dialogCarousel.setNestedScrollingEnabled(false);
