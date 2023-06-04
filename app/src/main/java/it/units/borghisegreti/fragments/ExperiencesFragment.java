@@ -45,8 +45,8 @@ public class ExperiencesFragment extends Fragment {
         viewBinding.completedExperiencesRecycler.addItemDecoration(divider);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         viewBinding.completedExperiencesRecycler.setLayoutManager(layoutManager);
-
         viewModel.getCompletedExperiences().observe(getViewLifecycleOwner(), experiencesAdapter::submitExperiences);
+
         return viewBinding.getRoot();
     }
 

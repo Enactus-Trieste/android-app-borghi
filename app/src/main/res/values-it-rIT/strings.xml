@@ -43,4 +43,11 @@
     <string name="book_button_text">Prenota ora</string>
     <string name="experience_image_description">Immagine esperienza</string>
     <string name="close_dialog_description">Chiudi la finestra di dialogo</string>
+    <string name="mountain">Montagna</string>
+    <string name="naturalistic_area">Zona naturalistica</string>
+    <string name="panoramic_view">Vista panoramica</string>
+    <string name="point_of_historical_interest">Punto d\'interesse storico</string>
+    <string name="restaurant">Ristorante</string>
+    <string name="river_waterfall">Cascata</string>
+    <string name="typical_food">Cibo tipico</string>
 </resources>
