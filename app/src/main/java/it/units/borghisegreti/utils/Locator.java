@@ -92,7 +92,7 @@ public class Locator implements DefaultLifecycleObserver {
                     objectiveExperience.getLongitude(), location.getLatitude(), location.getLongitude());
             Log.d(LOCATOR_TAG, "Distance from the objective is: " + distanceBetweenPoints);
         } else {
-            Log.w(LOCATOR_TAG, "Unable to find objective among the given experiences");
+            Log.w(LOCATOR_TAG, "Objective experience not set yet");
         }
         return distanceBetweenPoints < 50;
     }
