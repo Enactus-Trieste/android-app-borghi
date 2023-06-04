@@ -7,24 +7,19 @@ import static it.units.borghisegreti.fragments.directions.MapsFragmentDirections
 import static it.units.borghisegreti.fragments.directions.UserProfileFragmentDirections.actionUserProfileFragmentToExperiencesFragment;
 import static it.units.borghisegreti.fragments.directions.UserProfileFragmentDirections.actionUserProfileFragmentToMapsFragment;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.ActionOnlyNavDirections;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import java.util.Objects;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.ActivityMainBinding;
-import it.units.borghisegreti.fragments.directions.ExperiencesFragmentDirections;
-import it.units.borghisegreti.fragments.directions.MapsFragmentDirections;
-import it.units.borghisegreti.fragments.directions.UserProfileFragmentDirections;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         viewBinding.bottomNavigation.setSelectedItemId(R.id.menu_map);
         NavigationUI.setupWithNavController(viewBinding.bottomNavigation, navController);
         viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {
-            if (navController.getCurrentDestination().getId() == R.id.mapsFragment) {
+            if (Objects.equals(navController.getCurrentDestination(), navController.findDestination(R.id.mapsFragment))) {
                 if (item.getItemId() == R.id.menu_completed_experiences) {
                     navController.navigate(actionMapsFragmentToExperiencesFragment());
                     return true;
@@ -74,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 return false;
-            } else if (navController.getCurrentDestination().getId() == R.id.experiencesFragment) {
+            } else if (Objects.equals(navController.getCurrentDestination(), navController.findDestination(R.id.experiencesFragment))) {
                 if (item.getItemId() == R.id.menu_map) {
                     navController.navigate(actionExperiencesFragmentToMapsFragment());
                     return true;
@@ -83,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 return false;
-            } else if (navController.getCurrentDestination().getId() == R.id.userProfileFragment) {
+            } else if (Objects.equals(navController.getCurrentDestination(), navController.findDestination(R.id.userProfileFragment))) {
                 if (item.getItemId() == R.id.menu_map) {
                     navController.navigate(actionUserProfileFragmentToMapsFragment());
                     return true;
