@@ -9,7 +9,14 @@
         android:id="@+id/mapsFragment"
         android:name="it.units.borghisegreti.fragments.MapsFragment"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_mapsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_mapsFragment_to_experiencesFragment"
+            app:destination="@id/experiencesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="it.units.borghisegreti.fragments.LoginFragment"
@@ -24,11 +31,6 @@
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
     </fragment>
-    <action
-        android:id="@+id/action_global_loginFragment"
-        app:destination="@id/loginFragment"
-        app:popUpTo="@id/navigation_graph"
-        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/registrationFragment"
         android:name="it.units.borghisegreti.fragments.RegistrationFragment"
@@ -44,20 +46,30 @@
         android:id="@+id/experiencesFragment"
         android:name="it.units.borghisegreti.fragments.ExperiencesFragment"
         android:label="fragment_experiences"
-        tools:layout="@layout/fragment_experiences" />
-    <action
-        android:id="@+id/action_global_experiencesFragment"
-        app:destination="@id/experiencesFragment" />
+        tools:layout="@layout/fragment_experiences" >
+        <action
+            android:id="@+id/action_experiencesFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_experiencesFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="it.units.borghisegreti.fragments.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile"
-        />
-    <action
-        android:id="@+id/action_global_mapsFragment"
-        app:destination="@id/mapsFragment" />
-    <action
-        android:id="@+id/action_global_userProfileFragment"
-        app:destination="@id/userProfileFragment" />
+        >
+        <action
+            android:id="@+id/action_userProfileFragment_to_experiencesFragment"
+            app:destination="@id/experiencesFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
