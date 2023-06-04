@@ -1,14 +1,20 @@
 package it.units.borghisegreti.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.ActionOnlyNavDirections;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
+import static it.units.borghisegreti.fragments.directions.ExperiencesFragmentDirections.actionExperiencesFragmentToMapsFragment;
+import static it.units.borghisegreti.fragments.directions.ExperiencesFragmentDirections.actionExperiencesFragmentToUserProfileFragment;
+import static it.units.borghisegreti.fragments.directions.MapsFragmentDirections.actionMapsFragmentToExperiencesFragment;
+import static it.units.borghisegreti.fragments.directions.MapsFragmentDirections.actionMapsFragmentToUserProfileFragment;
+import static it.units.borghisegreti.fragments.directions.UserProfileFragmentDirections.actionUserProfileFragmentToExperiencesFragment;
+import static it.units.borghisegreti.fragments.directions.UserProfileFragmentDirections.actionUserProfileFragmentToMapsFragment;
 
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import java.util.Objects;
 
@@ -54,23 +60,33 @@ public class MainActivity extends AppCompatActivity {
         viewBinding.bottomNavigation.setSelectedItemId(R.id.menu_map);
         NavigationUI.setupWithNavController(viewBinding.bottomNavigation, navController);
         viewBinding.bottomNavigation.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.menu_completed_experiences) {
-                // this prevents page reload in case the user already reached this destination
-                if (navController.getCurrentDestination().getId() != R.id.experiencesFragment) {
-                    navController.navigate(new ActionOnlyNavDirections(R.id.action_global_experiencesFragment));
+            if (Objects.equals(navController.getCurrentDestination(), navController.findDestination(R.id.mapsFragment))) {
+                if (item.getItemId() == R.id.menu_completed_experiences) {
+                    navController.navigate(actionMapsFragmentToExperiencesFragment());
+                    return true;
+                } else if (item.getItemId() == R.id.menu_user) {
+                    navController.navigate(actionMapsFragmentToUserProfileFragment());
                     return true;
                 }
-            } else if (item.getItemId() == R.id.menu_user) {
-                if (navController.getCurrentDestination().getId() != R.id.userProfileFragment) {
-                    navController.navigate(new ActionOnlyNavDirections(R.id.action_global_userProfileFragment));
+                return false;
+            } else if (Objects.equals(navController.getCurrentDestination(), navController.findDestination(R.id.experiencesFragment))) {
+                if (item.getItemId() == R.id.menu_map) {
+                    navController.navigate(actionExperiencesFragmentToMapsFragment());
+                    return true;
+                } else if (item.getItemId() == R.id.menu_user) {
+                    navController.navigate(actionExperiencesFragmentToUserProfileFragment());
                     return true;
                 }
-            } else if (item.getItemId() == R.id.menu_map) {
-                // this prevents page reload in case the user already reached this destination
-                if (navController.getCurrentDestination().getId() != R.id.mapsFragment) {
-                    navController.navigate(new ActionOnlyNavDirections(R.id.action_global_mapsFragment));
+                return false;
+            } else if (Objects.equals(navController.getCurrentDestination(), navController.findDestination(R.id.userProfileFragment))) {
+                if (item.getItemId() == R.id.menu_map) {
+                    navController.navigate(actionUserProfileFragmentToMapsFragment());
+                    return true;
+                } else if (item.getItemId() == R.id.menu_completed_experiences) {
+                    navController.navigate(actionUserProfileFragmentToExperiencesFragment());
                     return true;
                 }
+                return false;
             }
             return false;
         });

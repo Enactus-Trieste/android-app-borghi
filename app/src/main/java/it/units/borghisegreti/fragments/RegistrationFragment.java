@@ -1,6 +1,7 @@
 package it.units.borghisegreti.fragments;
 
 import static it.units.borghisegreti.fragments.LoginFragment.AUTH_TAG;
+import static it.units.borghisegreti.fragments.directions.RegistrationFragmentDirections.actionRegistrationFragmentToMapsFragment;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -76,7 +77,7 @@ public class RegistrationFragment extends Fragment {
                                             .addOnSuccessListener(newUserTask -> Log.d(AUTH_TAG, "User " + newUser + " added to database"))
                                             .addOnFailureListener(exception -> Log.w(AUTH_TAG, "Unable to add user " + newUser + " to database", exception));
                                     NavHostFragment.findNavController(RegistrationFragment.this)
-                                            .navigate(RegistrationFragmentDirections.actionRegistrationFragmentToMapsFragment());
+                                            .navigate(actionRegistrationFragmentToMapsFragment());
                                 } else {
                                     Log.w(AUTH_TAG, "Failed to create new user", task.getException());
                                     // always non-null, checked if task has failed

@@ -1,5 +1,8 @@
 package it.units.borghisegreti.fragments;
 
+import static it.units.borghisegreti.fragments.directions.LoginFragmentDirections.actionLoginFragmentToMapsFragment;
+import static it.units.borghisegreti.fragments.directions.LoginFragmentDirections.actionLoginFragmentToRegistrationFragment;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -45,7 +48,7 @@ public class LoginFragment extends Fragment {
         viewBinding = FragmentLoginBinding.inflate(inflater, container, false);
 
         viewBinding.signUpButton.setOnClickListener(registrationButtonView ->
-                NavHostFragment.findNavController(this).navigate(LoginFragmentDirections.actionLoginFragmentToRegistrationFragment()));
+                NavHostFragment.findNavController(this).navigate(actionLoginFragmentToRegistrationFragment()));
         viewBinding.loginButton.setOnClickListener(new View.OnClickListener() {
             private final AtomicBoolean alreadySentOnce = new AtomicBoolean(false);
 
@@ -62,7 +65,7 @@ public class LoginFragment extends Fragment {
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     Log.d(AUTH_TAG, "Sign-in successful");
-                                    NavHostFragment.findNavController(LoginFragment.this).navigate(LoginFragmentDirections.actionLoginFragmentToMapsFragment());
+                                    NavHostFragment.findNavController(LoginFragment.this).navigate(actionLoginFragmentToMapsFragment());
                                 } else {
                                     Log.w(AUTH_TAG, "Sign-in failed", task.getException());
                                     Snackbar.make(LoginFragment.this.requireView(),
