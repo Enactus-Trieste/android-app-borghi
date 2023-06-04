@@ -12,10 +12,14 @@
         tools:layout="@layout/fragment_maps" >
         <action
             android:id="@+id/action_mapsFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
+            app:destination="@id/userProfileFragment"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_mapsFragment_to_experiencesFragment"
-            app:destination="@id/experiencesFragment" />
+            app:destination="@id/experiencesFragment"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -49,10 +53,14 @@
         tools:layout="@layout/fragment_experiences" >
         <action
             android:id="@+id/action_experiencesFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
+            app:destination="@id/userProfileFragment"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_experiencesFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            app:destination="@id/mapsFragment"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
