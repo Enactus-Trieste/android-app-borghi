@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -63,15 +62,15 @@ public class ExperiencesFragment extends Fragment {
         viewModel.getCompletedExperiences().observe(getViewLifecycleOwner(), experiences -> {
             this.experiences = experiences;
             List<Integer> checkedChipIds = viewBinding.experiencesCategories.getCheckedChipIds();
-            experiencesAdapter.submitExperiences(getFilteredExperiences(checkedChipIds));
+            experiencesAdapter.submitExperiences(filterExperiencesByCheckedChipIds(checkedChipIds));
         });
-        viewBinding.experiencesCategories.setOnCheckedStateChangeListener((group, checkedIds) -> experiencesAdapter.submitExperiences(getFilteredExperiences(checkedIds)));
+        viewBinding.experiencesCategories.setOnCheckedStateChangeListener((group, checkedIds) -> experiencesAdapter.submitExperiences(filterExperiencesByCheckedChipIds(checkedIds)));
         return viewBinding.getRoot();
     }
 
     @NonNull
-    private List<Experience> getFilteredExperiences(@NonNull List<Integer> checkedChipIds) {
-        Set<Experience.Type> checkedExperienceTypes = getCheckedExperienceTypes(checkedChipIds);
+    private List<Experience> filterExperiencesByCheckedChipIds(@NonNull List<Integer> checkedChipIds) {
+        Set<Experience.Type> checkedExperienceTypes = getCheckedExperienceTypesFromCheckedChipIds(checkedChipIds);
         List<Experience> filteredExperiences = new ArrayList<>();
         for (Experience experience : experiences) {
             if (checkedExperienceTypes.contains(experience.getEnumType())) {
@@ -82,7 +81,7 @@ public class ExperiencesFragment extends Fragment {
     }
 
     @NonNull
-    private Set<Experience.Type> getCheckedExperienceTypes(@NonNull List<Integer> checkedChipIds) {
+    private Set<Experience.Type> getCheckedExperienceTypesFromCheckedChipIds(@NonNull List<Integer> checkedChipIds) {
         Set<Experience.Type> checkedExperienceTypes = new HashSet<>();
         for (Integer chipId : checkedChipIds) {
             if (chipId.equals(viewBinding.chipMountain.getId())) {
