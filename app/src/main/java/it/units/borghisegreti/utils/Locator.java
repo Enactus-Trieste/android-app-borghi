@@ -149,5 +149,6 @@ public class Locator implements DefaultLifecycleObserver {
     public interface Callback {
         void onObjectiveInRange();
         void onObjectiveOutOfRange();
+        void onLocationUpdate(Location location);
     }
 }
