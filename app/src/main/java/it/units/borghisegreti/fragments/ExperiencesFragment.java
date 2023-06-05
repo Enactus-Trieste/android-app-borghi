@@ -9,7 +9,6 @@ import static it.units.borghisegreti.models.Experience.Type.RIVER_WATERFALL;
 import static it.units.borghisegreti.models.Experience.Type.TYPICAL_FOOD;
 import static it.units.borghisegreti.utils.Database.DB_URL;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,6 @@ import java.util.Set;
 import it.units.borghisegreti.adapters.ExperiencesAdapter;
 import it.units.borghisegreti.databinding.FragmentExperiencesBinding;
 import it.units.borghisegreti.models.Experience;
-import it.units.borghisegreti.utils.Locator;
 import it.units.borghisegreti.viewmodels.ExperiencesViewModel;
 
 public class ExperiencesFragment extends Fragment {
@@ -41,7 +39,6 @@ public class ExperiencesFragment extends Fragment {
     private ExperiencesViewModel viewModel;
     @NonNull
     private List<Experience> experiences = Collections.emptyList();
-    private Locator locator;
 
     public ExperiencesFragment() {
         // Required empty public constructor
@@ -51,22 +48,6 @@ public class ExperiencesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this, new ExperiencesViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(ExperiencesViewModel.class);
-        locator = new Locator(requireContext(), getLifecycle(), new Locator.Callback() {
-            @Override
-            public void onObjectiveInRange() {
-
-            }
-
-            @Override
-            public void onObjectiveOutOfRange() {
-
-            }
-
-            @Override
-            public void onLocationUpdate(Location location) {
-
-            }
-        });
     }
 
     @Override
