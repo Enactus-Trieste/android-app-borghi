@@ -42,4 +42,11 @@
     <string name="book_button_text">Book now</string>
     <string name="experience_image_description">Experience image</string>
     <string name="close_dialog_description">Close the dialog</string>
+    <string name="mountain">Moutain</string>
+    <string name="naturalistic_area">Naturalistic area</string>
+    <string name="panoramic_view">Panoramic view</string>
+    <string name="point_of_historical_interest">Point of historical interest</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="river_waterfall">Waterfall</string>
+    <string name="typical_food">Typical food</string>
 </resources>

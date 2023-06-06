@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
@@ -106,6 +107,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             public void onObjectiveOutOfRange() {
                 Log.d(LOCATOR_TAG, "Objective experience is out of range");
                 //viewBinding.completeExpButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLocationUpdate(Location location) {
+                Log.d(LOCATOR_TAG, "New location data received: " + location);
             }
         });
 
