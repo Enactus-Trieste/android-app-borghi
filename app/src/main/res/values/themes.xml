@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.AdventureMaps" parent="Theme.Material3.Light.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -34,5 +34,22 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
+
+        <!-- custom fonts for all components -->
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.AdventureMaps.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.AdventureMaps.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.AdventureMaps.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.AdventureMaps.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.AdventureMaps.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.AdventureMaps.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.AdventureMaps.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.AdventureMaps.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.AdventureMaps.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.AdventureMaps.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.AdventureMaps.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.AdventureMaps.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.AdventureMaps.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.AdventureMaps.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.AdventureMaps.LabelSmall</item>
     </style>
 </resources>
