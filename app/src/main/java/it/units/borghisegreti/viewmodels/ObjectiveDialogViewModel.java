@@ -1,7 +1,7 @@
 package it.units.borghisegreti.viewmodels;
 
-import static it.units.borghisegreti.utils.Database.DB_TAG;
 import static it.units.borghisegreti.utils.Database.COMPLETED_EXPERIENCES_REFERENCE;
+import static it.units.borghisegreti.utils.Database.DB_TAG;
 import static it.units.borghisegreti.utils.Database.USER_DATA_REFERENCE;
 
 import android.util.Log;
@@ -19,9 +19,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import it.units.borghisegreti.models.Experience;
 
@@ -44,12 +45,11 @@ public class ObjectiveDialogViewModel extends MapViewModel {
         completedExperiencesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Map<String, Experience> completedExperiencesById = new HashMap<>();
-                for (DataSnapshot completedExperienceSnapshot : snapshot.getChildren()) {
-                    String experienceId = completedExperienceSnapshot.getKey();
-                    Experience completedExperience = completedExperienceSnapshot.getValue(Experience.class);
-                    completedExperiencesById.put(experienceId, completedExperience);
-                }
+                Map<String, Experience> completedExperiencesById = StreamSupport.stream(snapshot.getChildren().spliterator(), true)
+                        .collect(Collectors.toMap(
+                                DataSnapshot::getKey,
+                                completedExperienceSnapshot -> Objects.requireNonNull(completedExperienceSnapshot.getValue(Experience.class)))
+                        );
                 databaseCompletedExperiencesById.setValue(completedExperiencesById);
             }
 
