@@ -22,11 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import it.units.borghisegreti.adapters.ExperiencesAdapter;
 import it.units.borghisegreti.databinding.FragmentExperiencesBinding;
@@ -72,42 +71,33 @@ public class ExperiencesFragment extends Fragment {
     @NonNull
     private List<Experience> filterExperiencesByCheckedChipIds(@NonNull List<Integer> checkedChipIds) {
         Set<Experience.Type> checkedExperienceTypes = getCheckedExperienceTypesFromCheckedChipIds(checkedChipIds);
-        List<Experience> filteredExperiences = new ArrayList<>();
-        for (Experience experience : experiences) {
-            if (checkedExperienceTypes.contains(experience.getEnumType())) {
-                filteredExperiences.add(experience);
-            }
-        }
-        return filteredExperiences;
+        return experiences.stream()
+                .filter(experience -> checkedExperienceTypes.contains(experience.getEnumType()))
+                .collect(Collectors.toList());
     }
 
     @NonNull
     private Set<Experience.Type> getCheckedExperienceTypesFromCheckedChipIds(@NonNull List<Integer> checkedChipIds) {
-        Set<Experience.Type> checkedExperienceTypes = new HashSet<>();
-        for (Integer chipId : checkedChipIds) {
-            if (chipId.equals(viewBinding.chipMountain.getId())) {
-                checkedExperienceTypes.add(MOUNTAIN);
-            }
-            if (chipId.equals(viewBinding.chipPanoramicView.getId())) {
-                checkedExperienceTypes.add(PANORAMIC_VIEW);
-            }
-            if (chipId.equals(viewBinding.chipNaturalisticArea.getId())) {
-                checkedExperienceTypes.add(NATURALISTIC_AREA);
-            }
-            if (chipId.equals(viewBinding.chipPointOfHistoricalInterest.getId())) {
-                checkedExperienceTypes.add(POINT_OF_HISTORICAL_INTEREST);
-            }
-            if (chipId.equals(viewBinding.chipRestaurant.getId())) {
-                checkedExperienceTypes.add(RESTAURANT);
-            }
-            if (chipId.equals(viewBinding.chipRiverWaterfall.getId())) {
-                checkedExperienceTypes.add(RIVER_WATERFALL);
-            }
-            if (chipId.equals(viewBinding.chipTypicalFood.getId())) {
-                checkedExperienceTypes.add(TYPICAL_FOOD);
-            }
-        }
-        return checkedExperienceTypes;
+        return checkedChipIds.stream()
+                .map(chipId -> {
+                    if (chipId.equals(viewBinding.chipMountain.getId())) {
+                        return MOUNTAIN;
+                    } else if (chipId.equals(viewBinding.chipPanoramicView.getId())) {
+                        return PANORAMIC_VIEW;
+                    } else if (chipId.equals(viewBinding.chipNaturalisticArea.getId())) {
+                        return NATURALISTIC_AREA;
+                    } else if (chipId.equals(viewBinding.chipPointOfHistoricalInterest.getId())) {
+                        return POINT_OF_HISTORICAL_INTEREST;
+                    } else if (chipId.equals(viewBinding.chipRestaurant.getId())) {
+                        return RESTAURANT;
+                    } else if (chipId.equals(viewBinding.chipRiverWaterfall.getId())) {
+                        return RIVER_WATERFALL;
+                    } else if (chipId.equals(viewBinding.chipTypicalFood.getId())) {
+                        return TYPICAL_FOOD;
+                    }
+                    throw new IllegalStateException("No corresponding experience type found for the checked chip");
+                })
+                .collect(Collectors.toSet());
     }
 
     @Override
