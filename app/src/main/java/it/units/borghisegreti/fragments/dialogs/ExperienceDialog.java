@@ -1,7 +1,6 @@
 package it.units.borghisegreti.fragments.dialogs;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
