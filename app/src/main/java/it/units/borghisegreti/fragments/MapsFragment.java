@@ -1,7 +1,7 @@
 package it.units.borghisegreti.fragments;
 
-import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
 import static it.units.borghisegreti.utils.Database.DB_URL;
+import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -12,6 +12,12 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -23,14 +29,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
-
-import android.provider.Settings;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,7 +47,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
@@ -63,12 +60,11 @@ import it.units.borghisegreti.viewmodels.MapViewModel;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    public static final String MAPS_TAG = "MAPS_FRAGMENT";
+    private static final String MAPS_TAG = "MAPS_FRAGMENT";
+    private static final int MARKER_ZOOM_THRESHOLD = 12;
     private MapViewModel mapViewModel;
     @NonNull
     private List<Experience> experiences = Collections.emptyList();
-    @NonNull
-    private List<Zone> zones = Collections.emptyList();
     private GoogleMap map;
     @NonNull
     private final Map<Marker, Experience> experiencesOnTheMapByMarker = new HashMap<>();
@@ -263,40 +259,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.879688, 13.564337), 8f));
         }
-        map.setOnCameraMoveListener(this::drawMarkers);
+        map.setOnCameraMoveListener(this::showMarkers);
 
         mapViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
             objectiveExperienceId = experienceId;
             locator.submitObjectiveId(experienceId);
-            for (Experience experienceOnTheMap : experiencesOnTheMapByMarker.values()) {
-                if (experienceOnTheMap.getId().equals(objectiveExperienceId)) {
-                    Marker marker = findMarkerAssociatedToExperience(experienceOnTheMap);
-                    if (marker != null) {
-                        marker.setZIndex(1f);
-                    } else {
-                        Log.w(MAPS_TAG, "No marker found on the map for the given experience");
-                    }
-                }
+            Marker marker = findMarkerAssociatedToExperience(experienceId);
+            if (marker != null) {
+                marker.setZIndex(1f);
+            } else {
+                Log.w(MAPS_TAG, "Experience with id " + experienceId + " not found on the map");
             }
         });
         mapViewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
             Log.d(MAPS_TAG, "Obtained " + experiences.size() + " experiences from Firebase");
             this.experiences = experiences;
             locator.submitExperiences(experiences);
-            if (map.getCameraPosition().zoom >= 12) {
-                drawAllExperienceMarkers();
-            } else {
-                Log.d(MAPS_TAG, "Zoom is less than 12, not drawing experience markers");
-            }
+            drawExperienceMarkers(experiences);
         });
         mapViewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
             Log.d(MAPS_TAG, "Obtained " + zones.size() + " zones from Firebase");
-            this.zones = zones;
-            if (map.getCameraPosition().zoom < 12) {
-                drawAllZoneMarkers();
-            } else {
-                Log.d(MAPS_TAG, "Zoom is more than 12, not drawing zone markers");
-            }
+            drawZoneMarkers(zones);
         });
 
         if (isLocationEnabled()) {
@@ -306,25 +289,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    @Nullable
+    private Marker findMarkerAssociatedToExperience(@NonNull String experienceId) {
+        for (Map.Entry<Marker, Experience> entry : experiencesOnTheMapByMarker.entrySet()) {
+            if (experienceId.equals(entry.getValue().getId())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    private void drawMarkers() {
-        Log.d(MAPS_TAG, "Starting to draw markers");
-        if (map.getCameraPosition().zoom < 12) {
-            clearFromTheMap(experiencesOnTheMapByMarker.keySet());
-            experiencesOnTheMapByMarker.clear();
-            drawAllZoneMarkers();
+    private void showMarkers() {
+        if (map.getCameraPosition().zoom < MARKER_ZOOM_THRESHOLD) {
+            experiencesOnTheMapByMarker.keySet().forEach(marker -> marker.setVisible(false));
+            zonesOnTheMapByMarker.keySet().forEach(marker -> marker.setVisible(true));
         } else {
-            clearFromTheMap(zonesOnTheMapByMarker.keySet());
-            zonesOnTheMapByMarker.clear();
-            drawAllExperienceMarkers();
+            experiencesOnTheMapByMarker.keySet().forEach(marker -> marker.setVisible(true));
+            zonesOnTheMapByMarker.keySet().forEach(marker -> marker.setVisible(false));
         }
     }
 
-    private void drawAllExperienceMarkers() {
+    private void drawExperienceMarkers(@NonNull List<Experience> experiences) {
         for (Experience experience : experiences) {
             if (!experiencesOnTheMapByMarker.containsValue(experience)) {
                 try {
@@ -335,25 +325,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             } else {
                 Log.d(MAPS_TAG, "Marker for experience " + experience + " already on the map, not drawing");
             }
-            if (experience.getId().equals(objectiveExperienceId)) {
-                Marker foundMarker = findMarkerAssociatedToExperience(experience);
-                if (foundMarker != null) {
-                    foundMarker.setZIndex(1f);
-                } else {
-                    Log.e(MAPS_TAG, "No marker found for the objective experience, even though it should be on the map");
-                }
-            }
         }
-    }
-
-    @Nullable
-    private Marker findMarkerAssociatedToExperience(@NonNull Experience experience) {
-        for (Map.Entry<Marker, Experience> entry : experiencesOnTheMapByMarker.entrySet()) {
-            if (experience.equals(entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-        return null;
     }
 
     private void drawExperienceMarker(@NonNull Experience experience) throws MarkerNotDrawnException {
@@ -368,10 +340,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             IconBuilder iconBuilder = new IconBuilder(requireContext(), experience);
             experienceMarker.setIcon(iconBuilder.buildMarkerDescriptor());
             experienceMarker.setAlpha(iconBuilder.getMarkerAlpha());
+            if (map.getCameraPosition().zoom < MARKER_ZOOM_THRESHOLD) {
+                experienceMarker.setVisible(false);
+            }
+            if (experience.getId().equals(objectiveExperienceId)) {
+                experienceMarker.setZIndex(1f);
+            }
         }
     }
 
-    private void drawAllZoneMarkers() {
+    private void drawZoneMarkers(@NonNull List<Zone> zones) {
         for (Zone zone : zones) {
             if (!zonesOnTheMapByMarker.containsValue(zone)) {
                 try {
@@ -395,12 +373,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             throw new MarkerNotDrawnException("Error while drawing marker for zone " + zone);
         } else {
             zonesOnTheMapByMarker.put(zoneMarker, zone);
-        }
-    }
-
-    private void clearFromTheMap(@NonNull Set<Marker> markersToClear) {
-        for (Marker marker : markersToClear) {
-            marker.remove();
+            if (map.getCameraPosition().zoom >= MARKER_ZOOM_THRESHOLD) {
+                zoneMarker.setVisible(false);
+            }
         }
     }
 
