@@ -87,7 +87,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
@@ -131,6 +130,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
             }
         });
+        super.onCreate(savedInstanceState);
     }
 
     private boolean areBothPermissionsGranted(@NonNull Map<String, Boolean> arePermissionsGranted) {
@@ -144,7 +144,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         viewBinding = FragmentMapsBinding.inflate(inflater, container, false);
-        View fragmentView = viewBinding.getRoot();
         viewBinding.map.onCreate(savedInstanceState);
         if (arePermissionsAlreadyGranted()) {
             viewBinding.map.getMapAsync(this);
@@ -182,7 +181,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 dialog.show();
             }
         });
-        return fragmentView;
+        return viewBinding.getRoot();
     }
 
     private boolean shouldShowRequestPermissionsRationale() {
@@ -242,8 +241,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onLowMemory() {
-        super.onLowMemory();
         viewBinding.map.onLowMemory();
+        super.onLowMemory();
     }
 
     @SuppressLint("MissingPermission")
