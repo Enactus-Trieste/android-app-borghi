@@ -293,7 +293,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Nullable
     private Marker findMarkerAssociatedToExperience(@NonNull String experienceId) {
         Optional<Map.Entry<Marker, Experience>> optionalMarkerForExperience = experiencesOnTheMapByMarker.entrySet().stream()
-                .filter(entry -> experienceId.equals(entry.getValue().getId()))
+                .filter(entry -> entry.getValue().getId().equals(experienceId))
                 .findFirst();
         return optionalMarkerForExperience.map(Map.Entry::getKey).orElse(null);
     }
