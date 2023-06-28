@@ -55,6 +55,7 @@ public class Locator implements DefaultLifecycleObserver {
             } else {
                 callback.onObjectiveOutOfRange();
             }
+            callback.onLocationUpdate(location);
         };
     }
 
