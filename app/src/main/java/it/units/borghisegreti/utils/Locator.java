@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
@@ -23,12 +22,12 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import it.units.borghisegreti.models.Experience;
 
 public class Locator implements DefaultLifecycleObserver {
 
+    private static final int OBJECTIVE_RANGE_THRESHOLD = 50;
     private boolean hasStarted = false;
     @NonNull
     private final Context context;
@@ -97,7 +96,7 @@ public class Locator implements DefaultLifecycleObserver {
         } else {
             Log.w(LOCATOR_TAG, "Objective experience not set yet");
         }
-        return distanceBetweenPoints < 50;
+        return distanceBetweenPoints < OBJECTIVE_RANGE_THRESHOLD;
     }
 
     private double computeDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
