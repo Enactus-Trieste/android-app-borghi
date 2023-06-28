@@ -47,6 +47,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentMapsBinding;
@@ -291,12 +292,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Nullable
     private Marker findMarkerAssociatedToExperience(@NonNull String experienceId) {
-        for (Map.Entry<Marker, Experience> entry : experiencesOnTheMapByMarker.entrySet()) {
-            if (experienceId.equals(entry.getValue().getId())) {
-                return entry.getKey();
-            }
-        }
-        return null;
+        Optional<Map.Entry<Marker, Experience>> optionalMarkerForExperience = experiencesOnTheMapByMarker.entrySet().stream()
+                .filter(entry -> experienceId.equals(entry.getValue().getId()))
+                .findFirst();
+        return optionalMarkerForExperience.map(Map.Entry::getKey).orElse(null);
     }
 
     private boolean isLocationEnabled() {
