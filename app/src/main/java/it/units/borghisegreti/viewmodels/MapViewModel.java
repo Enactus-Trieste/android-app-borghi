@@ -21,6 +21,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
@@ -77,12 +82,9 @@ public class MapViewModel extends ViewModel {
         experiencesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Experience> experiences = new ArrayList<>();
-                for (DataSnapshot experienceSnapshot : snapshot.getChildren()) {
-                    Experience databaseExperience = experienceSnapshot.getValue(Experience.class);
-                    Log.d(DB_TAG, "Received new remote experience from database: " + databaseExperience);
-                    experiences.add(databaseExperience);
-                }
+                List<Experience> experiences = StreamSupport.stream(snapshot.getChildren().spliterator(), true)
+                        .map(experienceSnapshot -> experienceSnapshot.getValue(Experience.class))
+                        .collect(Collectors.toList());
                 MapViewModel.this.databaseExperiences.setValue(experiences);
             }
 
@@ -94,12 +96,9 @@ public class MapViewModel extends ViewModel {
         zonesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Zone> zones = new ArrayList<>();
-                for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
-                    Zone databaseZone = zoneSnapshot.getValue(Zone.class);
-                    Log.d(DB_TAG, "Received new remote zone from database: " + databaseZone);
-                    zones.add(databaseZone);
-                }
+                List<Zone> zones = StreamSupport.stream(snapshot.getChildren().spliterator(), true)
+                        .map(zoneSnapshot -> zoneSnapshot.getValue(Zone.class))
+                        .collect(Collectors.toList());
                 MapViewModel.this.databaseZones.setValue(zones);
             }
 
@@ -162,15 +161,10 @@ public class MapViewModel extends ViewModel {
 
     // example method on how to transform data directly in the ViewModel
     public LiveData<List<Experience>> getExperiencesByName(@NonNull String experienceName) {
-        return Transformations.map(databaseExperiences, experiences -> {
-            List<Experience> filteredExperiences = new ArrayList<>();
-            for (Experience experience : experiences) {
-                if (experience.getName().equals(experienceName)) {
-                    filteredExperiences.add(experience);
-                }
-            }
-            return filteredExperiences;
-        });
+        return Transformations.map(databaseExperiences, experiences ->
+                experiences.stream()
+                        .filter(experience -> experience.getName().equals(experienceName))
+                        .collect(Collectors.toList()));
     }
 
     /**
