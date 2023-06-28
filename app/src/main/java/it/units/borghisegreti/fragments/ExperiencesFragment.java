@@ -45,8 +45,8 @@ public class ExperiencesFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this, new ExperiencesViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(ExperiencesViewModel.class);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class ExperiencesFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         viewBinding = null;
+        super.onDestroyView();
     }
 }

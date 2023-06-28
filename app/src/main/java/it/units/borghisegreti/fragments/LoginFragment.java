@@ -38,8 +38,8 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         authentication = FirebaseAuth.getInstance();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -108,5 +108,11 @@ public class LoginFragment extends Fragment {
             viewBinding.loginPasswordLayout.setError(null);
         }
         return isInputValid;
+    }
+
+    @Override
+    public void onDestroyView() {
+        viewBinding = null;
+        super.onDestroyView();
     }
 }

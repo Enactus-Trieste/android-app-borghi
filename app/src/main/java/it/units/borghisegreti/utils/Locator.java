@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
@@ -20,8 +21,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.Task;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import it.units.borghisegreti.models.Experience;
 
@@ -38,7 +40,7 @@ public class Locator implements DefaultLifecycleObserver {
     @Nullable
     private String objectiveExperienceId;
     @NonNull
-    private List<Experience> experiences = Collections.emptyList();
+    private final List<Experience> experiences = new ArrayList<>();
     @NonNull
     private final LocationListener locationListener;
     @NonNull
@@ -131,12 +133,16 @@ public class Locator implements DefaultLifecycleObserver {
 
     @Override
     public void onStop(@NonNull LifecycleOwner owner) {
-        locationProviderClient.removeLocationUpdates(locationListener)
-                .addOnSuccessListener(task -> {
-                    Log.d(LOCATOR_TAG, "Location updates successfully removed");
-                    hasStarted = false;
-                })
-                .addOnFailureListener(exception -> Log.e(LOCATOR_TAG, "Error while removing location updates", exception));
+        if (hasStarted) {
+            locationProviderClient.removeLocationUpdates(locationListener)
+                    .addOnSuccessListener(task -> {
+                        Log.d(LOCATOR_TAG, "Location updates successfully removed");
+                        hasStarted = false;
+                    })
+                    .addOnFailureListener(exception -> Log.e(LOCATOR_TAG, "Error while removing location updates", exception));
+        } else {
+            Log.d(LOCATOR_TAG, "Locator already stopped");
+        }
     }
 
     public void submitObjectiveId(@NonNull String objectiveExperienceId) {
@@ -144,7 +150,8 @@ public class Locator implements DefaultLifecycleObserver {
     }
 
     public void submitExperiences(@NonNull List<Experience> experiences) {
-        this.experiences = experiences;
+        this.experiences.clear();
+        this.experiences.addAll(experiences);
     }
 
     public interface Callback {

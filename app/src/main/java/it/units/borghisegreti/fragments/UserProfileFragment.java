@@ -4,23 +4,19 @@ import static it.units.borghisegreti.fragments.directions.UserProfileFragmentDir
 import static it.units.borghisegreti.utils.Database.DB_URL;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentUserProfileBinding;
-import it.units.borghisegreti.fragments.directions.UserProfileFragmentDirections;
 import it.units.borghisegreti.viewmodels.UserProfileViewModel;
 
 public class UserProfileFragment extends Fragment {
@@ -36,9 +32,9 @@ public class UserProfileFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this, new UserProfileViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(UserProfileViewModel.class);
         authentication = FirebaseAuth.getInstance();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -54,7 +50,7 @@ public class UserProfileFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         viewBinding = null;
+        super.onDestroyView();
     }
 }

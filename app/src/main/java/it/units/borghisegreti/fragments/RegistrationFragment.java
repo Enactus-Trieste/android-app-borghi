@@ -41,8 +41,8 @@ public class RegistrationFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         authentication = FirebaseAuth.getInstance();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -157,5 +157,11 @@ public class RegistrationFragment extends Fragment {
             }
         }
         return isFormValid;
+    }
+
+    @Override
+    public void onDestroyView() {
+        viewBinding = null;
+        super.onDestroyView();
     }
 }
