@@ -24,7 +24,6 @@ import it.units.borghisegreti.fragments.dialogs.ExperienceDialog;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
 import it.units.borghisegreti.models.Experience;
 import it.units.borghisegreti.models.Zone;
-import it.units.borghisegreti.viewmodels.MapViewModel;
 
 public class MapHandler {
 
@@ -48,7 +47,11 @@ public class MapHandler {
     private String objectiveExperienceId;
 
     @SuppressLint("MissingPermission")
-    public MapHandler(@NonNull Context context, @NonNull MapViewModel viewModel, @NonNull GoogleMap map) {
+    public MapHandler(@NonNull Context context,
+                      @NonNull GoogleMap map,
+                      @Nullable Double initialLatitude,
+                      @Nullable Double initialLongitude,
+                      @Nullable Float initialZoom) {
         this.context = context;
         this.map = map;
 
@@ -56,11 +59,8 @@ public class MapHandler {
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setMyLocationEnabled(true);
-        Double cameraLatitude = viewModel.getCameraLatitude();
-        Double cameraLongitude = viewModel.getCameraLongitude();
-        Float cameraZoom = viewModel.getCameraZoom();
-        if (cameraLatitude != null && cameraLongitude != null && cameraZoom != null) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude, cameraLongitude), cameraZoom));
+        if (initialLatitude != null && initialLongitude != null && initialZoom != null) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(initialLatitude, initialLongitude), initialZoom));
         } else {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_INITIAL_COORDINATES, DEFAULT_INITIAL_ZOOM));
         }

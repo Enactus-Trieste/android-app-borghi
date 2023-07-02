@@ -50,7 +50,7 @@ public class MapsFragment extends Fragment {
     private ActivityResultLauncher<String[]> requestMapPermissions;
     private ActivityResultLauncher<Intent> requestEnableLocation;
     private Locator locator;
-    private MapHandler drawUtility;
+    private MapHandler mapHandler;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -167,9 +167,9 @@ public class MapsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        mapViewModel.saveCameraLatitude(drawUtility.getMap().getCameraPosition().target.latitude);
-        mapViewModel.saveCameraLongitude(drawUtility.getMap().getCameraPosition().target.longitude);
-        mapViewModel.saveCameraZoom(drawUtility.getMap().getCameraPosition().zoom);
+        mapViewModel.saveCameraLatitude(mapHandler.getMap().getCameraPosition().target.latitude);
+        mapViewModel.saveCameraLongitude(mapHandler.getMap().getCameraPosition().target.longitude);
+        mapViewModel.saveCameraZoom(mapHandler.getMap().getCameraPosition().zoom);
         if (viewBinding != null) {
             viewBinding.map.onSaveInstanceState(outState);
         }
@@ -196,20 +196,20 @@ public class MapsFragment extends Fragment {
     }
 
     private void setupDrawingOfMarkers(GoogleMap map) {
-        drawUtility = new MapHandler(requireContext(), mapViewModel, map);
+        mapHandler = new MapHandler(requireContext(), map, mapViewModel.getCameraLatitude(), mapViewModel.getCameraLongitude(), mapViewModel.getCameraZoom());
 
         mapViewModel.getObjectiveExperienceId().observe(getViewLifecycleOwner(), experienceId -> {
             locator.submitObjectiveId(experienceId);
-            drawUtility.submitObjectiveId(experienceId);
+            mapHandler.submitObjectiveId(experienceId);
         });
         mapViewModel.getExperiences().observe(getViewLifecycleOwner(), experiences -> {
             Log.d(MAPS_TAG, "Obtained " + experiences.size() + " experiences from Firebase");
             locator.submitExperiences(experiences);
-            drawUtility.drawExperienceMarkers(experiences);
+            mapHandler.drawExperienceMarkers(experiences);
         });
         mapViewModel.getZones().observe(getViewLifecycleOwner(), zones -> {
             Log.d(MAPS_TAG, "Obtained " + zones.size() + " zones from Firebase");
-            drawUtility.drawZoneMarkers(zones);
+            mapHandler.drawZoneMarkers(zones);
         });
 
         if (isLocationEnabled()) {
