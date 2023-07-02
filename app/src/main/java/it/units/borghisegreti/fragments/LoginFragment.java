@@ -4,17 +4,16 @@ import static it.units.borghisegreti.fragments.directions.LoginFragmentDirection
 import static it.units.borghisegreti.fragments.directions.LoginFragmentDirections.actionLoginFragmentToRegistrationFragment;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentLoginBinding;
-import it.units.borghisegreti.fragments.directions.LoginFragmentDirections;
 
 public class LoginFragment extends Fragment {
 
