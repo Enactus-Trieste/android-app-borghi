@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentRegistrationBinding;
-import it.units.borghisegreti.fragments.directions.RegistrationFragmentDirections;
 import it.units.borghisegreti.models.User;
 import it.units.borghisegreti.viewmodels.RegistrationViewModel;
 

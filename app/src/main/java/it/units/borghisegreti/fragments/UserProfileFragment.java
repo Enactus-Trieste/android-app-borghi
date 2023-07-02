@@ -1,6 +1,5 @@
 package it.units.borghisegreti.fragments;
 
-import static it.units.borghisegreti.fragments.directions.UserProfileFragmentDirections.actionUserProfileFragmentToLoginFragment;
 import static it.units.borghisegreti.utils.Database.DB_URL;
 
 import android.os.Bundle;
@@ -11,11 +10,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import it.units.borghisegreti.R;
 import it.units.borghisegreti.databinding.FragmentUserProfileBinding;
 import it.units.borghisegreti.viewmodels.UserProfileViewModel;
 
@@ -43,7 +44,7 @@ public class UserProfileFragment extends Fragment {
         viewBinding = FragmentUserProfileBinding.inflate(inflater, container, false);
         viewBinding.logOutButton.setOnClickListener(view -> {
             authentication.signOut();
-            NavHostFragment.findNavController(this).navigate(actionUserProfileFragmentToLoginFragment());
+            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
         });
         return viewBinding.getRoot();
     }
