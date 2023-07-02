@@ -35,6 +35,7 @@ public class MapHandler {
     private static final float ZONE_ANIMATION_ZOOM = 12f;
     private static final float EXPERIENCE_ANIMATION_ZOOM = 16f;
     private static final float OBJECTIVE_ELEVATION = 1f;
+    private static final float MIN_ZOOM = 7f;
     @NonNull
     private final Context context;
     @NonNull
@@ -51,7 +52,7 @@ public class MapHandler {
         this.context = context;
         this.map = map;
 
-        map.setMinZoomPreference(7f);
+        map.setMinZoomPreference(MIN_ZOOM);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setMyLocationEnabled(true);
