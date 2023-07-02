@@ -167,11 +167,9 @@ public class MapsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (drawUtility.getMap() != null) {
-            mapViewModel.saveCameraLatitude(drawUtility.getMap().getCameraPosition().target.latitude);
-            mapViewModel.saveCameraLongitude(drawUtility.getMap().getCameraPosition().target.longitude);
-            mapViewModel.saveCameraZoom(drawUtility.getMap().getCameraPosition().zoom);
-        }
+        mapViewModel.saveCameraLatitude(drawUtility.getMap().getCameraPosition().target.latitude);
+        mapViewModel.saveCameraLongitude(drawUtility.getMap().getCameraPosition().target.longitude);
+        mapViewModel.saveCameraZoom(drawUtility.getMap().getCameraPosition().zoom);
         if (viewBinding != null) {
             viewBinding.map.onSaveInstanceState(outState);
         }
