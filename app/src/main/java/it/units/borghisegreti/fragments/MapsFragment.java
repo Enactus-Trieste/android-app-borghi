@@ -4,7 +4,6 @@ import static it.units.borghisegreti.utils.Database.DB_URL;
 import static it.units.borghisegreti.utils.Locator.LOCATOR_TAG;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -109,7 +108,6 @@ public class MapsFragment extends Fragment {
                 && Boolean.TRUE.equals(arePermissionsGranted.get(Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
-    @SuppressLint("MissingPermission")
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
