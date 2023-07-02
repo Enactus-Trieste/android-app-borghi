@@ -20,10 +20,4 @@ public class UserProfileFragmentDirections {
     public static NavDirections actionUserProfileFragmentToExperiencesFragment() {
         return new ActionOnlyNavDirections(R.id.action_userProfileFragment_to_experiencesFragment);
     }
-
-    @NonNull
-    @Contract(" -> new")
-    public static NavDirections actionUserProfileFragmentToLoginFragment() {
-        return new ActionOnlyNavDirections(R.id.action_userProfileFragment_to_loginFragment);
-    }
 }

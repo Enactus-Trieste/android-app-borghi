@@ -78,11 +78,6 @@
             app:destination="@id/mapsFragment"
             app:popUpTo="@id/navigation_graph"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_userProfileFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:popUpTo="@id/navigation_graph"
-            app:popUpToInclusive="true" />
     </fragment>
     <action
         android:id="@+id/action_global_loginFragment"
