@@ -57,6 +57,7 @@ public class MapsFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
@@ -100,7 +101,6 @@ public class MapsFragment extends Fragment {
                 Snackbar.make(requireView(), R.string.permissions_not_granted, Snackbar.LENGTH_SHORT).show();
             }
         });
-        super.onCreate(savedInstanceState);
     }
 
     private boolean areBothPermissionsGranted(@NonNull Map<String, Boolean> arePermissionsGranted) {
