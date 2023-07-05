@@ -67,7 +67,10 @@ public class LoginFragment extends Fragment {
                                 } else {
                                     Log.w(AUTH_TAG, "Sign-in failed", task.getException());
                                     Snackbar.make(LoginFragment.this.requireView(),
-                                            Objects.requireNonNull(Objects.requireNonNull(task.getException(), "Task completed successfully, no exception available").getLocalizedMessage(), "No localized message available"),
+                                            Objects.requireNonNull(
+                                                    Objects.requireNonNull(task.getException(), "Task should have an exception when it has failed").getLocalizedMessage(),
+                                                    "No localized message available"
+                                            ),
                                             Snackbar.LENGTH_LONG).show();
                                     alreadySentOnce.set(false);
                                 }
