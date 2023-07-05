@@ -48,7 +48,8 @@ public class ObjectiveDialogViewModel extends MapViewModel {
                 Map<String, Experience> completedExperiencesById = StreamSupport.stream(snapshot.getChildren().spliterator(), true)
                         .collect(Collectors.toMap(
                                 DataSnapshot::getKey,
-                                completedExperienceSnapshot -> Objects.requireNonNull(completedExperienceSnapshot.getValue(Experience.class)))
+                                completedExperienceSnapshot -> Objects.requireNonNull(completedExperienceSnapshot.getValue(Experience.class),
+                                        "Invalid database structure, no completed experience found for id " + completedExperienceSnapshot.getKey()))
                         );
                 databaseCompletedExperiencesById.setValue(completedExperiencesById);
             }
