@@ -173,14 +173,10 @@ public class MapViewModel extends ViewModel {
      * @return The experience associated with the given ID, or null if such an experience isn't found
      */
     public LiveData<Experience> getExperienceById(@NonNull String experienceId) {
-        return Transformations.map(databaseExperiences, experiences -> {
-            for (Experience experience : experiences) {
-                if (experience.getId().equals(experienceId)) {
-                    return experience;
-                }
-            }
-            return null;
-        });
+        return Transformations.map(databaseExperiences, experiences ->
+                experiences.stream()
+                        .filter(experience -> experience.getId().equals(experienceId))
+                        .findFirst().orElse(null));
     }
 
     /**
