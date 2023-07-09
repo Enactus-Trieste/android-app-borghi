@@ -19,7 +19,8 @@ import it.units.borghisegreti.fragments.UserProfileFragment;
 
 public class AuthenticatedFragmentsFactory extends FragmentFactory {
 
-    public static final String TEST_AUTH_TAG = "TEST_AUTH";
+    private static final String TEST_AUTH_TAG = "TEST_AUTH";
+    private static final String LOCAL_HOST_FROM_ANDROID = "10.0.2.2";
     @NonNull
     private final String email;
     @NonNull
@@ -31,7 +32,7 @@ public class AuthenticatedFragmentsFactory extends FragmentFactory {
         this.email = email;
         this.password = password;
         authentication = FirebaseAuth.getInstance();
-        authentication.useEmulator("10.0.2.2", 9099);
+        authentication.useEmulator(LOCAL_HOST_FROM_ANDROID, 9099);
     }
 
     @NonNull
@@ -43,7 +44,7 @@ public class AuthenticatedFragmentsFactory extends FragmentFactory {
                 .addOnFailureListener(exception -> Log.e(TEST_AUTH_TAG, "Error while generating authenticated fragment", exception));
         if (MapsFragment.class.equals(fragmentClass)) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            database.useEmulator("10.0.2.2", 9000);
+            database.useEmulator(LOCAL_HOST_FROM_ANDROID, 9000);
             return MapsFragment.newInstance(database);
         } else if (UserProfileFragment.class.equals(fragmentClass)) {
             return new UserProfileFragment();
