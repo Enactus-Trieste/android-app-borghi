@@ -41,7 +41,7 @@ public class AuthenticatedFragmentsFactory extends FragmentFactory {
         Class<? extends Fragment> fragmentClass = loadFragmentClass(classLoader, className);
         authentication.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(task -> Log.d(TEST_AUTH_TAG, "User authenticated"))
-                .addOnFailureListener(exception -> Log.e(TEST_AUTH_TAG, "Error while generating authenticated fragment", exception));
+                .addOnFailureListener(exception -> Log.e(TEST_AUTH_TAG, "Error while authenticating", exception));
         if (MapsFragment.class.equals(fragmentClass)) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             database.useEmulator(LOCAL_HOST_FROM_ANDROID, 9000);
