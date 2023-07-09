@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentFactory;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -41,7 +42,9 @@ public class AuthenticatedFragmentsFactory extends FragmentFactory {
                 .addOnSuccessListener(task -> Log.d(TEST_AUTH_TAG, "User authenticated"))
                 .addOnFailureListener(exception -> Log.e(TEST_AUTH_TAG, "Error while generating authenticated fragment", exception));
         if (MapsFragment.class.equals(fragmentClass)) {
-            return new MapsFragment();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            database.useEmulator("10.0.2.2", 9000);
+            return MapsFragment.newInstance(database);
         } else if (UserProfileFragment.class.equals(fragmentClass)) {
             return new UserProfileFragment();
         } else if (ExperiencesFragment.class.equals(fragmentClass)) {

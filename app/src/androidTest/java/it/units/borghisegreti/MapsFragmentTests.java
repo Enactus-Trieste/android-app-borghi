@@ -2,18 +2,13 @@ package it.units.borghisegreti;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.swipeLeft;
-import static androidx.test.espresso.action.ViewActions.swipeRight;
+import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
-import static it.units.borghisegreti.utils.Database.DB_URL;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.filters.LargeTest;
-
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,11 +25,14 @@ public class MapsFragmentTests {
     @Before
     public void init() {
         scenario = FragmentScenario.launchInContainer(MapsFragment.class, Bundle.EMPTY, R.style.Theme_AdventureMaps, new AuthenticatedFragmentsFactory("test@prova.it", "password"));
-        scenario.onFragment(mapsFragment -> FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000));
     }
 
     @Test
     public void test() {
+        onView(withId(R.id.map))
+                .perform(doubleClick());
+        onView(withId(R.id.map))
+                .perform(doubleClick());
         IntStream.range(0, 100)
                         .forEach(index -> {
                             onView(withId(R.id.maps_search_button))
