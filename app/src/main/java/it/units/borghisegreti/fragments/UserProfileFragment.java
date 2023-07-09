@@ -25,17 +25,27 @@ public class UserProfileFragment extends Fragment {
     private FragmentUserProfileBinding viewBinding;
     private UserProfileViewModel viewModel;
     private FirebaseAuth authentication;
+    private FirebaseDatabase database;
 
     public UserProfileFragment() {
         // Required empty public constructor
     }
 
+    private UserProfileFragment(@NonNull FirebaseDatabase database) {
+        this.database = database;
+    }
+
+    @NonNull
+    public static UserProfileFragment newInstance(@NonNull FirebaseDatabase database) {
+        return new UserProfileFragment(database);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this, new UserProfileViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(UserProfileViewModel.class);
-        authentication = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this, new UserProfileViewModel.Factory(database == null ? FirebaseDatabase.getInstance(DB_URL) : database)).get(UserProfileViewModel.class);
+        authentication = FirebaseAuth.getInstance();
     }
 
     @Override

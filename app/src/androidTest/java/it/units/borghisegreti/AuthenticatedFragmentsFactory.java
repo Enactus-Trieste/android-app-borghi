@@ -42,14 +42,14 @@ public class AuthenticatedFragmentsFactory extends FragmentFactory {
         authentication.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(task -> Log.d(TEST_AUTH_TAG, "User authenticated"))
                 .addOnFailureListener(exception -> Log.e(TEST_AUTH_TAG, "Error while authenticating", exception));
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.useEmulator(LOCAL_HOST_FROM_ANDROID, 9000);
         if (MapsFragment.class.equals(fragmentClass)) {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            database.useEmulator(LOCAL_HOST_FROM_ANDROID, 9000);
             return MapsFragment.newInstance(database);
         } else if (UserProfileFragment.class.equals(fragmentClass)) {
-            return new UserProfileFragment();
+            return UserProfileFragment.newInstance(database);
         } else if (ExperiencesFragment.class.equals(fragmentClass)) {
-            return new ExperiencesFragment();
+            return ExperiencesFragment.newInstance(database);
         }
         return super.instantiate(classLoader, className);
     }
