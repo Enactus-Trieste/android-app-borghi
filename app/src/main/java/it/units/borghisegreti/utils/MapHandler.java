@@ -18,7 +18,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import it.units.borghisegreti.fragments.dialogs.ExperienceDialog;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
@@ -180,10 +179,10 @@ public class MapHandler {
 
     @Nullable
     private Marker findMarkerAssociatedToExperience(@NonNull String experienceId) {
-        Optional<Map.Entry<Marker, Experience>> optionalMarkerForExperience = experiencesOnTheMapByMarker.entrySet().stream()
+        return experiencesOnTheMapByMarker.entrySet().stream()
                 .filter(entry -> entry.getValue().getId().equals(experienceId))
-                .findFirst();
-        return optionalMarkerForExperience.map(Map.Entry::getKey).orElse(null);
+                .findFirst()
+                .map(Map.Entry::getKey).orElse(null);
     }
 
     @NonNull
