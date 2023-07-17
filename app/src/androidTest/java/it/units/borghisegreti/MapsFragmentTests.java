@@ -24,7 +24,11 @@ public class MapsFragmentTests {
 
     @Before
     public void init() {
-        scenario = FragmentScenario.launchInContainer(MapsFragment.class, Bundle.EMPTY, R.style.Theme_AdventureMaps, new AuthenticatedFragmentsFactory("test@prova.it", "password"));
+        scenario = FragmentScenario.launchInContainer(
+                MapsFragment.class, Bundle.EMPTY,
+                R.style.Theme_AdventureMaps,
+                new AuthenticatedFragmentsFactory("test@prova.it", "password")
+        );
     }
 
     @Test
