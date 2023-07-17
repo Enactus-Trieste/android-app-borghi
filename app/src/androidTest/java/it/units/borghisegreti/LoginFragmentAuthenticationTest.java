@@ -14,7 +14,6 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.navigation.Navigation;
 import androidx.navigation.testing.TestNavHostController;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,12 +21,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import it.units.borghisegreti.fragments.LoginFragment;
 
 @LargeTest
-@RunWith(AndroidJUnit4.class)
 public class LoginFragmentAuthenticationTest {
 
     private FragmentScenario<LoginFragment> scenario;
