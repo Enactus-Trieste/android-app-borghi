@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static it.units.borghisegreti.CustomMatchers.hasTextInputLayoutErrorText;
 
 import android.os.Bundle;
 
@@ -13,8 +14,6 @@ import androidx.test.filters.LargeTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static it.units.borghisegreti.CustomMatchers.hasTextInputLayoutErrorText;
 
 import it.units.borghisegreti.fragments.LoginFragment;
 
