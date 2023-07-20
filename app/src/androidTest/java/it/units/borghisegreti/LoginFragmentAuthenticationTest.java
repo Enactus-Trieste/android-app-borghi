@@ -27,6 +27,8 @@ import it.units.borghisegreti.fragments.LoginFragment;
 @LargeTest
 public class LoginFragmentAuthenticationTest {
 
+    private static final String USER_EMAIL = "test@prova.it";
+    private static final String USER_PASSWORD = "password";
     private FragmentScenario<LoginFragment> scenario;
     private TestNavHostController navController;
 
@@ -45,11 +47,11 @@ public class LoginFragmentAuthenticationTest {
     @Test
     public void testAuthentication() {
         onView(withId(R.id.login_username_text))
-                .perform(typeText("test@prova.it"));
+                .perform(typeText(USER_EMAIL));
         onView(withId(R.id.login_username_text))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.login_password_text))
-                .perform(typeText("password"));
+                .perform(typeText(USER_PASSWORD));
         onView(withId(R.id.login_password_text))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.login_button))
