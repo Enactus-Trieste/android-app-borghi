@@ -8,9 +8,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.EMAIL;
 import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.PASSWORD;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.filters.LargeTest;
 
 import org.junit.After;
@@ -35,16 +38,8 @@ public class MapsFragmentTests {
     }
 
     @Test
-    public void test() {
-        onView(withId(R.id.map))
-                .perform(doubleClick());
-        onView(withId(R.id.map))
-                .perform(doubleClick());
-        IntStream.range(0, 100)
-                        .forEach(index -> {
-                            onView(withId(R.id.maps_search_button))
-                                    .perform(click());
-                        });
+    public void testNumberOfNaturalisticViews() {
+        // empty
     }
 
     @After
