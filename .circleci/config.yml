@@ -41,8 +41,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Make ./gradlew executable
+          name: make ./gradlew executable
           command: chmod +x ./gradlew
+      - run:
+          name: make Android tests script executable
+          command: chmod +x .circleci/run-android-tests.sh
       - run:
           name: set Google Maps API key
           command: echo "MAPS_API_KEY=${MAPS_API_KEY}" > local.properties
