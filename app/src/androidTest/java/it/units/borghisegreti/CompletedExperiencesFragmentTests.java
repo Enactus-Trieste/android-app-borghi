@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import androidx.fragment.app.testing.FragmentScenario;
-import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.filters.LargeTest;
 
 import org.junit.After;
