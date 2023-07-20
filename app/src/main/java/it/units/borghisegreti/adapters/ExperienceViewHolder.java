@@ -26,7 +26,8 @@ public class ExperienceViewHolder extends RecyclerView.ViewHolder {
     public void bind(@NonNull Experience experience) {
         binding.completedExperienceTitle.setText(experience.getName());
         binding.completedExperienceDescription.setText(experience.getDescription());
-       binding.completedExperiencePoints.setText(String.valueOf(experience.getPoints()));
+        binding.completedExperiencePoints.setText(String.valueOf(experience.getPoints()));
+        binding.getRoot().setTag(experience.getId());
         try {
             IconBuilder iconBuilder = new IconBuilder(itemView.getContext(), experience);
             InputStream iconStream = iconBuilder.getExperienceIcon();
