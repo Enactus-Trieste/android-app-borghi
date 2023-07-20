@@ -58,7 +58,7 @@ jobs:
           no-window: true
           restore-gradle-cache-prefix: v1a
       - run:
-          name: start the local Firebase emulators and run Android tests
+          name: start local Firebase emulators and run Android tests
           command: firebase emulators:exec --import=firebase-emulators-data/ .circleci/run-android-tests.sh
       - android/save-gradle-cache:
           cache-prefix: v1a
