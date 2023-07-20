@@ -7,7 +7,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-import static it.units.borghisegreti.CustomMatchers.hasTextInputLayoutErrorText;
+import static it.units.borghisegreti.utils.CustomMatchers.hasTextInputLayoutErrorText;
 
 import android.os.Bundle;
 

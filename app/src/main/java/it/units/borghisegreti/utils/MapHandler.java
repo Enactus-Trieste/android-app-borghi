@@ -18,7 +18,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import it.units.borghisegreti.fragments.dialogs.ExperienceDialog;
 import it.units.borghisegreti.fragments.exceptions.MarkerNotDrawnException;
@@ -129,6 +128,7 @@ public class MapHandler {
             IconBuilder iconBuilder = new IconBuilder(context, experience);
             experienceMarker.setIcon(iconBuilder.buildMarkerDescriptor());
             experienceMarker.setAlpha(iconBuilder.getMarkerAlpha());
+            experienceMarker.setTag(experience.getId());
             if (map.getCameraPosition().zoom < ZONE_TO_EXPERIENCES_ZOOM_THRESHOLD) {
                 experienceMarker.setVisible(false);
             }
@@ -162,6 +162,7 @@ public class MapHandler {
             throw new MarkerNotDrawnException("Error while drawing marker for zone " + zone);
         } else {
             zonesOnTheMapByMarker.put(zoneMarker, zone);
+            zoneMarker.setTag(zone.getName());
             if (map.getCameraPosition().zoom >= ZONE_TO_EXPERIENCES_ZOOM_THRESHOLD) {
                 zoneMarker.setVisible(false);
             }
@@ -180,10 +181,10 @@ public class MapHandler {
 
     @Nullable
     private Marker findMarkerAssociatedToExperience(@NonNull String experienceId) {
-        Optional<Map.Entry<Marker, Experience>> optionalMarkerForExperience = experiencesOnTheMapByMarker.entrySet().stream()
+        return experiencesOnTheMapByMarker.entrySet().stream()
                 .filter(entry -> entry.getValue().getId().equals(experienceId))
-                .findFirst();
-        return optionalMarkerForExperience.map(Map.Entry::getKey).orElse(null);
+                .findFirst()
+                .map(Map.Entry::getKey).orElse(null);
     }
 
     @NonNull

@@ -34,6 +34,7 @@ import it.units.borghisegreti.viewmodels.ExperiencesViewModel;
 
 public class ExperiencesFragment extends Fragment {
 
+    private FirebaseDatabase database;
     private FragmentExperiencesBinding viewBinding;
     private ExperiencesViewModel viewModel;
     @NonNull
@@ -43,10 +44,19 @@ public class ExperiencesFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private ExperiencesFragment(@NonNull FirebaseDatabase database) {
+        this.database = database;
+    }
+
+    @NonNull
+    public static ExperiencesFragment newInstance(@NonNull FirebaseDatabase database) {
+        return new ExperiencesFragment(database);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this, new ExperiencesViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(ExperiencesViewModel.class);
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this, new ExperiencesViewModel.Factory(database == null ? FirebaseDatabase.getInstance(DB_URL) : database)).get(ExperiencesViewModel.class);
     }
 
     @Override

@@ -44,6 +44,7 @@ import it.units.borghisegreti.viewmodels.MapViewModel;
 public class MapsFragment extends Fragment {
 
     private static final String MAPS_TAG = "MAPS_FRAGMENT";
+    private FirebaseDatabase database;
     private MapViewModel mapViewModel;
     private FragmentMapsBinding viewBinding;
     private ActivityResultLauncher<String[]> requestMapPermissions;
@@ -55,6 +56,15 @@ public class MapsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private MapsFragment(@NonNull FirebaseDatabase database) {
+        this.database = database;
+    }
+
+    @NonNull
+    public static MapsFragment newInstance(@NonNull FirebaseDatabase database) {
+        return new MapsFragment(database);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +74,7 @@ public class MapsFragment extends Fragment {
             return;
         }
         // view models must be initialized after the fragment is attached
-        mapViewModel = new ViewModelProvider(this, new MapViewModel.Factory(FirebaseDatabase.getInstance(DB_URL))).get(MapViewModel.class);
+        mapViewModel = new ViewModelProvider(this, new MapViewModel.Factory(database == null ? FirebaseDatabase.getInstance(DB_URL) : database)).get(MapViewModel.class);
 
         locator = new Locator(requireContext(), getLifecycle(), new Locator.Callback() {
             @Override
@@ -165,14 +175,13 @@ public class MapsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
         mapViewModel.saveCameraLatitude(mapHandler.getMap().getCameraPosition().target.latitude);
         mapViewModel.saveCameraLongitude(mapHandler.getMap().getCameraPosition().target.longitude);
         mapViewModel.saveCameraZoom(mapHandler.getMap().getCameraPosition().zoom);
         if (viewBinding != null) {
             viewBinding.map.onSaveInstanceState(outState);
         }
-        super.onSaveInstanceState(outState);
-
     }
 
     @Override
