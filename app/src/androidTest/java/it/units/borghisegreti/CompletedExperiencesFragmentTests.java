@@ -28,7 +28,7 @@ import it.units.borghisegreti.fragments.ExperiencesFragment;
 import it.units.borghisegreti.utils.AuthenticatedFragmentsFactory;
 
 @LargeTest
-public class ExperiencesFragmentTests {
+public class CompletedExperiencesFragmentTests {
 
     private FragmentScenario<ExperiencesFragment> scenario;
 
