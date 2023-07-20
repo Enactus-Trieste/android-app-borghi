@@ -46,6 +46,12 @@ jobs:
       - run:
           name: set Google Maps API key
           command: echo "MAPS_API_KEY=${MAPS_API_KEY}" > local.properties
+      - run:
+          name: download the Firebase Emulator Suite
+          command: curl -sL https://firebase.tools | bash
+      - run:
+          name: start the local Firebase emulators
+          command: firebase emulators:start --import=firebase-emulators-data/
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
           system-image: system-images;android-28;google_apis;x86
