@@ -48,7 +48,7 @@ public class LoginFragmentAuthenticationTest {
     }
 
     @Test
-    public void testUsernameExistingNavigation() {
+    public void testUsernameExistingAndCorrectPasswordNavigation() {
         onView(withId(R.id.login_username_text))
                 .perform(typeText(EMAIL))
                 .perform(closeSoftKeyboard());
