@@ -48,14 +48,12 @@ public class LoginFragmentAuthenticationTest {
     }
 
     @Test
-    public void testAuthentication() {
+    public void testUsernameExistingNavigation() {
         onView(withId(R.id.login_username_text))
-                .perform(typeText(EMAIL));
-        onView(withId(R.id.login_username_text))
+                .perform(typeText(EMAIL))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.login_password_text))
-                .perform(typeText(PASSWORD));
-        onView(withId(R.id.login_password_text))
+                .perform(typeText(PASSWORD))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.login_button))
                 .perform(click());
