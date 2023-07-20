@@ -128,6 +128,7 @@ public class MapHandler {
             IconBuilder iconBuilder = new IconBuilder(context, experience);
             experienceMarker.setIcon(iconBuilder.buildMarkerDescriptor());
             experienceMarker.setAlpha(iconBuilder.getMarkerAlpha());
+            experienceMarker.setTag(experience.getId());
             if (map.getCameraPosition().zoom < ZONE_TO_EXPERIENCES_ZOOM_THRESHOLD) {
                 experienceMarker.setVisible(false);
             }
@@ -161,6 +162,7 @@ public class MapHandler {
             throw new MarkerNotDrawnException("Error while drawing marker for zone " + zone);
         } else {
             zonesOnTheMapByMarker.put(zoneMarker, zone);
+            zoneMarker.setTag(zone.getName());
             if (map.getCameraPosition().zoom >= ZONE_TO_EXPERIENCES_ZOOM_THRESHOLD) {
                 zoneMarker.setVisible(false);
             }
