@@ -8,6 +8,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.junit.Assert.assertEquals;
 
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.AUTH_PORT;
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.EMAIL;
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.HOST;
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.PASSWORD;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
@@ -27,8 +32,6 @@ import it.units.borghisegreti.fragments.LoginFragment;
 @LargeTest
 public class LoginFragmentAuthenticationTest {
 
-    private static final String USER_EMAIL = "test@prova.it";
-    private static final String USER_PASSWORD = "password";
     private FragmentScenario<LoginFragment> scenario;
     private TestNavHostController navController;
 
@@ -37,7 +40,7 @@ public class LoginFragmentAuthenticationTest {
         scenario = FragmentScenario.launchInContainer(LoginFragment.class, Bundle.EMPTY, R.style.Theme_AdventureMaps);
         navController = new TestNavHostController(ApplicationProvider.getApplicationContext());
         scenario.onFragment(loginFragment -> {
-            FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+            FirebaseAuth.getInstance().useEmulator(HOST, AUTH_PORT);
             navController.setGraph(R.navigation.navigation_graph);
             navController.setCurrentDestination(R.id.loginFragment);
             Navigation.setViewNavController(loginFragment.requireView(), navController);
@@ -47,11 +50,11 @@ public class LoginFragmentAuthenticationTest {
     @Test
     public void testAuthentication() {
         onView(withId(R.id.login_username_text))
-                .perform(typeText(USER_EMAIL));
+                .perform(typeText(EMAIL));
         onView(withId(R.id.login_username_text))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.login_password_text))
-                .perform(typeText(USER_PASSWORD));
+                .perform(typeText(PASSWORD));
         onView(withId(R.id.login_password_text))
                 .perform(closeSoftKeyboard());
         onView(withId(R.id.login_button))

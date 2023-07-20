@@ -5,6 +5,9 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.EMAIL;
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.PASSWORD;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
@@ -27,7 +30,7 @@ public class MapsFragmentTests {
         scenario = FragmentScenario.launchInContainer(
                 MapsFragment.class, Bundle.EMPTY,
                 R.style.Theme_AdventureMaps,
-                new AuthenticatedFragmentsFactory("test@prova.it", "password")
+                new AuthenticatedFragmentsFactory(EMAIL, PASSWORD)
         );
     }
 

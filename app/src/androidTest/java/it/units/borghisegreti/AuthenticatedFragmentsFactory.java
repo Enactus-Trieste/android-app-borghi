@@ -1,17 +1,17 @@
 package it.units.borghisegreti;
 
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.AUTH_PORT;
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.DATABASE_PORT;
+import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.HOST;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import it.units.borghisegreti.fragments.ExperiencesFragment;
 import it.units.borghisegreti.fragments.MapsFragment;
@@ -20,7 +20,6 @@ import it.units.borghisegreti.fragments.UserProfileFragment;
 public class AuthenticatedFragmentsFactory extends FragmentFactory {
 
     private static final String TEST_AUTH_TAG = "TEST_AUTH";
-    private static final String LOCAL_HOST_FROM_ANDROID = "10.0.2.2";
     @NonNull
     private final String email;
     @NonNull
@@ -32,7 +31,7 @@ public class AuthenticatedFragmentsFactory extends FragmentFactory {
         this.email = email;
         this.password = password;
         authentication = FirebaseAuth.getInstance();
-        authentication.useEmulator(LOCAL_HOST_FROM_ANDROID, 9099);
+        authentication.useEmulator(HOST, AUTH_PORT);
     }
 
     @NonNull
@@ -43,7 +42,7 @@ public class AuthenticatedFragmentsFactory extends FragmentFactory {
                 .addOnSuccessListener(task -> Log.d(TEST_AUTH_TAG, "User authenticated"))
                 .addOnFailureListener(exception -> Log.e(TEST_AUTH_TAG, "Error while authenticating", exception));
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        database.useEmulator(LOCAL_HOST_FROM_ANDROID, 9000);
+        database.useEmulator(HOST, DATABASE_PORT);
         if (MapsFragment.class.equals(fragmentClass)) {
             return MapsFragment.newInstance(database);
         } else if (UserProfileFragment.class.equals(fragmentClass)) {
