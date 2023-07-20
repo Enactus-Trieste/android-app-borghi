@@ -20,27 +20,20 @@ import it.units.borghisegreti.fragments.UserProfileFragment;
 public class AuthenticatedFragmentsFactory extends FragmentFactory {
 
     private static final String TEST_AUTH_TAG = "TEST_AUTH";
-    @NonNull
-    private final String email;
-    @NonNull
-    private final String password;
-    private final FirebaseAuth authentication;
 
     public AuthenticatedFragmentsFactory(@NonNull String email, @NonNull String password) {
         super();
-        this.email = email;
-        this.password = password;
-        authentication = FirebaseAuth.getInstance();
+        FirebaseAuth authentication = FirebaseAuth.getInstance();
         authentication.useEmulator(HOST, AUTH_PORT);
+        authentication.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(task -> Log.d(TEST_AUTH_TAG, "User authenticated"))
+                .addOnFailureListener(exception -> Log.e(TEST_AUTH_TAG, "Error while authenticating", exception));
     }
 
     @NonNull
     @Override
     public Fragment instantiate(@NonNull ClassLoader classLoader, @NonNull String className) {
         Class<? extends Fragment> fragmentClass = loadFragmentClass(classLoader, className);
-        authentication.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(task -> Log.d(TEST_AUTH_TAG, "User authenticated"))
-                .addOnFailureListener(exception -> Log.e(TEST_AUTH_TAG, "Error while authenticating", exception));
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.useEmulator(HOST, DATABASE_PORT);
         if (MapsFragment.class.equals(fragmentClass)) {

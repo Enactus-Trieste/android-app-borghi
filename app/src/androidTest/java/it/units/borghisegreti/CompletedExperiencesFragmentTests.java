@@ -1,6 +1,12 @@
 package it.units.borghisegreti;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.slowSwipeLeft;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -18,6 +24,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.filters.LargeTest;
 
 import org.junit.After;
@@ -44,6 +51,9 @@ public class CompletedExperiencesFragmentTests {
 
     @Test
     public void testRiverWaterfallExperienceExists() {
+        onView(withId(R.id.completed_experiences_recycler))
+                .perform(swipeUp(), swipeUp())
+                .perform(swipeDown(), swipeDown());
         onView(withTagValue(is("ex003")))
                 .check(matches(isDisplayed()))
                 .check(matches(hasChildCount(4)))
@@ -55,6 +65,9 @@ public class CompletedExperiencesFragmentTests {
 
     @Test
     public void testPanoramicViewExperienceExists() {
+        onView(withId(R.id.completed_experiences_recycler))
+                .perform(swipeUp(), swipeUp())
+                .perform(swipeDown(), swipeDown());
         onView(withTagValue(is("ex012")))
                 .check(matches(isDisplayed()))
                 .check(matches(hasChildCount(4)))
@@ -62,6 +75,30 @@ public class CompletedExperiencesFragmentTests {
                 .check(matches(hasDescendant(withText("Vista sul paese di Montemaggiore di Taipana"))))
                 .check(matches(hasDescendant(allOf(isAssignableFrom(ImageView.class), withId(R.id.completed_experience_logo)))))
                 .check(matches(hasDescendant(withText("20"))));
+    }
+
+    @Test
+    public void testPanoramicViewFilterChip() {
+        onView(withId(R.id.experiences_chips_scrollview))
+                .perform(slowSwipeLeft());
+        onView(withId(R.id.chip_panoramic_view))
+                .perform(click());
+        onView(withTagValue(is("ex012")))
+                .check(doesNotExist());
+        onView(withTagValue(is("ex003")))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testRiverWaterfallFilterChip() {
+        onView(withId(R.id.experiences_chips_scrollview))
+                .perform(swipeLeft());
+        onView(withId(R.id.chip_river_waterfall))
+                .perform(click());
+        onView(withTagValue(is("ex003")))
+                .check(doesNotExist());
+        onView(withTagValue(is("ex012")))
+                .check(matches(isDisplayed()));
     }
 
     @After
