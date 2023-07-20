@@ -1,4 +1,4 @@
-package it.units.borghisegreti;
+package it.units.borghisegreti.utils;
 
 import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.AUTH_PORT;
 import static it.units.borghisegreti.utils.FirebaseEmulatorsConfiguration.DATABASE_PORT;

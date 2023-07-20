@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import androidx.fragment.app.testing.FragmentScenario;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.filters.LargeTest;
 
 import org.junit.After;
@@ -26,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import it.units.borghisegreti.fragments.ExperiencesFragment;
+import it.units.borghisegreti.utils.AuthenticatedFragmentsFactory;
 
 @LargeTest
 public class ExperiencesFragmentTests {
