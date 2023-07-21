@@ -44,27 +44,18 @@ jobs:
           name: make ./gradlew executable
           command: chmod +x ./gradlew
       - run:
-          name: make Android tests script executable
-          command: chmod +x .circleci/run-android-tests.sh
-      - run:
           name: set Google Maps API key
           command: echo "MAPS_API_KEY=${MAPS_API_KEY}" > local.properties
       - run:
           name: download the Firebase Emulator Suite
           command: curl -sL https://firebase.tools | bash
-      - android/create-avd:
-          avd-name: myavd
-          system-image: system-images;android-28;google_apis;x86
-          install: true
-      - android/start-emulator:
-          avd-name: myavd
-          no-window: true
-          restore-gradle-cache-prefix: v1a
       - run:
-          name: start local Firebase emulators and run Android tests
-          command: firebase emulators:exec --import=firebase-emulators-data/ .circleci/run-android-tests.sh
-      - android/save-gradle-cache:
-          cache-prefix: v1a
+          name: start local Firebase emulators in the background
+          command: firebase emulators:start --import=firebase-emulators-data/
+          background: true
+      - android/start-emulator-and-run-tests:
+          test-command: ./gradlew connectedDebugAndroidTest
+          system-image: system-images;android-28;google_apis;x86
       - run:
           name: Save test results
           command: |
