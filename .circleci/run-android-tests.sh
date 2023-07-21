@@ -5,7 +5,6 @@ run_with_retry() {
    until [ $n -gt $MAX_TRIES ]
    do
       echo "Starting test attempt $n"
-      adb shell input keyevent 82
       ./gradlew connectedDebugAndroidTest && break
       n=$[$n+1]
       sleep 5
